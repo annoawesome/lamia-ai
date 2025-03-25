@@ -1,0 +1,18 @@
+{
+  "name": "lamia-ai",
+  "version": "0.0.0",
+  "description": "A flexible AI co-writing app",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Seth Hoong",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^9.23.0",
+    "electron": "^35.0.3",
+    "eslint": "^9.23.0",
+    "globals": "^16.0.0"
+  }
+}
