@@ -23,6 +23,24 @@ export function createUser(username, passwordHash) {
         })));
 }
 
+function getUserMetadata(username) {
+    return new Promise((resolve, reject) => {
+        const lamiaUserDirectory = path.join(dataDirectoryPath, username);
+
+        if (!fs.existsSync(lamiaUserDirectory)) {
+            reject(new Error(`User not found`));
+        }
+
+        resolve(lamiaUserDirectory);
+    })
+        .then(dataPath => {
+            return fs.readFileSync(path.join(dataPath, '/userdata'), {
+                encoding: 'utf8'
+            });
+        });
+}
+
 export const userDao = {
     createUser: createUser,
+    getUserMetadata: getUserMetadata,
 };

@@ -10,7 +10,7 @@ async function hash(str) {
         .join('');
 }
 
-function postCreateAccount(username, password) {
+function postLoginAccount(username, password) {
     // TODO: implement endpoint
     const request = new Request('/user/login', {
         headers: {
@@ -43,8 +43,8 @@ btnLogin.addEventListener('click', () => {
     setInput(false);
 
     hash(password)
-        .then(passwordHash => postCreateAccount(username, passwordHash))
-        .then(() => window.location.replace('login.html'))
+        .then(passwordHash => postLoginAccount(username, passwordHash))
+        .then(() => window.location.replace('index.html'))
         .catch(() => {
             setInput(true);
         });
