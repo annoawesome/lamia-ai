@@ -17,9 +17,12 @@ export function createUserController(req, res) {
                     console.log(err);
                     res.sendStatus(500);
                 } else if (token) {
-                    res.status(200).json({
-                        jwt: token,
-                    });
+                    res.status(200)
+                        .cookie('user-jwt', token, {
+                            secure: true,
+                            httpOnly: true,
+                        })
+                        .json({});
                 }
             }))
             .catch(err => {
