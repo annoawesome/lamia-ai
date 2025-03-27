@@ -1,0 +1,83 @@
+html,
+body {
+    --bg-color: rgb(30, 30, 30);
+    --btn-color: rgb(250, 25, 25);
+    --btn-inset: rgb(20, 20, 20);
+    --text-color: rgb(200, 200, 200);
+    --div-info-bg-color: rgba(0, 150, 255, 0.2);
+
+    background-color: var(--bg-color);
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+h1 {
+    color: rgb(200, 200, 200);
+    text-align: center;
+}
+
+a.btn {
+    display: block;
+    margin: auto;
+    margin-bottom: 10px;
+
+    text-decoration: none;
+    text-align: center;
+    background-color: var(--btn-color);
+    color: var(--text-color);
+
+    padding: 10px;
+    width: 50%;
+    border-radius: 8px;
+}
+
+.div-form {
+    width: min(40%, 600px);
+}
+
+.div-center-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+input,
+label {
+    display: block;
+    color: var(--text-color);
+    margin-left: 15px;
+    width: 100%;
+}
+
+input {
+    margin: 5px 15px 15px 15px;
+    border: 1px solid rgb(100, 100, 100);
+    border-radius: 4px;
+    padding: 5px;
+
+    background-color: var(--btn-inset)
+}
+
+form > .info {
+    background-color: var(--div-info-bg-color);
+    padding: 6px 12px;
+    border: 1px solid rgb(0, 200, 255);
+    border-radius: 8px;
+    margin: 15px;
+    color: var(--text-color);
+}
+
+.warn {
+    margin: auto;
+    text-align: center;
+    color: var(--text-color);
+    background-color: rgba(255, 0, 0, 0.25);
+    border: 1px solid rgb(255, 0, 0);
+    border-radius: 8px;
+    width: 60%;
+    padding: 5px;
+    margin-bottom: 16px;
+}
+
+input.btn {
+    width: 50%;
+}

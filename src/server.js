@@ -12,11 +12,8 @@ export function startServer() {
 
     server.use(logSource);
 
-    server.get("/", (request, response) => {
-        response.send("Hello world!");
-    });
-
     server.use('/user', userRouter);
+    server.use(express.static('public'));
 
     server.listen(defaultPort, () => {
         console.log('[INFO] Server listening at port ' + defaultPort);

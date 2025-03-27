@@ -1,0 +1,36 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lamia AI | Register</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <h1>Register User</h1>
+
+  <div class="warn" id="warn-register-error" style="display: none;">
+    <p>Internal Server Error</p>
+  </div>
+
+  <div class="div-center-container">
+    <div class="div-form">
+      <form>
+        <label for="username">Username</label>
+        <input type="text" name="username" id="input-username">
+        <label for="password">Password</label>
+        <input type="password" name="password" id="input-password">
+        <label for="re-enter-password">Re-enter Password</label>
+        <input type="password" name="re-enter-password" id="input-re-enter-password">
+        <div class="info">
+          <p>
+            If you lose your password, you will not be able to recover your data!
+          </p>
+        </div>
+        <input type="button" value="Register Account" class="btn" id="btn-register-account">
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/register.js"></script>
+</body>
+</html>

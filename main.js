@@ -8,7 +8,7 @@ function createBrowserWindow() {
         height: 600,
     });
     
-    browserWindow.loadURL('http://localhost:8080/');
+    browserWindow.loadURL('http://localhost:8080/index.html');
 }
 
 // Starts the server
