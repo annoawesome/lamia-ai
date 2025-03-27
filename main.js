@@ -1,5 +1,6 @@
 import { app, BrowserWindow } from 'electron';
 import { startServer } from './src/server.js';
+import 'dotenv/config';
 
 function createBrowserWindow() {
     const browserWindow = new BrowserWindow({
@@ -7,7 +8,7 @@ function createBrowserWindow() {
         height: 600,
     });
     
-    browserWindow.loadFile('public/index.html');
+    browserWindow.loadURL('http://localhost:8080/');
 }
 
 // Starts the server
@@ -16,6 +17,7 @@ function init() {
 }
 
 app.whenReady().then(() => {
+    init();
     createBrowserWindow();
 
     app.on('activate', () => {
@@ -23,8 +25,6 @@ app.whenReady().then(() => {
             createBrowserWindow();
         }
     });
-}).then(() => {
-    init();
 });
 
 app.on('window-all-closed', () => {
