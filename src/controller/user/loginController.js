@@ -12,7 +12,6 @@ export function postLoginController(req, res) {
         const userdata = JSON.parse(userdataStr);
 
         bcrypt.compare(password, userdata.passwordHash, (err, success) => {
-            console.log(success);
             if (success) {
                 jwt.sign({ username: username }, process.env.JWT_KEY, {algorithm: 'HS256'}, (err, token) => {
                     if (err) {

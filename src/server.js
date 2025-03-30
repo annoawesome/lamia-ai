@@ -2,7 +2,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 
 import {router as userRouter} from './router/userRouter.js';
-import { logSource } from './middleware/logger.js';
+import { logSource, log } from './middleware/logger.js';
 import { authenticate } from './middleware/authenticate.js';
 
 const server = express();
@@ -10,7 +10,7 @@ const defaultPort = 8080;
 
 
 export function startServer() {
-    console.log('[INFO] Started server');
+    log('Started server');
 
     server.use(logSource);
     server.use(cookieParser());
@@ -24,6 +24,6 @@ export function startServer() {
     });
 
     server.listen(defaultPort, () => {
-        console.log('[INFO] Server listening at port ' + defaultPort);
+        log('Server listening at port ' + defaultPort);
     });
 }

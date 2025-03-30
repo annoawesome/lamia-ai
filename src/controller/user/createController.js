@@ -10,8 +10,6 @@ export function createUserController(req, res) {
     const username = body.username;
     const password = body.password;
 
-    console.log("HASH: " + password);
-
     bcrypt.hash(password, saltRounds).then((passwordHash) => {
         userDao.createUser(username, passwordHash)
             .then(() => jwt.sign({ username: username }, process.env.JWT_KEY, {algorithm: 'HS256'}, (err, token) => {
@@ -29,7 +27,6 @@ export function createUserController(req, res) {
             }))
             .catch(err => {
                 console.log(err);
-                console.log('[ERROR] Error caught');
                 res.sendStatus(500);
             });
     });
