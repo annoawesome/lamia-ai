@@ -1,5 +1,5 @@
 
-const authedRequest = new Request('/isAuthed', {
+const authedRequest = new Request('/api/v1/isAuthed', {
     method: 'GET'
 });
 

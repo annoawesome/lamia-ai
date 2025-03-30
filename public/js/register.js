@@ -12,7 +12,7 @@ async function hash(str) {
 }
 
 function postCreateAccount(username, password) {
-    const request = new Request('/user/create', {
+    const request = new Request('/api/v1/user/create', {
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',

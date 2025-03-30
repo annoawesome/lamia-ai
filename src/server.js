@@ -15,11 +15,11 @@ export function startServer() {
     server.use(logSource);
     server.use(cookieParser());
 
-    server.use('/user', userRouter);
+    server.use('/api/v1/user', userRouter);
     server.use(express.static('public'));
 
     // Test endpoint for authentication
-    server.get('/isAuthed', authenticate, (req, res) => {
+    server.get('/api/v1/isAuthed', authenticate, (req, res) => {
         res.sendStatus(200);
     });
 

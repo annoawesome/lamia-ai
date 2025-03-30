@@ -12,7 +12,7 @@ async function hash(str) {
 
 function postLoginAccount(username, password) {
     // TODO: implement endpoint
-    const request = new Request('/user/login', {
+    const request = new Request('/api/v1/user/login', {
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
