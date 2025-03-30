@@ -44,7 +44,7 @@ btnLogin.addEventListener('click', () => {
 
     hash(password)
         .then(passwordHash => postLoginAccount(username, passwordHash))
-        .then(() => window.location.replace('index.html'))
+        .then(() => window.location.replace('home.html'))
         .catch(() => {
             setInput(true);
         });
