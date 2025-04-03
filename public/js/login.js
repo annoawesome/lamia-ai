@@ -1,3 +1,5 @@
+import { exportKey, generateEncryptionKey } from "./encryption.js";
+
 const btnLogin = document.getElementById('btn-login');
 
 const inputUsername = document.getElementById('input-username');
@@ -42,7 +44,10 @@ btnLogin.addEventListener('click', () => {
 
     setInput(false);
 
-    hash(password)
+    generateEncryptionKey(password)
+        .then(async key => await exportKey(key))
+        .then(encodedKey => sessionStorage.setItem('encryption-key', encodedKey))
+        .then(async () => await hash(password))
         .then(passwordHash => postLoginAccount(username, passwordHash))
         .then(() => window.location.replace('home.html'))
         .catch(() => {

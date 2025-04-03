@@ -2,6 +2,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 
 import {router as userRouter} from './router/userRouter.js';
+import { router as storyRouter } from './router/storyRouter.js';
 import { logSource, log } from './middleware/logger.js';
 import { authenticate } from './middleware/authenticate.js';
 
@@ -16,6 +17,7 @@ export function startServer() {
     server.use(cookieParser());
 
     server.use('/api/v1/user', userRouter);
+    server.use('/api/v1/story', storyRouter);
     server.use(express.static('public'));
 
     // Test endpoint for authentication

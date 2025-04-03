@@ -1,0 +1,45 @@
+import fs from 'fs';
+import path from 'path';
+import crypto from 'crypto';
+import { getLamiaUserDirectory } from '../util/fsdb.js';
+
+function getStoriesDirectory(dataPath) {
+    const storiesPath = path.join(dataPath, 'story');
+    fs.mkdirSync(storiesPath, { recursive: true });
+    return storiesPath;
+}
+
+function getStory(username, storyId) {
+    return getLamiaUserDirectory(username)
+        .then(getStoriesDirectory)
+        .then(storiesPath => fs.readFileSync(path.join(storiesPath, storyId), { encoding: 'utf-8' }));
+}
+
+function createStory(username, data) {
+    const uuid = crypto.randomUUID();
+
+    return getLamiaUserDirectory(username)
+        .then(getStoriesDirectory)
+        .then(storiesPath => fs.writeFileSync(path.join(storiesPath, uuid), data, { encoding: 'utf-8' }))
+        .then(() => uuid);
+}
+
+function modifyStory(username, storyId, data) {
+    return getLamiaUserDirectory(username)
+        .then(getStoriesDirectory)
+        .then(storiesPath => fs.writeFileSync(path.join(storiesPath, storyId), data, { encoding: 'utf-8' }))
+        .then(() => storyId);
+}
+
+function getStoryIds(username) {
+    return getLamiaUserDirectory(username)
+        .then(getStoriesDirectory)
+        .then(storiesPath => fs.readdirSync(storiesPath));
+}
+
+export const storyDao = {
+    getStory: getStory,
+    createStory: createStory,
+    modifyStory: modifyStory,
+    getStoryIds: getStoryIds
+};
