@@ -10,9 +10,9 @@ export const router = express.Router();
 router.use(express.json());
 router.use(express.text());
 router.use(authenticate);
-router.get('/:storyId', getStoryIdController);
-router.post('/', postStoryController);
-router.post('/:storyId', modifyStoryController);
+router.get('/content/:storyId', getStoryIdController);
+router.post('/content', postStoryController);
+router.post('/content/:storyId', modifyStoryController);
 router.get('/ids', getStoryIdsController);
 router.get('/index'); // convenient encrypted list of story names. Dont have to decrypt every single id
 router.post('/index');

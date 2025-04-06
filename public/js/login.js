@@ -1,4 +1,4 @@
-import { exportKey, generateEncryptionKey } from "./encryption.js";
+import { exportKey, generateEncryptionKey, generateSalt } from "./encryption.js";
 
 const btnLogin = document.getElementById('btn-login');
 
@@ -44,7 +44,8 @@ btnLogin.addEventListener('click', () => {
 
     setInput(false);
 
-    generateEncryptionKey(password)
+    generateSalt(password + username + '_lamia')
+        .then(async salt => await generateEncryptionKey(password, salt))
         .then(async key => await exportKey(key))
         .then(encodedKey => sessionStorage.setItem('encryption-key', encodedKey))
         .then(async () => await hash(password))

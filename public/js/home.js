@@ -1,8 +1,11 @@
 import { decrypt, encrypt, fromBase64, fromBase64ToUint8Array, generateIv, importKey, toBase64 } from "./encryption.js";
 
-const authedRequest = new Request('/api/v1/isAuthed', {
-    method: 'GET'
-});
+const btnNewStory = document.getElementById('btn-new-story');
+const panelSubStoryIndex = document.getElementById('panel-sub-story-index');
+const textareaContent = document.getElementById('textarea-content');
+
+let lastSeenText = '';
+let currentId = '';
 
 async function generateEncryptedPayload(storyContent) {
     const key = await importKey(sessionStorage.getItem('encryption-key'));
@@ -29,7 +32,7 @@ async function decryptPayload(payload) {
 async function createStory(storyContent) {
     const payload = await generateEncryptedPayload(storyContent);
 
-    const request = new Request('/api/v1/story', {
+    const request = new Request('/api/v1/story/content', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -43,7 +46,7 @@ async function createStory(storyContent) {
 }
 
 async function getStory(storyId) {
-    const request = new Request(`/api/v1/story/${storyId}`, {
+    const request = new Request(`/api/v1/story/content/${storyId}`, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -52,7 +55,7 @@ async function getStory(storyId) {
 
     const res = await fetch(request);
     const payload = await res.json();
-    const storyContent = decryptPayload(payload);
+    const storyContent = await decryptPayload(payload);
 
     return storyContent;
 }
@@ -60,7 +63,7 @@ async function getStory(storyId) {
 async function updateStory(storyId, storyContent) {
     const payload = await generateEncryptedPayload(storyContent);
 
-    const request = new Request(`/api/v1/story/${storyId}`, {
+    const request = new Request(`/api/v1/story/content/${storyId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -73,12 +76,79 @@ async function updateStory(storyId, storyContent) {
     return await res.text();
 }
 
-createStory("In the arms of an angel.")
-    .then(storyId => getStory(storyId))
-    .then(val => console.log(val));
-
-fetch(authedRequest)
-    .then(res => {
-        console.log(res);
-        console.log('Success?');
+async function getStoryIds() {
+    const request = new Request(`/api/v1/story/ids`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+        },
     });
+
+    const res = await fetch(request);
+    const list = await res.json();
+
+    return list;
+}
+
+function loadStoryGui(id) {
+    getStory(id)
+        .then(storyContent => {
+            console.log('Got story id ' + id);
+            textareaContent.value = storyContent;
+            lastSeenText = storyContent;
+            currentId = id;
+        });
+}
+
+function addNewStoryToIndex(id) {
+    const storySelectButton = document.createElement('button');
+    storySelectButton.className = 'btn btn-story-select';
+    storySelectButton.type = 'button';
+    storySelectButton.onclick = () => loadStoryGui(id);
+    storySelectButton.innerHTML = `<p>${id.substring(0, 15)}</p>`;
+
+    panelSubStoryIndex.append(storySelectButton);
+}
+
+function createNewStoryGuiAction() {
+    createStory('')
+        .then((id) => {
+            console.log('Created story id ' + id);
+            textareaContent.value = '';
+            lastSeenText = '';
+            currentId = id;
+            addNewStoryToIndex(id);
+        });
+}
+
+function saveStoryAction() {
+    let currentText = textareaContent.value;
+
+    if (currentText == lastSeenText) {
+        return;
+    }
+
+    if (currentId === '') {
+        return;
+    }
+
+    lastSeenText = currentText;
+    updateStory(currentId, currentText);
+    console.log('Updated id ' + currentId);
+}
+
+function getStoryIdsAction() {
+    getStoryIds()
+        .then((storyIds) => {
+            panelSubStoryIndex.textContent = '';
+
+            for (let storyId of storyIds) {
+                addNewStoryToIndex(storyId);
+            }
+        });
+}
+
+btnNewStory.onclick = createNewStoryGuiAction;
+setInterval(saveStoryAction, 5000);
+
+getStoryIdsAction();

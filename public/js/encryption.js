@@ -2,8 +2,11 @@ export function generateIv() {
     return crypto.getRandomValues(new Uint8Array(16));
 }
 
-export async function generateEncryptionKey(password) {
-    const salt = crypto.getRandomValues(new Uint8Array(16));
+export async function generateSalt(secret) {
+    return new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(secret)));
+}
+
+export async function generateEncryptionKey(password, salt) {
     const passwordBuffer = new TextEncoder().encode(password);
     const keyMaterial = await crypto.subtle.importKey('raw', passwordBuffer, 'PBKDF2', false, ['deriveKey', 'deriveBits']);
 

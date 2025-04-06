@@ -4,9 +4,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lamia AI | Home</title>
   <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../css/home.css">
 </head>
 <body>
-  <h1>Home</h1>
+   <div class="topbar">
+    <!-- hamburger -->
+    <!-- story title -->
+     <button class="btn btn-topbar btn-menu">
+      Menu
+     </button>
+     <button type="button" class="btn btn-topbar btn-new-story" id="btn-new-story">
+      New Story
+     </button>
+   </div>
+
+   <div class="panel panel-main">
+    <div class="panel-left" id="panel-sub-story-index">
+      <!-- List of stories -->
+      <!-- <button type="button" class="btn btn-story-select">
+        <p>Story 1</p>
+      </button> -->
+    </div>
+  
+    <div class="panel-middle">
+    <!-- Text area -->
+    <textarea name="content" id="textarea-content" placeholder="Once upon a time..."></textarea>
+    </div>
+  
+    <div class="panel-right">
+
+    </div>
+   </div>
   <script type="module" src="../js/encryption.js"></script>
   <script type="module" src="../js/home.js"></script>
 </body>
