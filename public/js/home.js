@@ -6,6 +6,7 @@ const textareaContent = document.getElementById('textarea-content');
 
 let lastSeenText = '';
 let currentId = '';
+let index = {};
 
 async function generateEncryptedPayload(storyContent) {
     const key = await importKey(sessionStorage.getItem('encryption-key'));
@@ -90,6 +91,62 @@ async function getStoryIds() {
     return list;
 }
 
+async function postIndex(index) {
+    const encryptedPayload = await generateEncryptedPayload(JSON.stringify(index));
+
+    const request = new Request(`/api/v1/story/index`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(encryptedPayload),
+    });
+
+    return await fetch(request);
+}
+
+async function getIndex() {
+    const request = new Request(`/api/v1/story/index`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json'
+        }
+    });
+
+    const res = await fetch(request);
+    const encryptedPayload = await res.json();
+
+    if (!encryptedPayload.encryptedData64)
+        return generateIndex();
+
+    const index = JSON.parse(await decryptPayload(encryptedPayload));
+    return index;
+}
+
+// update ui
+
+function generateIndex() {
+    const index = {
+        metadata: {
+            version: '0.0.0'
+        },
+        stories: {},
+    };
+
+    return index;
+}
+
+function attachStoryToIndex(index, storyName, storyId) {
+    index.stories[storyId] = {
+        storyName: storyName,
+    };
+}
+
+function updateStoryIndex(index, storyName, storyId) {
+    attachStoryToIndex(index, storyName, storyId);
+    postIndex(index);
+}
+
 function loadStoryGui(id) {
     getStory(id)
         .then(storyContent => {
@@ -118,6 +175,7 @@ function createNewStoryGuiAction() {
             lastSeenText = '';
             currentId = id;
             addNewStoryToIndex(id);
+            updateStoryIndex(index, 'Untitled Story', id);
         });
 }
 
@@ -147,6 +205,10 @@ function getStoryIdsAction() {
             }
         });
 }
+
+// TODO: possible race condition?
+// older version? call index updaters
+getIndex().then(obtainedIndex => index = obtainedIndex);
 
 btnNewStory.onclick = createNewStoryGuiAction;
 setInterval(saveStoryAction, 5000);
