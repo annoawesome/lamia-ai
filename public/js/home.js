@@ -30,7 +30,7 @@ async function decryptPayload(payload) {
     return new TextDecoder().decode(encodedStoryContent);
 }
 
-async function createStory(storyContent) {
+async function apiCreateStory(storyContent) {
     const payload = await generateEncryptedPayload(storyContent);
 
     const request = new Request('/api/v1/story/content', {
@@ -46,7 +46,7 @@ async function createStory(storyContent) {
     return await res.text();
 }
 
-async function getStory(storyId) {
+async function apiGetStory(storyId) {
     const request = new Request(`/api/v1/story/content/${storyId}`, {
         method: 'GET',
         headers: {
@@ -61,7 +61,7 @@ async function getStory(storyId) {
     return storyContent;
 }
 
-async function updateStory(storyId, storyContent) {
+async function apiUpdateStory(storyId, storyContent) {
     const payload = await generateEncryptedPayload(storyContent);
 
     const request = new Request(`/api/v1/story/content/${storyId}`, {
@@ -77,7 +77,7 @@ async function updateStory(storyId, storyContent) {
     return await res.text();
 }
 
-async function getStoryIds() {
+async function apiGetStoryIds() {
     const request = new Request(`/api/v1/story/ids`, {
         method: 'GET',
         headers: {
@@ -91,7 +91,7 @@ async function getStoryIds() {
     return list;
 }
 
-async function postIndex(index) {
+async function apiPostIndex(index) {
     const encryptedPayload = await generateEncryptedPayload(JSON.stringify(index));
 
     const request = new Request(`/api/v1/story/index`, {
@@ -105,7 +105,7 @@ async function postIndex(index) {
     return await fetch(request);
 }
 
-async function getIndex() {
+async function apiGetIndex() {
     const request = new Request(`/api/v1/story/index`, {
         method: 'GET',
         headers: {
@@ -117,7 +117,7 @@ async function getIndex() {
     const encryptedPayload = await res.json();
 
     if (!encryptedPayload.encryptedData64)
-        return generateIndex();
+        return generateIndexObject();
 
     const index = JSON.parse(await decryptPayload(encryptedPayload));
     return index;
@@ -125,7 +125,8 @@ async function getIndex() {
 
 // update ui
 
-function generateIndex() {
+// Generates an index object 
+function generateIndexObject() {
     const index = {
         metadata: {
             version: '0.0.0'
@@ -136,19 +137,19 @@ function generateIndex() {
     return index;
 }
 
-function attachStoryToIndex(index, storyName, storyId) {
+function pushStoryToIndexObject(index, storyName, storyId) {
     index.stories[storyId] = {
         storyName: storyName,
     };
 }
 
 function updateStoryIndex(index, storyName, storyId) {
-    attachStoryToIndex(index, storyName, storyId);
-    postIndex(index);
+    pushStoryToIndexObject(index, storyName, storyId);
+    apiPostIndex(index);
 }
 
-function loadStoryGui(id) {
-    getStory(id)
+function loadStory(id) {
+    apiGetStory(id)
         .then(storyContent => {
             console.log('Got story id ' + id);
             textareaContent.value = storyContent;
@@ -157,29 +158,29 @@ function loadStoryGui(id) {
         });
 }
 
-function addNewStoryToIndex(id) {
+function addNewStoryToIndexGui(id) {
     const storySelectButton = document.createElement('button');
     storySelectButton.className = 'btn btn-story-select';
     storySelectButton.type = 'button';
-    storySelectButton.onclick = () => loadStoryGui(id);
+    storySelectButton.onclick = () => loadStory(id);
     storySelectButton.innerHTML = `<p>${id.substring(0, 15)}</p>`;
 
     panelSubStoryIndex.append(storySelectButton);
 }
 
-function createNewStoryGuiAction() {
-    createStory('')
+function createNewStory() {
+    apiCreateStory('')
         .then((id) => {
             console.log('Created story id ' + id);
             textareaContent.value = '';
             lastSeenText = '';
             currentId = id;
-            addNewStoryToIndex(id);
+            addNewStoryToIndexGui(id);
             updateStoryIndex(index, 'Untitled Story', id);
         });
 }
 
-function saveStoryAction() {
+function saveCurrentStory() {
     let currentText = textareaContent.value;
 
     if (currentText == lastSeenText) {
@@ -191,26 +192,26 @@ function saveStoryAction() {
     }
 
     lastSeenText = currentText;
-    updateStory(currentId, currentText);
+    apiUpdateStory(currentId, currentText);
     console.log('Updated id ' + currentId);
 }
 
-function getStoryIdsAction() {
-    getStoryIds()
+function updateStoryIndexGui() {
+    apiGetStoryIds()
         .then((storyIds) => {
             panelSubStoryIndex.textContent = '';
 
             for (let storyId of storyIds) {
-                addNewStoryToIndex(storyId);
+                addNewStoryToIndexGui(storyId);
             }
         });
 }
 
 // TODO: possible race condition?
 // older version? call index updaters
-getIndex().then(obtainedIndex => index = obtainedIndex);
+apiGetIndex().then(obtainedIndex => index = obtainedIndex);
 
-btnNewStory.onclick = createNewStoryGuiAction;
-setInterval(saveStoryAction, 5000);
+btnNewStory.onclick = createNewStory;
+setInterval(saveCurrentStory, 5000);
 
-getStoryIdsAction();
+updateStoryIndexGui();
