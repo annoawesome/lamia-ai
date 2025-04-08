@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import process from 'process';
+import { getLamiaUserDirectory } from '../util/fsdb.js';
 
 const userDataPath = process.env.APPDATA || (process.platform === 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share");
 const dataDirectoryPath = path.join(userDataPath, 'Lamia AI Server');
@@ -24,15 +25,7 @@ export function createUser(username, passwordHash) {
 }
 
 function getUserMetadata(username) {
-    return new Promise((resolve, reject) => {
-        const lamiaUserDirectory = path.join(dataDirectoryPath, username);
-
-        if (!fs.existsSync(lamiaUserDirectory)) {
-            reject(new Error(`User not found`));
-        }
-
-        resolve(lamiaUserDirectory);
-    })
+    return getLamiaUserDirectory(username)
         .then(dataPath => {
             return fs.readFileSync(path.join(dataPath, '/userdata'), {
                 encoding: 'utf8'
