@@ -1,10 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import process from 'process';
-import { getLamiaUserDirectory } from '../util/fsdb.js';
-
-const userDataPath = process.env.APPDATA || (process.platform === 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share");
-const dataDirectoryPath = path.join(userDataPath, 'Lamia AI Server');
+import { getLamiaUserDirectory, dataDirectoryPath } from '../util/fsdb.js';
 
 export function createUser(username, passwordHash) {
     return new Promise((resolve, reject) => {

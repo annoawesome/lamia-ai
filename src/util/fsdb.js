@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import process from 'process';
 
-const userDataPath = process.env.APPDATA || (process.platform === 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share");
-const dataDirectoryPath = path.join(userDataPath, 'Lamia AI Server');
+export const userDataPath = process.env.APPDATA || (process.platform === 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share");
+export const dataDirectoryPath = path.join(userDataPath, 'Lamia AI Server');
 
 export function getLamiaUserDirectory(username) {
     return new Promise((resolve, reject) => {
