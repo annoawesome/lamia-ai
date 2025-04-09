@@ -160,6 +160,12 @@ function generateStoryObject(version, title, content) {
 }
 
 function updateStoryIndex(index, storyName, storyId) {
+    const pStoryName = document.getElementById(`index-story-name-${storyId}`);
+
+    if (pStoryName) {
+        pStoryName.innerText = storyName;
+    }
+
     pushStoryToIndexObject(index, storyName, storyId);
     apiPostIndex(index);
 }
@@ -180,7 +186,7 @@ function addNewStoryToIndexGui(name, id) {
     storySelectButton.className = 'btn btn-story-select';
     storySelectButton.type = 'button';
     storySelectButton.onclick = () => loadStory(id);
-    storySelectButton.innerHTML = `<p>${name.substring(0, 15)}</p>`;
+    storySelectButton.innerHTML = `<p class="p-story-name" id="index-story-name-${id}">${name.substring(0, 15)}</p>`;
 
     panelSubStoryIndex.append(storySelectButton);
 }
