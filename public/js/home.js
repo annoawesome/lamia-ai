@@ -4,14 +4,18 @@ const btnNewStory = document.getElementById('btn-new-story');
 const panelSubStoryIndex = document.getElementById('panel-sub-story-index');
 const textareaContent = document.getElementById('textarea-content');
 
+const inputStoryName = document.getElementById('input-story-name');
+
+const storyObjectVersion = '0.1.0';
+
 let lastSeenText = '';
 let currentId = '';
 let index = {};
 
-async function generateEncryptedPayload(storyContent) {
+async function generateEncryptedPayload(data) {
     const key = await importKey(sessionStorage.getItem('encryption-key'));
     const iv = generateIv();
-    const encryptedData = await encrypt(key, iv, new TextEncoder().encode(storyContent));
+    const encryptedData = await encrypt(key, iv, new TextEncoder().encode(data));
 
     const payload = {
         encryptedData64: toBase64(encryptedData),
@@ -30,8 +34,8 @@ async function decryptPayload(payload) {
     return new TextDecoder().decode(encodedStoryContent);
 }
 
-async function apiCreateStory(storyContent) {
-    const payload = await generateEncryptedPayload(storyContent);
+async function apiCreateStory(storyObject) {
+    const payload = await generateEncryptedPayload(JSON.stringify(storyObject));
 
     const request = new Request('/api/v1/story/content', {
         method: 'POST',
@@ -56,13 +60,13 @@ async function apiGetStory(storyId) {
 
     const res = await fetch(request);
     const payload = await res.json();
-    const storyContent = await decryptPayload(payload);
+    const storyObjectStr = await decryptPayload(payload);
 
-    return storyContent;
+    return JSON.parse(storyObjectStr);
 }
 
-async function apiUpdateStory(storyId, storyContent) {
-    const payload = await generateEncryptedPayload(storyContent);
+async function apiUpdateStory(storyId, storyObject) {
+    const payload = await generateEncryptedPayload(JSON.stringify(storyObject));
 
     const request = new Request(`/api/v1/story/content/${storyId}`, {
         method: 'POST',
@@ -77,6 +81,7 @@ async function apiUpdateStory(storyId, storyContent) {
     return await res.text();
 }
 
+// eslint-disable-next-line no-unused-vars
 async function apiGetStoryIds() {
     const request = new Request(`/api/v1/story/ids`, {
         method: 'GET',
@@ -143,6 +148,17 @@ function pushStoryToIndexObject(index, storyName, storyId) {
     };
 }
 
+function generateStoryObject(version, title, content) {
+    return {
+        metadata: {
+            version: version,
+        },
+
+        title: title,
+        content: content,
+    };
+}
+
 function updateStoryIndex(index, storyName, storyId) {
     pushStoryToIndexObject(index, storyName, storyId);
     apiPostIndex(index);
@@ -150,32 +166,36 @@ function updateStoryIndex(index, storyName, storyId) {
 
 function loadStory(id) {
     apiGetStory(id)
-        .then(storyContent => {
+        .then(storyObject => {
             console.log('Got story id ' + id);
-            textareaContent.value = storyContent;
-            lastSeenText = storyContent;
+            textareaContent.value = storyObject.content;
+            inputStoryName.value = storyObject.title;
+            lastSeenText = storyObject.content;
             currentId = id;
         });
 }
 
-function addNewStoryToIndexGui(id) {
+function addNewStoryToIndexGui(name, id) {
     const storySelectButton = document.createElement('button');
     storySelectButton.className = 'btn btn-story-select';
     storySelectButton.type = 'button';
     storySelectButton.onclick = () => loadStory(id);
-    storySelectButton.innerHTML = `<p>${id.substring(0, 15)}</p>`;
+    storySelectButton.innerHTML = `<p>${name.substring(0, 15)}</p>`;
 
     panelSubStoryIndex.append(storySelectButton);
 }
 
 function createNewStory() {
-    apiCreateStory('')
+    const storyObject = generateStoryObject(storyObjectVersion, 'Untitled Story', '');
+
+    apiCreateStory(storyObject)
         .then((id) => {
             console.log('Created story id ' + id);
             textareaContent.value = '';
+            inputStoryName.value = storyObject.title;
             lastSeenText = '';
             currentId = id;
-            addNewStoryToIndexGui(id);
+            addNewStoryToIndexGui('Untitled Story', id);
             updateStoryIndex(index, 'Untitled Story', id);
         });
 }
@@ -183,7 +203,7 @@ function createNewStory() {
 function saveCurrentStory() {
     let currentText = textareaContent.value;
 
-    if (currentText == lastSeenText) {
+    if (currentText === lastSeenText) {
         return;
     }
 
@@ -192,17 +212,24 @@ function saveCurrentStory() {
     }
 
     lastSeenText = currentText;
-    apiUpdateStory(currentId, currentText);
+
+    const storyObject = generateStoryObject(storyObjectVersion, inputStoryName.value, currentText);
+
+    apiUpdateStory(currentId, storyObject);
     console.log('Updated id ' + currentId);
 }
 
 function updateStoryIndexGui() {
-    apiGetStoryIds()
-        .then((storyIds) => {
+    apiGetIndex()
+        .then((obtainedIndex) => {
+            index = obtainedIndex;
             panelSubStoryIndex.textContent = '';
 
-            for (let storyId of storyIds) {
-                addNewStoryToIndexGui(storyId);
+            for (let storyDataEntry of Object.entries(obtainedIndex.stories)) {
+                const storyId = storyDataEntry[0];
+                const storyData = storyDataEntry[1];
+
+                addNewStoryToIndexGui(storyData.storyName, storyId);
             }
         });
 }
@@ -212,6 +239,7 @@ function updateStoryIndexGui() {
 apiGetIndex().then(obtainedIndex => index = obtainedIndex);
 
 btnNewStory.onclick = createNewStory;
+inputStoryName.addEventListener('focusout', () => updateStoryIndex(index, inputStoryName.value, currentId));
 setInterval(saveCurrentStory, 5000);
 
 updateStoryIndexGui();

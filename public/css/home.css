@@ -6,17 +6,45 @@ body {
     height: 100%;
 }
 
+/* Topbar */
 .topbar {
     overflow: hidden;
+    display: flex;
+    justify-content: space-between;
 }
 
-.topbar .btn-topbar {
-    padding: 8px;
+.div-topbar-group {
+    display: flex;
+}
+
+.topbar-group-left {
+    justify-content: left;
+}
+
+.topbar-group-center {
+    justify-content: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 50px;
+}
+
+.topbar .btn {
+    padding: 5px;
     margin: 8px 0px 8px 8px;
     background-color: var(--btn-inset);
-    color: white;
+    border: 1px solid var(--border-color);
 }
 
+.topbar input {
+    margin: 8px;
+    border: 0;
+    box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.25);
+    font-size: medium;
+}
+
+/* The thing below the topbar */
 .panel-main  {
     width: 100%;
     display: flex;
@@ -59,6 +87,9 @@ body {
     border: 0;
     padding: 10px;
     color: white;
+
+    border-radius: 12px;
+    border: 1px solid var(--border-color)
 }
 
 .panel-right {

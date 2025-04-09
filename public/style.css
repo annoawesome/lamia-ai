@@ -5,6 +5,7 @@ body {
     --btn-inset: rgb(20, 20, 20);
     --text-color: rgb(200, 200, 200);
     --div-info-bg-color: rgba(0, 150, 255, 0.2);
+    --border-color: rgb(100, 100, 100);
 
     background-color: var(--bg-color);
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
@@ -15,19 +16,23 @@ h1 {
     text-align: center;
 }
 
+.btn {
+    text-decoration: none;
+    text-align: center;
+
+    background-color: var(--btn-color);
+    color: var(--text-color);
+    border-radius: 8px;
+    border: 0;
+}
+
 a.btn {
     display: block;
     margin: auto;
     margin-bottom: 10px;
 
-    text-decoration: none;
-    text-align: center;
-    background-color: var(--btn-color);
-    color: var(--text-color);
-
     padding: 10px;
     width: 50%;
-    border-radius: 8px;
 }
 
 .div-form {
@@ -50,7 +55,7 @@ label {
 
 input {
     margin: 5px 15px 15px 15px;
-    border: 1px solid rgb(100, 100, 100);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     padding: 5px;
 
