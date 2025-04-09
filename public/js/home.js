@@ -245,7 +245,13 @@ function updateStoryIndexGui() {
 apiGetIndex().then(obtainedIndex => index = obtainedIndex);
 
 btnNewStory.onclick = createNewStory;
-inputStoryName.addEventListener('focusout', () => updateStoryIndex(index, inputStoryName.value, currentId));
+inputStoryName.addEventListener('blur', () => updateStoryIndex(index, inputStoryName.value, currentId));
+inputStoryName.addEventListener('keypress', (ev) => {
+    if (ev.key === 'Enter') {
+        updateStoryIndex(index, inputStoryName.value, currentId);
+        inputStoryName.blur();
+    }
+});
 setInterval(saveCurrentStory, 5000);
 
 updateStoryIndexGui();
