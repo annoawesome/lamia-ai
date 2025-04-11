@@ -6,6 +6,7 @@ import { modifyStoryController } from '../controller/story/modifyStoryController
 import { getStoryIdsController } from '../controller/story/getStoryIdsController.js';
 import { getIndexController } from '../controller/story/getIndexController.js';
 import { postIndexController } from '../controller/story/postIndexController.js';
+import { deleteStoryController } from '../controller/story/deleteStoryController.js';
 
 export const router = express.Router();
 
@@ -15,6 +16,7 @@ router.use(authenticate);
 router.get('/content/:storyId', getStoryIdController);
 router.post('/content', postStoryController);
 router.post('/content/:storyId', modifyStoryController);
+router.delete('/content/:storyId', deleteStoryController);
 router.get('/ids', getStoryIdsController);
 router.get('/index', getIndexController); // convenient encrypted list of story names. Dont have to decrypt every single id
 router.post('/index', postIndexController);

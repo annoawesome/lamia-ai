@@ -31,6 +31,12 @@ function modifyStory(username, storyId, data) {
         .then(() => storyId);
 }
 
+function deleteStory(username, storyId) {
+    return getLamiaUserDirectory(username)
+        .then(getStoriesDirectory)
+        .then(storiesPath => fs.rmSync(path.join(storiesPath, storyId), { force: true }));
+}
+
 function getStoryIds(username) {
     return getLamiaUserDirectory(username)
         .then(getStoriesDirectory)
@@ -61,4 +67,5 @@ export const storyDao = {
     getStoryIds: getStoryIds,
     getIndex: getIndex,
     writeIndex: writeIndex,
+    deleteStory: deleteStory
 };

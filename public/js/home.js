@@ -5,6 +5,7 @@ const panelSubStoryIndex = document.getElementById('panel-sub-story-index');
 const textareaContent = document.getElementById('textarea-content');
 
 const inputStoryName = document.getElementById('input-story-name');
+const btnDeleteStory = document.getElementById('btn-delete-story');
 
 const storyObjectVersion = '0.1.0';
 
@@ -128,6 +129,17 @@ async function apiGetIndex() {
     return index;
 }
 
+async function apiDeleteStory(storyId) {
+    const request = new Request(`/api/v1/story/content/${storyId}`, {
+        method: 'DELETE',
+    });
+
+    const res = await fetch(request);
+    const statusCode = res.status;
+
+    return statusCode;
+}
+
 // update ui
 
 // Generates an index object 
@@ -167,6 +179,17 @@ function updateStoryIndex(index, storyName, storyId) {
     }
 
     pushStoryToIndexObject(index, storyName, storyId);
+    apiPostIndex(index);
+}
+
+function removeStoryFromIndex(index, storyId) {
+    const pStoryName = document.getElementById(`index-story-name-${storyId}`);
+
+    if (pStoryName) {
+        pStoryName.outerHTML = '';
+    }
+
+    delete index.stories[storyId];
     apiPostIndex(index);
 }
 
@@ -240,6 +263,21 @@ function updateStoryIndexGui() {
         });
 }
 
+function deleteStoryPermanently(storyId) {
+    apiDeleteStory(storyId)
+        .then(status => {
+            if (status === 200) {
+                textareaContent.value = '';
+                inputStoryName.value = '';
+                lastSeenText = '';
+                currentId = '';
+                // remove story from index
+                removeStoryFromIndex(index, storyId);
+            }
+        })
+        .then(() => console.log(`Deleted story ${storyId}`));
+}
+
 // TODO: possible race condition?
 // older version? call index updaters
 apiGetIndex().then(obtainedIndex => index = obtainedIndex);
@@ -252,6 +290,7 @@ inputStoryName.addEventListener('keypress', (ev) => {
         inputStoryName.blur();
     }
 });
+btnDeleteStory.onclick = () => deleteStoryPermanently(currentId);
 setInterval(saveCurrentStory, 5000);
 
 updateStoryIndexGui();
