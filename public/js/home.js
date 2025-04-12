@@ -172,6 +172,16 @@ function generateMoreStory() {
         });
 }
 
+// update story data stuff
+
+function getWordCount(text) {
+    return text.split(new RegExp("\\s+")).filter(word => word.length > 0).length;
+}
+
+function getCharacterCount(text) {
+    return text.length;
+}
+
 // update ui
 
 // Generates an index object 
@@ -325,5 +335,9 @@ inputStoryName.addEventListener('keypress', (ev) => {
 });
 btnDeleteStory.onclick = () => deleteStoryPermanently(currentId);
 setInterval(saveCurrentStory, 5000);
+setInterval(() => {
+    document.getElementById('p-word-count').innerText = `${getWordCount(textareaContent.value)} words`;
+    document.getElementById('p-character-count').innerText = `${getCharacterCount(textareaContent.value)} characters`;
+}, 1000);
 
 updateStoryIndexGui();

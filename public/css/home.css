@@ -120,3 +120,8 @@ body {
     margin: 10px auto;
     padding: 8px 10px 8px 10px;
 }
+
+.p-story-overview {
+    color: white;
+    padding: 0px 24px;
+}
