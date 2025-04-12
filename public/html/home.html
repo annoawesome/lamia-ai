@@ -21,7 +21,9 @@
     <div class="div div-topbar-group topbar-group-center">
       <input type="text" name="story-name" id="input-story-name" placeholder="Legends of Terra">
     </div>
-    <div class="div div-topbar-group">
+    <div class="div div-topbar-group topbar-group-right">
+      <!-- <button class="btn btn-topbar" id="btn-topbar-ai-endpoint">AI Endpoint</button> -->
+      <input type="text" name="ai-endpoint-uri" id="input-ai-endpoint-uri" placeholder="http://localhost:5001">
     </div>
    </div>
 
@@ -34,8 +36,9 @@
     </div>
   
     <div class="panel-middle">
-    <!-- Text area -->
-    <textarea name="content" id="textarea-content" placeholder="Once upon a time..."></textarea>
+      <!-- Text area -->
+      <textarea name="content" id="textarea-content" placeholder="Once upon a time..."></textarea>
+      <button class="btn btn-middle-panel" id="btn-ai-generate-more">Generate More</button>
     </div>
   
     <div class="panel-right">

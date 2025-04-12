@@ -140,6 +140,38 @@ async function apiDeleteStory(storyId) {
     return statusCode;
 }
 
+// ai endpoint handling
+
+function aiGetUri() {
+    return document.getElementById('input-ai-endpoint-uri').value;
+}
+
+async function aiRequestGenerate() {
+    console.log("Requesting ai generation");
+
+    // koboldai api request
+    const request = new Request(`${aiGetUri()}/api/v1/generate`, {
+        method: 'POST',
+        body: JSON.stringify({
+            max_length: 128,
+            prompt: textareaContent.value,
+        })
+    });
+
+    const res = await fetch(request);
+    const json = await res.json();
+
+    return json;
+}
+
+function generateMoreStory() {
+    aiRequestGenerate()
+        .then((json) => {
+            console.log(json.results[0].text);
+            textareaContent.value += json.results[0].text;
+        });
+}
+
 // update ui
 
 // Generates an index object 
@@ -283,6 +315,7 @@ function deleteStoryPermanently(storyId) {
 apiGetIndex().then(obtainedIndex => index = obtainedIndex);
 
 btnNewStory.onclick = createNewStory;
+document.getElementById('btn-ai-generate-more').onclick = () => generateMoreStory();
 inputStoryName.addEventListener('blur', () => updateStoryIndex(index, inputStoryName.value, currentId));
 inputStoryName.addEventListener('keypress', (ev) => {
     if (ev.key === 'Enter') {
