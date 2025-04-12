@@ -93,7 +93,10 @@ body {
     color: white;
 
     border-radius: 12px;
-    border: 1px solid var(--border-color)
+    border: 1px solid var(--border-color);
+
+    scrollbar-width: thin;
+    scrollbar-color: rgb(100, 100, 100) rgba(0,0,0,0);
 }
 
 #btn-ai-generate-more {
@@ -107,7 +110,9 @@ body {
 .panel-right {
     width: 25%;
     height: 80vh;
-    overflow-x: auto;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(100, 100, 100) rgba(0,0,0,0);
 }
 
 /* Story overview */
