@@ -1,3 +1,4 @@
+import { generateHomeState, getCurrentId, getHomeIndex, getLastSeenText, putStoryInIndex, removeStoryInIndex, setCurrentId, setHomeIndex, setLastSeenText } from './homeState.js';
 import * as lamiaApi from './lamiaApi.js';
 
 const btnNewStory = document.getElementById('btn-new-story');
@@ -9,9 +10,7 @@ const btnDeleteStory = document.getElementById('btn-delete-story');
 
 const storyObjectVersion = '0.1.0';
 
-let lastSeenText = '';
-let currentId = '';
-let index = {};
+const homeState = generateHomeState();
 
 // ai endpoint handling
 
@@ -57,12 +56,6 @@ function getCharacterCount(text) {
 
 // update ui
 
-function pushStoryToIndexObject(index, storyName, storyId) {
-    index.stories[storyId] = {
-        storyName: storyName,
-    };
-}
-
 function generateStoryObject(version, title, content) {
     return {
         metadata: {
@@ -74,15 +67,15 @@ function generateStoryObject(version, title, content) {
     };
 }
 
-function updateStoryIndex(index, storyName, storyId) {
+function updateStoryIndex(storyName, storyId) {
     const pStoryName = document.getElementById(`index-story-name-${storyId}`);
 
     if (pStoryName) {
         pStoryName.innerText = storyName;
     }
 
-    pushStoryToIndexObject(index, storyName, storyId);
-    lamiaApi.postIndex(index);
+    putStoryInIndex(homeState, storyName, storyId);
+    lamiaApi.postIndex(getHomeIndex(homeState));
 }
 
 function removeStoryFromIndex(index, storyId) {
@@ -92,18 +85,27 @@ function removeStoryFromIndex(index, storyId) {
         pStoryName.outerHTML = '';
     }
 
-    delete index.stories[storyId];
     lamiaApi.postIndex(index);
+}
+
+/**
+ * Update the html elements and home state to match newly loaded story.
+ * @param {string} storyName Title of story
+ * @param {string} storyId Id of story in the database
+ * @param {string} storyContent Contents of the story
+ */
+function updateStoryGui(storyName, storyId, storyContent) {
+    textareaContent.value = storyContent;
+    inputStoryName.value = storyName;
+    setLastSeenText(homeState, storyContent);
+    setCurrentId(homeState, storyId);
 }
 
 function loadStory(id) {
     lamiaApi.getStory(id)
         .then(storyObject => {
             console.log('Got story id ' + id);
-            textareaContent.value = storyObject.content;
-            inputStoryName.value = storyObject.title;
-            lastSeenText = storyObject.content;
-            currentId = id;
+            updateStoryGui(storyObject.title, id, storyObject.content);
         });
 }
 
@@ -123,19 +125,17 @@ function createNewStory() {
     lamiaApi.createStory(storyObject)
         .then((id) => {
             console.log('Created story id ' + id);
-            textareaContent.value = '';
-            inputStoryName.value = storyObject.title;
-            lastSeenText = '';
-            currentId = id;
+            updateStoryGui(storyObject.title, id, storyObject.content);
             addNewStoryToIndexGui('Untitled Story', id);
-            updateStoryIndex(index, 'Untitled Story', id);
+            updateStoryIndex('Untitled Story', id);
         });
 }
 
 function saveCurrentStory() {
     let currentText = textareaContent.value;
+    const currentId = getCurrentId(homeState);
 
-    if (currentText === lastSeenText) {
+    if (currentText === getLastSeenText(homeState)) {
         return;
     }
 
@@ -143,7 +143,7 @@ function saveCurrentStory() {
         return;
     }
 
-    lastSeenText = currentText;
+    setLastSeenText(homeState, currentText);
 
     const storyObject = generateStoryObject(storyObjectVersion, inputStoryName.value, currentText);
 
@@ -154,7 +154,7 @@ function saveCurrentStory() {
 function updateStoryIndexGui() {
     lamiaApi.getIndex()
         .then((obtainedIndex) => {
-            index = obtainedIndex;
+            setHomeIndex(homeState, obtainedIndex);
             panelSubStoryIndex.textContent = '';
 
             for (let storyDataEntry of Object.entries(obtainedIndex.stories)) {
@@ -170,12 +170,10 @@ function deleteStoryPermanently(storyId) {
     lamiaApi.deleteStory(storyId)
         .then(status => {
             if (status === 200) {
-                textareaContent.value = '';
-                inputStoryName.value = '';
-                lastSeenText = '';
-                currentId = '';
+                updateStoryGui('', '', '');
                 // remove story from index
-                removeStoryFromIndex(index, storyId);
+                removeStoryInIndex(homeState, storyId);
+                removeStoryFromIndex(getHomeIndex(homeState), storyId);
             }
         })
         .then(() => console.log(`Deleted story ${storyId}`));
@@ -183,18 +181,18 @@ function deleteStoryPermanently(storyId) {
 
 // TODO: possible race condition?
 // older version? call index updaters
-lamiaApi.getIndex().then(obtainedIndex => index = obtainedIndex);
+lamiaApi.getIndex().then(obtainedIndex => setHomeIndex(homeState, obtainedIndex));
 
 btnNewStory.onclick = createNewStory;
 document.getElementById('btn-ai-generate-more').onclick = () => generateMoreStory();
-inputStoryName.addEventListener('blur', () => updateStoryIndex(index, inputStoryName.value, currentId));
+inputStoryName.addEventListener('blur', () => updateStoryIndex(inputStoryName.value, getCurrentId(homeState)));
 inputStoryName.addEventListener('keypress', (ev) => {
     if (ev.key === 'Enter') {
-        updateStoryIndex(index, inputStoryName.value, currentId);
+        updateStoryIndex(inputStoryName.value, getCurrentId(homeState));
         inputStoryName.blur();
     }
 });
-btnDeleteStory.onclick = () => deleteStoryPermanently(currentId);
+btnDeleteStory.onclick = () => deleteStoryPermanently(getCurrentId(homeState));
 setInterval(saveCurrentStory, 5000);
 setInterval(() => {
     document.getElementById('p-word-count').innerText = `${getWordCount(textareaContent.value)} words`;
