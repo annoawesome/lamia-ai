@@ -8,7 +8,7 @@ function createBrowserWindow() {
         height: 600,
     });
     
-    browserWindow.loadURL('http://localhost:8080/index.html');
+    browserWindow.loadURL(new URL('/index.html', process.env.LAMIA_URL).href);
 }
 
 // Starts the server
