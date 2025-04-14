@@ -31,7 +31,8 @@
     <div class="panel-left" id="panel-sub-story-index">
       <!-- List of stories -->
       <!-- <button type="button" class="btn btn-story-select">
-        <p>Story 1</p>
+        <p class="p-story-index-title">Story 1</p>
+        <p class="p-story-index-blurb">Fear. The strongest emotion humanity had ever face. From the blistering heights of the tallest mountains, to the deepest trenches of the seas, humans...</p>
       </button> -->
     </div>
   
@@ -43,13 +44,30 @@
   
     <div class="panel-right">
       <div class="div div-story-overview">
-        <div>
+        <div class="div">
+          <label for="story-description">Description</label>
+          <div class="div div-editor" id="div-editor-desc" contenteditable="true"></div>
+          <label for="story-tags">Tags</label>
+          <input type="text" name="story-tags" id="input-story-tags">
+        </div>
+
+        <div class="separator"></div>
+
+        <div class="div div-story-stats" id="div-story-stats">
+          <h2 class="header header-story-overview">Story Statistics</h2>
           <p class="p-story-overview" id="p-word-count">12,000 words</p>
           <p class="p-story-overview" id="p-character-count">40,000 characters</p>
-
-
         </div>
-        <div class="div div-story-dangerous" style="text-align: center;">
+        <div class="div-story-overview div-export-panel">
+          <h2>Export</h2>
+          <button type="button" class="btn btn-story-panel">Export as Text</button>
+          <button type="button" class="btn btn-story-panel">Export as JSON</button>
+        </div>
+        <div class="div div-story-dangerous div-warn-lesser" style="text-align: center;">
+          <h2 class="header header-story-overview">Dangerous!</h2>
+          <button class="btn btn-story-panel" id="btn-archive-story">
+            Archive Story
+          </button>
           <button class="btn btn-story-panel" id="btn-delete-story">
             Permanently Delete Story
           </button>

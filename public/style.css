@@ -3,6 +3,7 @@ body {
     --bg-color: rgb(30, 30, 30);
     --btn-color: rgb(250, 25, 25);
     --btn-inset: rgb(20, 20, 20);
+    --bg-inset: rgb(20, 20, 20);
     --text-color: rgb(200, 200, 200);
     --div-info-bg-color: rgba(0, 150, 255, 0.2);
     --border-color: rgb(100, 100, 100);

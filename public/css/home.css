@@ -4,6 +4,7 @@ body {
     display: flex;
     flex-flow: column;
     height: 100%;
+    color: var(--text-color);
 }
 
 /* Topbar */
@@ -76,6 +77,15 @@ body {
     background-color: rgba(255, 255, 255, 0.25);
 }
 
+/* Story paragraphs */
+.p-story-index-title {
+    font-size: large;
+}
+
+.p-story-index-blurb {
+    color: gray;
+}
+
 /* text field */
 .panel-middle {
     width: 45%;
@@ -83,12 +93,32 @@ body {
     margin: auto;
 }
 
+/* Generic text editor field */
+.div-editor {
+    background-color: var(--btn-inset);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 10px;
+
+    scrollbar-width: thin;
+    scrollbar-color: rgb(100, 100, 100) rgba(0,0,0,0);
+}
+
+#div-editor-desc {
+    height: 200px;
+    margin: 10px 16px;
+    line-height: 1.5;
+}
+
+#div-editor-desc > * {
+    margin-bottom: 16px;
+}
+
 .panel-middle textarea {
     width: 100%;
     height: 85%;
     resize: none;
     background-color: var(--btn-inset);
-    border: 0;
     padding: 10px;
     color: white;
 
@@ -111,6 +141,7 @@ body {
     width: 25%;
     height: 80vh;
     overflow-y: auto;
+    overflow-x: hidden;
     scrollbar-width: thin;
     scrollbar-color: rgb(100, 100, 100) rgba(0,0,0,0);
 }
@@ -119,6 +150,41 @@ body {
 .btn-story-panel {
     margin: 10px auto;
     padding: 8px 10px 8px 10px;
+}
+
+#input-story-tags {
+    width: 80%;
+}
+
+#div-story-stats {
+    padding: 16px;
+    margin: 16px;
+    background-color: var(--bg-inset);
+    border: 1px solid black;
+    border-radius: 12px;
+}
+
+.header-story-overview {
+    margin: 0px;
+}
+
+.div-export-panel button {
+    width: 75%;
+}
+
+.div-warn-lesser {
+    background-color: rgba(255, 0, 0, 0.1);
+    border: 1px solid rgb(255, 0, 0);
+    border-radius: 8px;
+    padding: 5px;
+    margin: 16px;
+
+    display: flex;
+    flex-flow: column;
+}
+
+.separator {
+    height: 16px;
 }
 
 .p-story-overview {
