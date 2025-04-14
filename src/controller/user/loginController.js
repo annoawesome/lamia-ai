@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import { userDao } from '../../dao/userDao.js';
+import { getEnvVar } from '../../util/fsdb.js';
 
 export function postLoginController(req, res) {
     const body = req.body;
@@ -13,7 +14,7 @@ export function postLoginController(req, res) {
 
         bcrypt.compare(password, userdata.passwordHash, (err, success) => {
             if (success) {
-                jwt.sign({ username: username }, process.env.JWT_KEY, {algorithm: 'HS256'}, (err, token) => {
+                jwt.sign({ username: username }, getEnvVar('JWT_SECRET'), {algorithm: 'HS256'}, (err, token) => {
                     if (err) {
                         console.log(err);
                         res.sendStatus(500);

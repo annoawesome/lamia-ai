@@ -5,13 +5,15 @@ import {router as userRouter} from './router/userRouter.js';
 import { router as storyRouter } from './router/storyRouter.js';
 import { logSource, log } from './middleware/logger.js';
 import { authenticate } from './middleware/authenticate.js';
+import { getConfig } from './util/fsdb.js';
 
 const server = express();
 const defaultPort = 8080;
 
-
-export function startServer() {
-    log('Started server');
+export async function startServer() {
+    log('Loading configuration');
+    await getConfig();
+    log('Starting server');
 
     server.use(logSource);
     server.use(cookieParser());
