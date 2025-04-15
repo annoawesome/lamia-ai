@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import { startServer } from './src/server.js';
 import 'dotenv/config';
+import { getEnvVar } from './src/util/fsdb.js';
 
 function createBrowserWindow() {
     const browserWindow = new BrowserWindow({
@@ -8,7 +9,7 @@ function createBrowserWindow() {
         height: 800,
     });
     
-    browserWindow.loadURL(new URL('/index.html', process.env.LAMIA_URL).href);
+    browserWindow.loadURL(new URL('/index.html', getEnvVar('LAMIA_URL')).href);
 }
 
 // Starts the server
