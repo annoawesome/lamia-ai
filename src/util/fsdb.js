@@ -12,7 +12,8 @@ export let config = {
     },
     env: {
         JWT_SECRET: crypto.randomBytes(128).toString('hex'),
-        LAMIA_URL: 'http://localhost:8080',
+        LAMIA_URL: 'http://localhost:27297',
+        LAMIA_PORT: 27297,
     }
 };
 
