@@ -1,6 +1,7 @@
 import { getCurrentId, getLastSeenText } from './homeState.js';
 import { homeState } from './globalHomeState.js';
 import { emit, newEvent } from '../events.js';
+import { generateEmptyStoryObject, generateStoryObject, storyObjectVersion } from './storyObject.js';
 
 const btnNewStory = document.getElementById('btn-new-story');
 const panelSubStoryIndex = document.getElementById('panel-sub-story-index');
@@ -8,6 +9,9 @@ const textareaContent = document.getElementById('textarea-content');
 
 const inputStoryName = document.getElementById('input-story-name');
 const btnDeleteStory = document.getElementById('btn-delete-story');
+
+const divEditorDesc = document.getElementById('div-editor-desc');
+const inputStoryTags = document.getElementById('input-story-tags');
 
 export const storyInput = newEvent();
 export const indexInput = newEvent();
@@ -56,6 +60,35 @@ function getCharacterCount(text) {
     return text.length;
 }
 
+function generateStoryObjectFromGui() {
+    const storyTitle = inputStoryName.value;
+    const storyContent = textareaContent.value;
+    const storyDesc = divEditorDesc.innerText;
+    const storyTags = inputStoryTags.value.split(new RegExp('\\s*,\\s*')).filter(str => str.length > 0);
+
+    return generateStoryObject(
+        storyObjectVersion,
+        storyTitle,
+        storyContent,
+        storyDesc,
+        storyTags
+    );
+}
+
+function whenFinishWriting(domElement, callback) {
+    domElement.addEventListener('blur', () => {
+        callback();
+    });
+
+    domElement.addEventListener('keypress', ev => {
+        if (ev.key === 'Enter') {
+            domElement.blur();
+        }
+    });
+}
+
+
+
 // update ui
 
 /**
@@ -63,9 +96,13 @@ function getCharacterCount(text) {
  * @param {string} storyName Title of story.
  * @param {string} storyContent Contents of story.
  */
-function loadStoryFromEvent(storyName, storyContent) {
-    textareaContent.value = storyContent;
-    inputStoryName.value = storyName;
+function loadStoryFromEvent(storyObject) {
+    const overview = storyObject.overview;
+
+    textareaContent.value = storyObject.content;
+    inputStoryName.value = storyObject.title;
+    divEditorDesc.innerText = overview.description;
+    inputStoryTags.value = overview.tags.toString().replaceAll(',', ', ');
 }
 
 /**
@@ -148,7 +185,11 @@ function requestSaveCurrentStory() {
 
     if (!updatedStoryContent.updated) return;
 
-    emit(storyInput, 'save', updatedStoryContent.storyId, inputStoryName.value, updatedStoryContent.updatedText);
+    forceRequestSaveCurrentStory(updatedStoryContent.storyId);
+}
+
+function forceRequestSaveCurrentStory(storyId) {
+    emit(storyInput, 'save', generateStoryObjectFromGui(), storyId);
 }
 
 function requestDeleteStoryPermanently(storyId) {
@@ -164,7 +205,7 @@ function requestUpdateStoryIndexGui() {
  * @param {StoryObject} storyObject Object representation of a story.
  */
 export function onLoadStory(storyObject) {
-    loadStoryFromEvent(storyObject.title, storyObject.content);
+    loadStoryFromEvent(storyObject);
 }
 
 /**
@@ -173,7 +214,7 @@ export function onLoadStory(storyObject) {
  * @param {string} storyId Id of story.
  */
 export function onCreateNewStory(storyObject, storyId) {
-    loadStoryFromEvent(storyObject.title, storyObject.content);
+    loadStoryFromEvent(storyObject);
     addNewStoryToIndexGui('Untitled Story', storyId);
     requestUpdateStoryIndex('Untitled Story', storyId);
 }
@@ -198,7 +239,7 @@ export function onGetStoryIndex(obtainedIndex) {
  * @param {string} storyId Id of story.
  */
 export function onDelete(storyId) {
-    loadStoryFromEvent('', '');
+    loadStoryFromEvent(generateEmptyStoryObject());
     removeStoryInIndexGui(storyId);
 }
 
@@ -219,6 +260,9 @@ export function init() {
         document.getElementById('p-word-count').innerText = `${getWordCount(textareaContent.value)} words`;
         document.getElementById('p-character-count').innerText = `${getCharacterCount(textareaContent.value)} characters`;
     }, 1000);
+
+    whenFinishWriting(divEditorDesc, () => forceRequestSaveCurrentStory(getCurrentId(homeState)));
+    whenFinishWriting(inputStoryTags, () => forceRequestSaveCurrentStory(getCurrentId(homeState)));
 
     requestUpdateStoryIndexGui();
 }

@@ -1,6 +1,7 @@
 import { emit, newEvent } from "../events.js";
 import { homeState } from "./globalHomeState.js";
 import { getHomeIndex, putStoryInIndex, removeStoryInIndex, setCurrentId, setHomeIndex, setLastSeenText } from "./homeState.js";
+import { convertStoryObject, generateStoryObject } from "./storyObject.js";
 
 import * as lamiaApi from '../lamiaApi.js';
 import * as koboldCppApi from '../koboldCppApi.js';
@@ -9,29 +10,11 @@ export const storyOutput = newEvent();
 export const indexOutput = newEvent();
 export const llmOutput = newEvent();
 
-const storyObjectVersion = '0.1.0';
+const storyObjectVersion = '0.2.0';
 
 /**
  * @typedef {Object} StoryObject
  */
-
-/**
- * Generates a json representation of a story.
- * @param {string} version Data type version.
- * @param {string} title Title of story.
- * @param {string} content Content of story.
- * @returns {StoryObject}
- */
-function generateStoryObject(version, title, content) {
-    return {
-        metadata: {
-            version: version,
-        },
-
-        title: title,
-        content: content,
-    };
-}
 
 /**
  * Update global state last seen text.
@@ -65,7 +48,7 @@ export function updateStoryIndex(storyName, storyId) {
 }
 
 export function createNewStory() {
-    const storyObject = generateStoryObject(storyObjectVersion, 'Untitled Story', '');
+    const storyObject = generateStoryObject(storyObjectVersion, 'Untitled Story', '', '', []);
 
     lamiaApi.createStory(storyObject)
         .then(storyId => {
@@ -85,6 +68,7 @@ export function createNewStory() {
 export function loadStory(storyId) {
     lamiaApi.getStory(storyId)
         .then(storyObject => {
+            storyObject = convertStoryObject(storyObject);
             console.log('Got story id ' + storyId);
             setCurrentId(homeState, storyId);
             setLastSeenText(homeState, storyObject.content);
@@ -98,9 +82,7 @@ export function loadStory(storyId) {
  * @param {string} storyName Title of story.
  * @param {string} storyContent Content of story.
  */
-export function saveStory(storyId, storyName, storyContent) {
-     const storyObject = generateStoryObject(storyObjectVersion, storyName, storyContent);
-    
+export function saveStory(storyObject, storyId) {
     lamiaApi.updateStory(storyId, storyObject)
         .then(() => {
             console.log('Updated id ' + storyId);
