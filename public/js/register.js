@@ -11,6 +11,18 @@ async function hash(str) {
         .join('');
 }
 
+/**
+ * Currently only enforces password length. Overly strict requirements leads to
+ * password reuse, a bad practice among users.
+ * @param {string} password Password.
+ * @returns {boolean}
+ */
+function isSecurePassword(password) {
+    if (password.length < 12) return false;
+
+    return true;
+}
+
 function postCreateAccount(username, password) {
     const request = new Request('/api/v1/user/create', {
         headers: {
@@ -48,6 +60,11 @@ function setErrorMessage(message) {
 btnRegisterAccount.addEventListener('click', () => {
     const username = inputUsername.value;
     const password = inputPassword.value;
+
+    if (!isSecurePassword(password)) {
+        setErrorMessage('Insecure password! Choose one that is over 12 characters long.');
+        return;
+    }
     
     if (password !== inputReEnterPassword.value) {
         setErrorMessage('Passwords do not match!');
