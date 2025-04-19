@@ -10,10 +10,10 @@ body {
 
     background-color: var(--bg-color);
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: var(--text-color);
 }
 
 h1 {
-    color: rgb(200, 200, 200);
     text-align: center;
 }
 
@@ -37,7 +37,7 @@ a.btn {
 }
 
 .div-form {
-    width: min(40%, 600px);
+    width: min(40%, 400px);
 }
 
 .div-center-container {
@@ -59,6 +59,7 @@ input {
     border: 1px solid var(--border-color);
     border-radius: 4px;
     padding: 5px;
+    font-size: 1em;
 
     background-color: var(--btn-inset)
 }
@@ -69,13 +70,11 @@ form > .info {
     border: 1px solid rgb(0, 200, 255);
     border-radius: 8px;
     margin: 15px;
-    color: var(--text-color);
 }
 
 .warn {
     margin: auto;
     text-align: center;
-    color: var(--text-color);
     background-color: rgba(255, 0, 0, 0.25);
     border: 1px solid rgb(255, 0, 0);
     border-radius: 8px;
@@ -86,4 +85,9 @@ form > .info {
 
 input.btn {
     width: 50%;
+}
+
+/* Links inside p tags */
+p > a {
+    color: var(--btn-color);
 }
