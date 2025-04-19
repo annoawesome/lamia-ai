@@ -25,17 +25,24 @@ function postCreateAccount(username, password) {
     });
 
     return fetch(request)
-        .then(res => res.json())
-        .then(res => {
-            console.log(res);
-        });
+        .then(async res => {
+            if (res.status >= 300) 
+                throw await res.json(); 
+            else 
+                return await res.json();
+            });
 }
 
-function setInput(bool) {
+function toggleInputDisabled(bool) {
     inputUsername.disabled = bool;
     inputPassword.disabled = bool;
     inputReEnterPassword.disabled = bool;
     btnRegisterAccount.disabled = bool;
+}
+
+function setErrorMessage(message) {
+    document.getElementById('warn-register-error').style.display = '';
+    document.getElementById('p-warn-register-error').innerText = message;
 }
 
 btnRegisterAccount.addEventListener('click', () => {
@@ -43,16 +50,18 @@ btnRegisterAccount.addEventListener('click', () => {
     const password = inputPassword.value;
     
     if (password !== inputReEnterPassword.value) {
-        alert("Passwords do not match!");
+        setErrorMessage('Passwords do not match!');
+        return;
     }
 
-    setInput(false);
+    toggleInputDisabled(true);
 
     hash(password)
         .then(passwordHash => postCreateAccount(username, passwordHash))
         .then(() => window.location.replace('login.html'))
-        .catch(() => {
-            setInput(true);
-            document.getElementById('warn-register-error').style.display = '';
+        .catch((err) => {
+            toggleInputDisabled(false);
+            console.log(err);
+            setErrorMessage(err.reason || 'Internal server error');
         });
 });

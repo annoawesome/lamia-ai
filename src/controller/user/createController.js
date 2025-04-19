@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 
 import { userDao } from '../../dao/userDao.js';
 import { getEnvVar } from '../../util/fsdb.js';
+import { isFailure, sanitizeFailure } from '../../util/failure.js';
 
 const saltRounds = 10;
 
@@ -28,7 +29,13 @@ export function createUserController(req, res) {
             }))
             .catch(err => {
                 console.log(err);
-                res.sendStatus(500);
+
+                if (isFailure(err)) {
+                    res.status(err.httpStatusCode);
+                    res.json(sanitizeFailure(err));
+                } else {
+                    res.sendStatus(500);
+                };
             });
     });
 }
