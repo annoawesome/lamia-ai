@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, Menu } from 'electron';
 import { startServer } from './src/server.js';
 import 'dotenv/config';
 import { getEnvVar } from './src/util/fsdb.js';
@@ -10,6 +10,7 @@ function createBrowserWindow() {
     });
     
     browserWindow.loadURL(new URL('/index.html', getEnvVar('LAMIA_URL')).href);
+    Menu.setApplicationMenu(null);
 }
 
 // Starts the server
