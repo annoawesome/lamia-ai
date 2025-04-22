@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import { userDao } from '../../dao/userDao.js';
-import { getEnvVar } from '../../util/fsdb.js';
+import { getEnvVar } from '../../service/lamiadbService.js';
 
 export function postLoginController(req, res) {
     const body = req.body;

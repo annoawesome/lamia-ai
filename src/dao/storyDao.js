@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
-import { getLamiaUserDirectory } from '../util/fsdb.js';
+import { getLamiaUserDirectory } from '../service/lamiadbService.js';
 
 function getStoriesDirectory(dataPath) {
     const storiesPath = path.join(dataPath, 'story');

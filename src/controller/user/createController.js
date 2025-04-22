@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import { userDao } from '../../dao/userDao.js';
-import { getEnvVar } from '../../util/fsdb.js';
+import { getEnvVar } from '../../service/lamiadbService.js';
 import { isFailure, sanitizeFailure } from '../../util/failure.js';
 
 const saltRounds = 10;

@@ -1,7 +1,7 @@
 import { app, BrowserWindow, Menu } from 'electron';
 import { startServer } from './src/server.js';
 import 'dotenv/config';
-import { getEnvVar } from './src/util/fsdb.js';
+import { getEnvVar } from './src/service/lamiadbService.js';
 
 function createBrowserWindow() {
     const browserWindow = new BrowserWindow({

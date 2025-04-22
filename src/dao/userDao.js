@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { getLamiaUserDirectory, dataDirectoryPath } from '../util/fsdb.js';
+import { getLamiaUserDirectory, dataDirectoryPath } from '../service/lamiadbService.js';
 import { makeFailure } from '../util/failure.js';
 
 export function createUser(username, passwordHash) {
