@@ -1,4 +1,3 @@
-import { getCurrentId, getLastSeenText } from './homeState.js';
 import { homeState } from './globalHomeState.js';
 import { emit, newEvent } from '../events.js';
 import { generateEmptyStoryObject, generateStoryObject, storyObjectVersion } from './storyObject.js';
@@ -146,7 +145,7 @@ function updateStoryInIndexGui(storyId, storyName) {
 
 function getUpdatedStoryContent() {
     const currentText = textareaContent.value;
-    const currentId = getCurrentId(homeState);
+    const currentId = homeState.currentId.get();
 
     const updatedStoryContent = {
         updated: false,
@@ -154,7 +153,7 @@ function getUpdatedStoryContent() {
         updatedText: currentText,
     };
 
-    if (currentText === getLastSeenText(homeState)) {
+    if (currentText === homeState.lastSeenText.get()) {
         return updatedStoryContent;
     }
 
@@ -247,22 +246,22 @@ export function onDelete(storyId) {
 export function init() {
     btnNewStory.onclick = requestCreateNewStory;
     document.getElementById('btn-ai-generate-more').onclick = () => requestLlmGenerate();
-    inputStoryName.addEventListener('blur', () => requestUpdateStoryIndex(inputStoryName.value, getCurrentId(homeState)));
+    inputStoryName.addEventListener('blur', () => requestUpdateStoryIndex(inputStoryName.value, homeState.currentId.get()));
     inputStoryName.addEventListener('keypress', (ev) => {
         if (ev.key === 'Enter') {
-            requestUpdateStoryIndex(inputStoryName.value, getCurrentId(homeState));
+            requestUpdateStoryIndex(inputStoryName.value, homeState.currentId.get());
             inputStoryName.blur();
         }
     });
-    btnDeleteStory.onclick = () => requestDeleteStoryPermanently(getCurrentId(homeState));
+    btnDeleteStory.onclick = () => requestDeleteStoryPermanently(homeState.currentId.get());
     setInterval(requestSaveCurrentStory, 5000);
     setInterval(() => {
         document.getElementById('p-word-count').innerText = `${getWordCount(textareaContent.value)} words`;
         document.getElementById('p-character-count').innerText = `${getCharacterCount(textareaContent.value)} characters`;
     }, 1000);
 
-    whenFinishWriting(divEditorDesc, () => forceRequestSaveCurrentStory(getCurrentId(homeState)));
-    whenFinishWriting(inputStoryTags, () => forceRequestSaveCurrentStory(getCurrentId(homeState)));
+    whenFinishWriting(divEditorDesc, () => forceRequestSaveCurrentStory(homeState.currentId.get()));
+    whenFinishWriting(inputStoryTags, () => forceRequestSaveCurrentStory(homeState.currentId.get()));
 
     requestUpdateStoryIndexGui();
 }

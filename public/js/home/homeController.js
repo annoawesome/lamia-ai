@@ -1,6 +1,6 @@
 import { emit, newEvent } from "../events.js";
 import { homeState } from "./globalHomeState.js";
-import { getHomeIndex, putStoryInIndex, removeStoryInIndex, setCurrentId, setHomeIndex, setLastSeenText } from "./homeState.js";
+import { putStoryInIndex, removeStoryInIndex } from "./homeState.js";
 import { convertStoryObject, generateStoryObject } from "./storyObject.js";
 
 import * as lamiaApi from '../lamiaApi.js';
@@ -21,19 +21,19 @@ const storyObjectVersion = '0.2.0';
  * @param {string} updatedText Updated text.
  */
 export function updateStoryLastSeenText(updatedText) {
-    setLastSeenText(homeState, updatedText);
+    homeState.lastSeenText.set(updatedText);
 }
 
 export function getStoryIndex() {
     lamiaApi.getIndex()
         .then(obtainedIndex => {
-            setHomeIndex(homeState, obtainedIndex);
+            homeState.index.set(obtainedIndex);
             emit(indexOutput, 'get', obtainedIndex);
         });
 }
 
 export function obtainStoryIndex() {
-    lamiaApi.getIndex().then(obtainedIndex => setHomeIndex(homeState, obtainedIndex));
+    lamiaApi.getIndex().then(obtainedIndex => homeState.index.set(obtainedIndex));
 }
 
 /**
@@ -43,7 +43,7 @@ export function obtainStoryIndex() {
  */
 export function updateStoryIndex(storyName, storyId) {
     putStoryInIndex(homeState, storyName, storyId);
-    lamiaApi.postIndex(getHomeIndex(homeState))
+    lamiaApi.postIndex(homeState.index.get())
         .then(() => emit(indexOutput, 'update'));
 }
 
@@ -55,8 +55,8 @@ export function createNewStory() {
             console.log('Created story id ' + storyId);
             updateStoryIndex('Untitled Story', storyId);
 
-            setCurrentId(homeState, storyId);
-            setLastSeenText(homeState, storyObject.content);
+            homeState.currentId.set(storyId);
+            homeState.lastSeenText.set(storyObject.content);
             emit(storyOutput, 'create', storyObject, storyId);
         });
 }
@@ -70,8 +70,8 @@ export function loadStory(storyId) {
         .then(storyObject => {
             storyObject = convertStoryObject(storyObject);
             console.log('Got story id ' + storyId);
-            setCurrentId(homeState, storyId);
-            setLastSeenText(homeState, storyObject.content);
+            homeState.currentId.set(storyId);
+            homeState.lastSeenText.set(homeState, storyObject.content);
             emit(storyOutput, 'load', storyObject, storyId);
         });
 }
@@ -97,10 +97,10 @@ export function deleteStory(storyId) {
      lamiaApi.deleteStory(storyId)
         .then(status => {
             if (status === 200) {
-                setCurrentId(homeState, '');
-                setLastSeenText(homeState, '');
+                homeState.currentId.set('');
+                homeState.lastSeenText.set('');
                 removeStoryInIndex(homeState, storyId);
-                lamiaApi.postIndex(getHomeIndex(homeState));
+                lamiaApi.postIndex(homeState.index.get());
                 emit(storyOutput, 'delete', storyId);
             }
         });
