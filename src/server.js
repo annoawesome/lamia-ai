@@ -4,7 +4,6 @@ import cookieParser from 'cookie-parser';
 import {router as userRouter} from './router/userRouter.js';
 import { router as storyRouter } from './router/storyRouter.js';
 import { logSource, log } from './middleware/logger.js';
-import { authenticate } from './middleware/authenticate.js';
 import { getConfig, getEnvVar } from './service/lamiadbService.js';
 
 const server = express();
@@ -21,12 +20,7 @@ export async function startServer() {
 
     server.use('/api/v1/user', userRouter);
     server.use('/api/v1/story', storyRouter);
-    server.use(express.static('public'));
-
-    // Test endpoint for authentication
-    server.get('/api/v1/isAuthed', authenticate, (req, res) => {
-        res.sendStatus(200);
-    });
+    server.use(express.static('src/public'));
 
     server.listen(defaultPort, () => {
         log('Server listening at port ' + defaultPort);
