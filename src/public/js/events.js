@@ -33,6 +33,10 @@ export function emit(event, name, ...args) {
     if (!event[name]) return;
 
     for (let callback of event[name]) {
-        callback(...args);
+        try {
+            callback(...args);
+        } catch (error) {
+            console.log(`Error in event category ${name}: ${error.toString()}`);
+        }
     }
 }
