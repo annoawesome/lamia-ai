@@ -4,7 +4,7 @@ import { generateEmptyStoryObject, generateStoryObject, storyObjectVersion } fro
 
 const btnNewStory = document.getElementById('btn-new-story');
 const panelSubStoryIndex = document.getElementById('panel-sub-story-index');
-const textareaContent = document.getElementById('textarea-content');
+const divEditorContent = document.getElementById('div-editor-content');
 
 const inputStoryName = document.getElementById('input-story-name');
 const btnDeleteStory = document.getElementById('btn-delete-story');
@@ -24,8 +24,44 @@ function getLlmUri() {
     return document.getElementById('input-ai-endpoint-uri').value;
 }
 
+function getStoryText() {
+    const editorContentChildren = Array.from(divEditorContent.children);
+
+    if (editorContentChildren.length === 0) return '';
+
+    return editorContentChildren
+        .reduce((partialStoryText, currentElement) => partialStoryText + '\n' + currentElement.textContent)
+        .substring(1); // Removes the starting \n
+}
+
+/**
+ * 
+ * @param {string} text 
+ */
+function setStoryText(text) {
+    divEditorContent.innerHTML = text.split('\n').reduce((previous, current) => previous += `<div>${current}</div>`);
+}
+
+/**
+ * 
+ * @param {string} text 
+ */
+function appendToStoryText(text) {
+    const splitText = text.split('\n');
+
+    divEditorContent.children[divEditorContent.children.length - 1].innerText += splitText[0];
+
+    if (splitText.length > 1) {
+        for (let i = 1; i < splitText.length; i++) {
+            const divTextChunk = document.createElement('div');
+            divTextChunk.textContent = splitText[i];
+            divEditorContent.append(divTextChunk);
+        }
+    }
+}
+
 async function requestLlmGenerate() {
-    const text = textareaContent.value;
+    const text = getStoryText();
     const url = getLlmUri();
 
     emit(llmInput, 'generate', text, url);
@@ -36,7 +72,7 @@ async function requestLlmGenerate() {
  * @param {string} text The generated text to append.
  */
 export function onGenerateStory(text) {
-    textareaContent.value += text;
+    appendToStoryText(text);
 }
 
 // update story data stuff
@@ -61,7 +97,7 @@ function getCharacterCount(text) {
 
 function generateStoryObjectFromGui() {
     const storyTitle = inputStoryName.value;
-    const storyContent = textareaContent.value;
+    const storyContent = getStoryText();
     const storyDesc = divEditorDesc.innerText;
     const storyTags = inputStoryTags.value.split(new RegExp('\\s*,\\s*')).filter(str => str.length > 0);
 
@@ -98,7 +134,7 @@ function whenFinishWriting(domElement, callback) {
 function loadStoryFromEvent(storyObject) {
     const overview = storyObject.overview;
 
-    textareaContent.value = storyObject.content;
+    setStoryText(storyObject.content);
     inputStoryName.value = storyObject.title;
     divEditorDesc.innerText = overview.description;
     inputStoryTags.value = overview.tags.toString().replaceAll(',', ', ');
@@ -144,7 +180,7 @@ function updateStoryInIndexGui(storyId, storyName) {
 }
 
 function getUpdatedStoryContent() {
-    const currentText = textareaContent.value;
+    const currentText = getStoryText();
     const currentId = homeState.currentId.get();
 
     const updatedStoryContent = {
@@ -256,8 +292,8 @@ export function init() {
     btnDeleteStory.onclick = () => requestDeleteStoryPermanently(homeState.currentId.get());
     setInterval(requestSaveCurrentStory, 5000);
     setInterval(() => {
-        document.getElementById('p-word-count').innerText = `${getWordCount(textareaContent.value)} words`;
-        document.getElementById('p-character-count').innerText = `${getCharacterCount(textareaContent.value)} characters`;
+        document.getElementById('p-word-count').innerText = `${getWordCount(getStoryText())} words`;
+        document.getElementById('p-character-count').innerText = `${getCharacterCount(getStoryText())} characters`;
     }, 1000);
 
     whenFinishWriting(divEditorDesc, () => forceRequestSaveCurrentStory(homeState.currentId.get()));
