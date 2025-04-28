@@ -114,19 +114,16 @@ body {
     margin-bottom: 16px;
 }
 
-.panel-middle textarea {
-    width: 100%;
-    height: 85%;
-    resize: none;
-    background-color: var(--btn-inset);
-    padding: 10px;
-    color: white;
+#div-editor-content {
+    width: 95%;
+    height: 75vh;
+    margin: auto;
 
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
+    overflow-y: auto;
+}
 
-    scrollbar-width: thin;
-    scrollbar-color: rgb(100, 100, 100) rgba(0,0,0,0);
+#div-editor-content > * {
+    margin-bottom: 16px;
 }
 
 #btn-ai-generate-more {
