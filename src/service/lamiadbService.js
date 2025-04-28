@@ -1,7 +1,7 @@
 import path from 'path';
 import crypto from 'crypto';
 
-import { createKeyValueStore, getDocumentWithDefaults, getKeyValueStore, userDataPath } from "../util/fsdb.js";
+import { createKeyValueStore, readDocumentWithDefaults, getKeyValueStore, userDataPath } from "../util/fsdb.js";
 
 export const dataDirectoryPath = path.join(userDataPath, 'Lamia AI Server');
 
@@ -45,7 +45,7 @@ export function getLamiaUserDirectory(username) {
  * @returns {Object}
  */
 export async function getConfig() {
-    const configStr = getDocumentWithDefaults(dataDirectoryPath, 'config.json', JSON.stringify(config));
+    const configStr = readDocumentWithDefaults(dataDirectoryPath, 'config.json', JSON.stringify(config));
     config = JSON.parse(configStr);
 
     return config;

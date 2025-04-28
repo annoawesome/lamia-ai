@@ -23,6 +23,15 @@ export function getKeyValueStore(dataPath, name) {
 }
 
 /**
+ * Returns a list of all keys in key value store
+ * @param {string} dataPath Path of store
+ * @returns {string[]}
+ */
+export function readKeyValueStore(keyValueStore) {
+    return fs.readdirSync(keyValueStore);
+}
+
+/**
  * 
  * @param {string} dataPath Path of store
  * @param {string} name Name of key
@@ -44,6 +53,18 @@ export function createKeyValueStore(dataPath, name) {
 }
 
 /**
+ * Similar to `createKeyValueStore` but recursively creates non-existent stores
+ * @param {string} dataPath 
+ * @param {string} name 
+ * @returns {string}
+ */
+export function expectKeyValueStore(dataPath, name) {
+    const keyValueStore = path.join(dataPath, name);
+    fs.mkdirSync(keyValueStore, { recursive: true });
+    return keyValueStore;
+}
+
+/**
  * 
  * @param {string} dataPath Path of store
  * @param {string} name Name of key
@@ -59,8 +80,12 @@ export function writeDocument(dataPath, name, contents) {
  * @param {string} name Name of key
  * @returns {string}
  */
-export function getDocument(dataPath, name) {
+export function readDocument(dataPath, name) {
     return fs.readFileSync(path.join(dataPath, name), { encoding: 'utf-8' });
+}
+
+export function removeDocument(dataPath, name) {
+    fs.rmSync(path.join(dataPath, name), { force: true });
 }
 
 /**
@@ -70,14 +95,14 @@ export function getDocument(dataPath, name) {
  * @param {string} defaultContents Default contents if no document is found
  * @returns {string}
  */
-export function getDocumentWithDefaults(dataPath, name, defaultContents) {
+export function readDocumentWithDefaults(dataPath, name, defaultContents) {
     const configPath = path.join(dataPath, name);
     let contents = defaultContents;
 
     if (!fs.existsSync(configPath)) {
         writeDocument(dataPath, name, defaultContents);
     } else {
-        contents = getDocument(dataPath, name);
+        contents = readDocument(dataPath, name);
     }
 
     return contents;
