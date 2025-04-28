@@ -91,3 +91,8 @@ input.btn {
 p > a {
     color: var(--btn-color);
 }
+
+footer {
+    margin: auto;
+    margin-bottom: 10px;
+}

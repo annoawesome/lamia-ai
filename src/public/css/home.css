@@ -165,6 +165,10 @@ body {
     margin: 0px;
 }
 
+.div-export-panel {
+    padding: 16px;
+}
+
 .div-export-panel button {
     width: 75%;
 }

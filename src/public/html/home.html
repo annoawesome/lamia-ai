@@ -7,27 +7,34 @@
   <link rel="stylesheet" href="../css/home.css">
 </head>
 <body>
-   <div class="topbar">
+  <header class="topbar">
     <!-- hamburger -->
     <!-- story title -->
-    <div class="div div-topbar-group topbar-group-left">
+    <nav class="div div-topbar-group topbar-group-left">
+
       <button class="btn btn-topbar btn-menu">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1m0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1M3 7c0 .55.45 1 1 1h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1"/></svg>
       </button>
+
       <button type="button" class="btn btn-topbar btn-new-story" id="btn-new-story">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 17.46v3.04c0 .28.22.5.5.5h3.04c.13 0 .26-.05.35-.15L17.81 9.94l-3.75-3.75L3.15 17.1q-.15.15-.15.36M20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83l3.75 3.75z"/></svg>
       </button>
-    </div>
-    <div class="div div-topbar-group topbar-group-center">
+
+    </nav>
+
+    <nav class="div div-topbar-group topbar-group-center">
       <input type="text" name="story-name" id="input-story-name" placeholder="Legends of Terra">
-    </div>
-    <div class="div div-topbar-group topbar-group-right">
+    </nav>
+
+    <nav class="div div-topbar-group topbar-group-right">
       <!-- <button class="btn btn-topbar" id="btn-topbar-ai-endpoint">AI Endpoint</button> -->
       <input type="text" name="ai-endpoint-uri" id="input-ai-endpoint-uri" placeholder="http://localhost:5001">
-    </div>
-   </div>
+    </nav>
 
-   <div class="panel panel-main">
+  </header>
+
+  <div class="panel panel-main">
+
     <div class="panel-left" id="panel-sub-story-index">
       <!-- List of stories -->
       <!-- <button type="button" class="btn btn-story-select">
@@ -35,15 +42,21 @@
         <p class="p-story-index-blurb">Fear. The strongest emotion humanity had ever face. From the blistering heights of the tallest mountains, to the deepest trenches of the seas, humans...</p>
       </button> -->
     </div>
-  
+
     <div class="panel-middle">
       <!-- Text area -->
       <div class="div-editor" id="div-editor-content" contenteditable="true"></div>
-      <button class="btn btn-middle-panel" id="btn-ai-generate-more">Generate More</button>
+
+      <button class="btn btn-middle-panel" id="btn-ai-generate-more">
+        Generate More
+      </button>
+
     </div>
-  
+
     <div class="panel-right">
+
       <div class="div div-story-overview">
+
         <div class="div">
           <label for="story-description">Description</label>
           <div class="div div-editor" id="div-editor-desc" contenteditable="true"></div>
@@ -58,23 +71,40 @@
           <p class="p-story-overview" id="p-word-count">12,000 words</p>
           <p class="p-story-overview" id="p-character-count">40,000 characters</p>
         </div>
+
         <div class="div-story-overview div-export-panel">
           <h2>Export</h2>
-          <button type="button" class="btn btn-story-panel">Export as Text</button>
-          <button type="button" class="btn btn-story-panel">Export as JSON</button>
+
+          <button type="button" class="btn btn-story-panel">
+            Export as Text
+          </button>
+
+          <button type="button" class="btn btn-story-panel">
+            Export as JSON
+          </button>
+
         </div>
+
         <div class="div div-story-dangerous div-warn-lesser" style="text-align: center;">
           <h2 class="header header-story-overview">Dangerous!</h2>
+
           <button class="btn btn-story-panel" id="btn-archive-story">
             Archive Story
           </button>
+
           <button class="btn btn-story-panel" id="btn-delete-story">
             Permanently Delete Story
           </button>
+
         </div>
       </div>
     </div>
-   </div>
+  </div>
+
+  <footer>
+
+  </footer>
+
   <script type="module" src="../js/encryption.js"></script>
   <script type="module" src="../js/lamiaApi.js"></script>
   <script type="module" src="../js/koboldCppApi.js"></script>
