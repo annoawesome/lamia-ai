@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "A flexible AI co-writing app",
   "private": true,
-  "main": "main.js",
+  "main": "src/main.js",
   "type": "module",
   "scripts": {
     "start": "electron .",
