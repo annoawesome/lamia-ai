@@ -75,7 +75,7 @@ btnRegisterAccount.addEventListener('click', () => {
 
     hash(password)
         .then(passwordHash => postCreateAccount(username, passwordHash))
-        .then(() => window.location.replace('login.html'))
+        .then(() => window.location.replace('login'))
         .catch((err) => {
             toggleInputDisabled(false);
             console.log(err);

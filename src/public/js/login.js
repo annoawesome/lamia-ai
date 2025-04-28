@@ -50,7 +50,7 @@ btnLogin.addEventListener('click', () => {
         .then(encodedKey => sessionStorage.setItem('encryption-key', encodedKey))
         .then(async () => await hash(password))
         .then(passwordHash => postLoginAccount(username, passwordHash))
-        .then(() => window.location.replace('home.html'))
+        .then(() => window.location.replace('home'))
         .catch(() => {
             setInput(true);
         });

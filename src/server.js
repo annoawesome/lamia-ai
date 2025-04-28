@@ -20,7 +20,10 @@ export async function startServer() {
 
     server.use('/api/v1/user', userRouter);
     server.use('/api/v1/story', storyRouter);
-    server.use(express.static('src/public'));
+
+    server.use('/js', express.static('src/public/js'));
+    server.use('/css', express.static('src/public/css'));
+    server.use('/', express.static('src/public/html', { extensions: ['html'] }));
 
     server.listen(defaultPort, () => {
         log('Server listening at port ' + defaultPort);
