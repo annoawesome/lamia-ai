@@ -25,13 +25,7 @@ function getLlmUri() {
 }
 
 function getStoryText() {
-    const editorContentChildren = Array.from(divEditorContent.children);
-
-    if (editorContentChildren.length === 0) return '';
-
-    return editorContentChildren
-        .reduce((partialStoryText, currentElement) => partialStoryText + '\n' + currentElement.textContent)
-        .substring(1); // Removes the starting \n
+    return divEditorContent.innerText;
 }
 
 /**
@@ -39,7 +33,11 @@ function getStoryText() {
  * @param {string} text 
  */
 function setStoryText(text) {
-    divEditorContent.innerHTML = text.split('\n').reduce((previous, current) => previous += `<div>${current}</div>`);
+    divEditorContent.innerHTML = text.split('\n').reduce((previous, current) => previous += `<div>${current}</div>`, '');
+}
+
+function fixStoryText() {
+    setStoryText(getStoryText());
 }
 
 /**
@@ -47,6 +45,7 @@ function setStoryText(text) {
  * @param {string} text 
  */
 function appendToStoryText(text) {
+    fixStoryText(); // Hopefully removes any weird nonsense revolving chrome's handling of contenteditable.
     const splitText = text.split('\n');
 
     divEditorContent.children[divEditorContent.children.length - 1].innerText += splitText[0];
