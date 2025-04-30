@@ -281,13 +281,12 @@ export function onDelete(storyId) {
 export function init() {
     btnNewStory.onclick = requestCreateNewStory;
     document.getElementById('btn-ai-generate-more').onclick = () => requestLlmGenerate();
-    inputStoryName.addEventListener('blur', () => requestUpdateStoryIndex(inputStoryName.value, homeState.currentId.get()));
-    inputStoryName.addEventListener('keypress', (ev) => {
-        if (ev.key === 'Enter') {
-            requestUpdateStoryIndex(inputStoryName.value, homeState.currentId.get());
-            inputStoryName.blur();
-        }
+
+    divEditorContent.addEventListener('blur', () => {
+        fixStoryText();
     });
+
+    whenFinishWriting(inputStoryName, () => requestUpdateStoryIndex(inputStoryName.value, homeState.currentId.get()));
     btnDeleteStory.onclick = () => requestDeleteStoryPermanently(homeState.currentId.get());
     setInterval(requestSaveCurrentStory, 5000);
     setInterval(() => {
