@@ -1,18 +1,18 @@
 import { exportKey, generateEncryptionKey, generateSalt } from "./encryption.js";
 
-const btnLogin = document.getElementById('btn-login');
+const btnLogin = document.getElementById('btn-login') as HTMLButtonElement;
 
-const inputUsername = document.getElementById('input-username');
-const inputPassword = document.getElementById('input-password');
+const inputUsername = document.getElementById('input-username') as HTMLInputElement;
+const inputPassword = document.getElementById('input-password') as HTMLInputElement;
 
-async function hash(str) {
+async function hash(str: string | undefined) {
     const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
     return Array.from(new Uint8Array(hashBuffer))
         .map(char => char.toString(16).padStart(2, '0'))
         .join('');
 }
 
-function postLoginAccount(username, password) {
+function postLoginAccount(username: string, password: string) {
     // TODO: implement endpoint
     const request = new Request('/api/v1/user/login', {
         headers: {
@@ -33,7 +33,7 @@ function postLoginAccount(username, password) {
         });
 }
 
-function setInput(bool) {
+function setInput(bool: boolean) {
     inputUsername.disabled = bool;
     inputPassword.disabled = bool;
 }

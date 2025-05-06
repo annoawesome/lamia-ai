@@ -1,6 +1,18 @@
 export const storyObjectVersion = '0.2.0';
 
-export function generateStoryObject(storyVersion, storyTitle, storyContent, storyDesc, storyTags) {
+export type StoryObject = {
+    metadata: {
+        version: any;
+    };
+    title: any;
+    content: any;
+    overview: {
+        description: any;
+        tags: any;
+    };
+}
+
+export function generateStoryObject(storyVersion: string, storyTitle: string, storyContent: string, storyDesc: string, storyTags: string[]): StoryObject {
     return {
         metadata: {
             version: storyVersion,
@@ -24,7 +36,7 @@ export function generateEmptyStoryObject() {
  * @param {StoryObject} storyObject JSON representation of story
  * @returns {StoryObject}
  */
-export function convertStoryObject(storyObject) {
+export function convertStoryObject(storyObject: StoryObject) {
     if (storyObject.metadata.version !== '0.1.0') {
         return storyObject;
     }

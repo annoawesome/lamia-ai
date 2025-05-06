@@ -5,7 +5,7 @@
  * @param {string} url The url to send the request to.
  * @returns {Object}
  */
-export async function postRequestGenerate(text, url) {
+export async function postRequestGenerate(text: string, url: string) {
     console.log("Requesting ai generation");
 
     // koboldai api request

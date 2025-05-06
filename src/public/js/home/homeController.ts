@@ -1,7 +1,7 @@
 import { emit, newEvent } from "../events.js";
 import { homeState } from "./globalHomeState.js";
-import { putStoryInIndex, removeStoryInIndex } from "./homeState.js";
-import { convertStoryObject, generateStoryObject } from "./storyObject.js";
+import { putStoryInIndex, removeStoryInIndex, StoryIndex } from "./homeState.js";
+import { convertStoryObject, generateStoryObject, StoryObject } from "./storyObject.js";
 
 import * as lamiaApi from '../lamiaApi.js';
 import * as koboldCppApi from '../koboldCppApi.js';
@@ -12,15 +12,12 @@ export const llmOutput = newEvent();
 
 const storyObjectVersion = '0.2.0';
 
-/**
- * @typedef {Object} StoryObject
- */
 
 /**
  * Update global state last seen text.
  * @param {string} updatedText Updated text.
  */
-export function updateStoryLastSeenText(updatedText) {
+export function updateStoryLastSeenText(updatedText: string) {
     homeState.lastSeenText.set(updatedText);
 }
 
@@ -41,9 +38,9 @@ export function obtainStoryIndex() {
  * @param {string} storyName Title of story.
  * @param {string} storyId Id of story.
  */
-export function updateStoryIndex(storyName, storyId) {
+export function updateStoryIndex(storyName: string, storyId: string) {
     putStoryInIndex(homeState, storyName, storyId);
-    lamiaApi.postIndex(homeState.index.get())
+    lamiaApi.postIndex(homeState.index.get() as StoryIndex)
         .then(() => emit(indexOutput, 'update'));
 }
 
@@ -65,13 +62,13 @@ export function createNewStory() {
  * Load story from databse with id.
  * @param {string} storyId Id of story.
  */
-export function loadStory(storyId) {
+export function loadStory(storyId: string) {
     lamiaApi.getStory(storyId)
         .then(storyObject => {
             storyObject = convertStoryObject(storyObject);
             console.log('Got story id ' + storyId);
             homeState.currentId.set(storyId);
-            homeState.lastSeenText.set(homeState, storyObject.content);
+            homeState.lastSeenText.set(storyObject.content);
             emit(storyOutput, 'load', storyObject, storyId);
         });
 }
@@ -82,7 +79,7 @@ export function loadStory(storyId) {
  * @param {string} storyName Title of story.
  * @param {string} storyContent Content of story.
  */
-export function saveStory(storyObject, storyId) {
+export function saveStory(storyObject: StoryObject, storyId: string) {
     lamiaApi.updateStory(storyId, storyObject)
         .then(() => {
             console.log('Updated id ' + storyId);
@@ -93,14 +90,14 @@ export function saveStory(storyObject, storyId) {
  * Delete story from database.
  * @param {string} storyId Id of story.
  */
-export function deleteStory(storyId) {
+export function deleteStory(storyId: string) {
      lamiaApi.deleteStory(storyId)
         .then(status => {
             if (status === 200) {
                 homeState.currentId.set('');
                 homeState.lastSeenText.set('');
                 removeStoryInIndex(homeState, storyId);
-                lamiaApi.postIndex(homeState.index.get());
+                lamiaApi.postIndex(homeState.index.get() as StoryIndex);
                 emit(storyOutput, 'delete', storyId);
             }
         });
@@ -111,7 +108,7 @@ export function deleteStory(storyId) {
  * @param {string} text Prompt to give to the llm.
  * @param {string} url The url to send the request to.
  */
-export function generateStory(text, url) {
+export function generateStory(text: string, url: string) {
     koboldCppApi.postRequestGenerate(text, url)
         .then(json => {
             emit(llmOutput, 'generate', json.results[0].text);
