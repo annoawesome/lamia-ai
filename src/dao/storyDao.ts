@@ -2,17 +2,17 @@ import crypto from 'crypto';
 import { getLamiaUserDirectory } from '../service/lamiadbService.js';
 import { expectKeyValueStore, readDocument, readDocumentWithDefaults, readKeyValueStore, removeDocument, writeDocument } from '../util/fsdb.js';
 
-function getStoriesDirectory(dataPath) {
+function getStoriesDirectory(dataPath: string) {
     return expectKeyValueStore(dataPath, 'story');
 }
 
-function getStory(username, storyId) {
+function getStory(username: string, storyId: string) {
     return getLamiaUserDirectory(username)
         .then(getStoriesDirectory)
         .then(storiesPath => readDocument(storiesPath, storyId));
 }
 
-function createStory(username, data) {
+function createStory(username: string, data: string) {
     const uuid = crypto.randomUUID();
 
     return getLamiaUserDirectory(username)
@@ -21,31 +21,31 @@ function createStory(username, data) {
         .then(() => uuid);
 }
 
-function modifyStory(username, storyId, data) {
+function modifyStory(username: string, storyId: string, data: string) {
     return getLamiaUserDirectory(username)
         .then(getStoriesDirectory)
         .then(storiesPath => writeDocument(storiesPath, storyId, data))
         .then(() => storyId);
 }
 
-function deleteStory(username, storyId) {
+function deleteStory(username: string, storyId: string) {
     return getLamiaUserDirectory(username)
         .then(getStoriesDirectory)
         .then(storiesPath => removeDocument(storiesPath, storyId));
 }
 
-function getStoryIds(username) {
+function getStoryIds(username: string) {
     return getLamiaUserDirectory(username)
         .then(getStoriesDirectory)
         .then(storiesPath => readKeyValueStore(storiesPath));
 }
 
-function getIndex(username) {
+function getIndex(username: string) {
     return getLamiaUserDirectory(username)
         .then(dataPath => readDocumentWithDefaults(dataPath, 'storyIndex', '{}'));
 }
 
-function writeIndex(username, data) {
+function writeIndex(username: string, data: string) {
     return getLamiaUserDirectory(username)
         .then(dataPath => writeDocument(dataPath, 'storyIndex', data));
 }

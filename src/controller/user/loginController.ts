@@ -3,8 +3,9 @@ import jwt from 'jsonwebtoken';
 
 import { userDao } from '../../dao/userDao.js';
 import { getEnvVar } from '../../service/lamiadbService.js';
+import { Request, Response } from 'express';
 
-export function postLoginController(req, res) {
+export function postLoginController(req: Request, res: Response) {
     const body = req.body;
     const username = body.username;
     const password = body.password;

@@ -3,7 +3,7 @@ import path from 'path';
 import { getLamiaUserDirectory, dataDirectoryPath } from '../service/lamiadbService.js';
 import { makeFailure } from '../util/failure.js';
 
-export function createUser(username, passwordHash) {
+export function createUser(username: string, passwordHash: string) {
     return new Promise((resolve, reject) => {
         const lamiaUserDirectory = path.join(dataDirectoryPath, username);
 
@@ -21,7 +21,7 @@ export function createUser(username, passwordHash) {
         })));
 }
 
-function getUserMetadata(username) {
+function getUserMetadata(username: string) {
     return getLamiaUserDirectory(username)
         .then(dataPath => {
             return fs.readFileSync(path.join(dataPath, '/userdata'), {
