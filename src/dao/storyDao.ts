@@ -6,48 +6,77 @@ function getStoriesDirectory(dataPath: string) {
     return expectKeyValueStore(dataPath, 'story');
 }
 
-function getStory(username: string, storyId: string) {
-    return getLamiaUserDirectory(username)
-        .then(getStoriesDirectory)
-        .then(storiesPath => readDocument(storiesPath, storyId));
+async function getStory(username: string, storyId: string) {
+    const userDirectory = await getLamiaUserDirectory(username);
+
+    if (typeof(userDirectory) !== 'string') {
+        return;
+    }
+
+    return readDocument(getStoriesDirectory(userDirectory), storyId)
 }
 
-function createStory(username: string, data: string) {
+async function createStory(username: string, data: string) {
     const uuid = crypto.randomUUID();
+    const userDirectory = await getLamiaUserDirectory(username);
 
-    return getLamiaUserDirectory(username)
-        .then(getStoriesDirectory)
-        .then(storiesPath => writeDocument(storiesPath, uuid, data))
-        .then(() => uuid);
+    if (typeof(userDirectory) !== 'string') {
+        return;
+    }
+
+    writeDocument(getStoriesDirectory(userDirectory), uuid, data);
+
+    return uuid;
 }
 
-function modifyStory(username: string, storyId: string, data: string) {
-    return getLamiaUserDirectory(username)
-        .then(getStoriesDirectory)
-        .then(storiesPath => writeDocument(storiesPath, storyId, data))
-        .then(() => storyId);
+async function modifyStory(username: string, storyId: string, data: string) {
+    const userDirectory = await getLamiaUserDirectory(username);
+
+    if (typeof(userDirectory) !== 'string') {
+        return;
+    }
+
+    writeDocument(getStoriesDirectory(userDirectory), storyId, data);
 }
 
-function deleteStory(username: string, storyId: string) {
-    return getLamiaUserDirectory(username)
-        .then(getStoriesDirectory)
-        .then(storiesPath => removeDocument(storiesPath, storyId));
+async function deleteStory(username: string, storyId: string) {
+    const userDirectory = await getLamiaUserDirectory(username);
+
+    if (typeof(userDirectory) !== 'string') {
+        return;
+    }
+
+    removeDocument(getStoriesDirectory(userDirectory), storyId)
 }
 
-function getStoryIds(username: string) {
-    return getLamiaUserDirectory(username)
-        .then(getStoriesDirectory)
-        .then(storiesPath => readKeyValueStore(storiesPath));
+async function getStoryIds(username: string) {
+    const userDirectory = await getLamiaUserDirectory(username);
+
+    if (typeof(userDirectory) !== 'string') {
+        return;
+    }
+
+    return readKeyValueStore(getStoriesDirectory(userDirectory));
 }
 
-function getIndex(username: string) {
-    return getLamiaUserDirectory(username)
-        .then(dataPath => readDocumentWithDefaults(dataPath, 'storyIndex', '{}'));
+async function getIndex(username: string) {
+    const userDirectory = await getLamiaUserDirectory(username);
+
+    if (typeof(userDirectory) !== 'string') {
+        return;
+    }
+
+    return readDocumentWithDefaults(userDirectory, 'storyIndex', '{}')
 }
 
-function writeIndex(username: string, data: string) {
-    return getLamiaUserDirectory(username)
-        .then(dataPath => writeDocument(dataPath, 'storyIndex', data));
+async function writeIndex(username: string, data: string) {
+    const userDirectory = await getLamiaUserDirectory(username);
+
+    if (typeof(userDirectory) !== 'string') {
+        return;
+    }
+
+    return writeDocument(userDirectory, 'storyIndex', data)
 }
 
 export const storyDao = {

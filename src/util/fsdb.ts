@@ -10,7 +10,7 @@ export const userDataPath = process.env.APPDATA || (process.platform === 'darwin
  * @param {string} name Name of key
  * @returns {Promise<string | Error>}
  */
-export function getKeyValueStore(dataPath: string, name: string) {
+export function getKeyValueStore(dataPath: string, name: string): Promise<string | Error> {
     return new Promise((resolve, reject) => {
         const listingDirectory = path.join(dataPath, name);
 
@@ -27,7 +27,7 @@ export function getKeyValueStore(dataPath: string, name: string) {
  * @param {string} dataPath Path of store
  * @returns {string[]}
  */
-export function readKeyValueStore(keyValueStore: string) {
+export function readKeyValueStore(keyValueStore: string): string[] {
     return fs.readdirSync(keyValueStore);
 }
 
@@ -37,7 +37,7 @@ export function readKeyValueStore(keyValueStore: string) {
  * @param {string} name Name of key
  * @returns {Promise<string | Error>}
  */
-export function createKeyValueStore(dataPath: string, name: string) {
+export function createKeyValueStore(dataPath: string, name: string): Promise<string | Error | NodeJS.ErrnoException> {
     return new Promise((resolve, reject) => {
         const keyValueStoreDirectory = path.join(dataPath, name);
 

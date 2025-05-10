@@ -67,6 +67,8 @@ export async function getConfig() {
  * @param {string} variableName Name of variable
  */
 export function getEnvVar(variableName: string) {
+    const configEnv = config.env as {[x: string]: any}
+
     if (process.env[variableName]) return process.env[variableName];
-    else return config.env[variableName];
+    else return configEnv[variableName];
 }
