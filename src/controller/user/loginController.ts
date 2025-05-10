@@ -11,6 +11,11 @@ export function postLoginController(req: Request, res: Response) {
     const password = body.password;
 
     userDao.getUserMetadata(username).then(userdataStr => {
+        if (userdataStr === false) {
+            res.sendStatus(500);
+            return;
+        }
+
         const userdata = JSON.parse(userdataStr);
 
         bcrypt.compare(password, userdata.passwordHash, (err, success) => {
