@@ -10,7 +10,7 @@ export const userDataPath = process.env.APPDATA || (process.platform === 'darwin
  * @param {string} name Name of key
  * @returns {Promise<string | Error>}
  */
-export function getKeyValueStore(dataPath, name) {
+export function getKeyValueStore(dataPath: string, name: string): Promise<string | Error> {
     return new Promise((resolve, reject) => {
         const listingDirectory = path.join(dataPath, name);
 
@@ -27,7 +27,7 @@ export function getKeyValueStore(dataPath, name) {
  * @param {string} dataPath Path of store
  * @returns {string[]}
  */
-export function readKeyValueStore(keyValueStore) {
+export function readKeyValueStore(keyValueStore: string): string[] {
     return fs.readdirSync(keyValueStore);
 }
 
@@ -37,7 +37,7 @@ export function readKeyValueStore(keyValueStore) {
  * @param {string} name Name of key
  * @returns {Promise<string | Error>}
  */
-export function createKeyValueStore(dataPath, name) {
+export function createKeyValueStore(dataPath: string, name: string): Promise<string | Error | NodeJS.ErrnoException> {
     return new Promise((resolve, reject) => {
         const keyValueStoreDirectory = path.join(dataPath, name);
 
@@ -58,7 +58,7 @@ export function createKeyValueStore(dataPath, name) {
  * @param {string} name 
  * @returns {string}
  */
-export function expectKeyValueStore(dataPath, name) {
+export function expectKeyValueStore(dataPath: string, name: string) {
     const keyValueStore = path.join(dataPath, name);
     fs.mkdirSync(keyValueStore, { recursive: true });
     return keyValueStore;
@@ -70,7 +70,7 @@ export function expectKeyValueStore(dataPath, name) {
  * @param {string} name Name of key
  * @param {string} contents Contents of document
  */
-export function writeDocument(dataPath, name, contents) {
+export function writeDocument(dataPath: string, name: string, contents: string) {
     fs.writeFileSync(path.join(dataPath, name), contents, { encoding: 'utf-8' });
 }
 
@@ -80,11 +80,11 @@ export function writeDocument(dataPath, name, contents) {
  * @param {string} name Name of key
  * @returns {string}
  */
-export function readDocument(dataPath, name) {
+export function readDocument(dataPath: string, name: string) {
     return fs.readFileSync(path.join(dataPath, name), { encoding: 'utf-8' });
 }
 
-export function removeDocument(dataPath, name) {
+export function removeDocument(dataPath: string, name: string) {
     fs.rmSync(path.join(dataPath, name), { force: true });
 }
 
@@ -95,7 +95,7 @@ export function removeDocument(dataPath, name) {
  * @param {string} defaultContents Default contents if no document is found
  * @returns {string}
  */
-export function readDocumentWithDefaults(dataPath, name, defaultContents) {
+export function readDocumentWithDefaults(dataPath: string, name: string, defaultContents: string) {
     const configPath = path.join(dataPath, name);
     let contents = defaultContents;
 

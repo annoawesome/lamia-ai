@@ -4,10 +4,11 @@ import jwt from 'jsonwebtoken';
 import { userDao } from '../../dao/userDao.js';
 import { getEnvVar } from '../../service/lamiadbService.js';
 import { isFailure, sanitizeFailure } from '../../util/failure.js';
+import { Request, Response } from 'express';
 
 const saltRounds = 10;
 
-export function createUserController(req, res) {
+export function createUserController(req: Request, res: Response) {
     const body = req.body;
     const username = body.username;
     const password = body.password;

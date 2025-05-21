@@ -1,11 +1,23 @@
 import { emit, newEvent, subscribe } from "../events.js";
 
-class ReactiveVariable {
+export type StoryIndex = { 
+    stories: { [storyId: string]: {
+        storyName: string
+    }; }
+}
+
+export type HomeState = {
+    lastSeenText: ReactiveVariable<string>;
+    currentId: ReactiveVariable<string>;
+    index: ReactiveVariable<StoryIndex | {}>;
+}
+
+class ReactiveVariable<T> {
     name;
     value;
     event = newEvent();
 
-    constructor(name, value) {
+    constructor(name: string, value: T) {
         this.name = name;
         this.value = value;
     }
@@ -14,12 +26,12 @@ class ReactiveVariable {
         return this.value;
     }
 
-    set(value) {
+    set(value: T) {
         this.value = value;
         emit(this.event, 'update', value);
     }
 
-    onUpdate(callback) {
+    onUpdate(callback: (value: T) => void) {
         subscribe(this.event, 'update', callback);
     }
 }
@@ -31,7 +43,7 @@ class ReactiveVariable {
  * @property {ReactiveVariable} index
  */
 
-export function generateHomeState() {
+export function generateHomeState(): HomeState {
     return {
         lastSeenText: new ReactiveVariable('lastSeenText', ''),
         currentId: new ReactiveVariable('currentId', ''),
@@ -45,8 +57,12 @@ export function generateHomeState() {
  * @param {string} storyName Title of story.
  * @param {string} storyId Id of story.
  */
-export function putStoryInIndex(homeState, storyName, storyId) {
+export function putStoryInIndex(homeState: HomeState, storyName: string, storyId: string) {
     const index = homeState.index.get();
+
+    if (!('stories' in index)) {
+        return;
+    }
 
     index.stories[storyId] = {
         storyName: storyName,
@@ -60,20 +76,14 @@ export function putStoryInIndex(homeState, storyName, storyId) {
  * @param {HomeState} homeState Home state.
  * @param {string} storyId Id of story.
  */
-export function removeStoryInIndex(homeState, storyId) {
+export function removeStoryInIndex(homeState: HomeState, storyId: string) {
     const index = homeState.index.get();
+
+    if (!('stories' in index)) {
+        return;
+    }
 
     delete index.stories[storyId];
 
     homeState.index.set(index);
-}
-
-/**
- * Subscribe to an event in home state.
- * @param {string} eventName Name of event.
- * @param {string} category Name of category of event.
- * @param {function(...any): void} callback Callback.
- */
-export function subscribeToEvent(homeState, eventName, category, callback) {
-    subscribe(homeState.events[eventName], category, callback);
 }

@@ -1,10 +1,13 @@
-const btnRegisterAccount = document.getElementById('btn-register-account');
+const btnRegisterAccount = document.getElementById('btn-register-account') as HTMLButtonElement;
 
-const inputUsername = document.getElementById('input-username');
-const inputPassword = document.getElementById('input-password');
-const inputReEnterPassword = document.getElementById('input-re-enter-password');
+const inputUsername = document.getElementById('input-username') as HTMLInputElement;
+const inputPassword = document.getElementById('input-password') as HTMLInputElement;
+const inputReEnterPassword = document.getElementById('input-re-enter-password') as HTMLInputElement;
 
-async function hash(str) {
+const divWarnRegisterError = document.getElementById('warn-register-error') as HTMLDivElement;
+const pWarnRegisterError = document.getElementById('p-warn-register-error') as HTMLDivElement;
+
+async function hash(str: string) {
     const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
     return Array.from(new Uint8Array(hashBuffer))
         .map(char => char.toString(16).padStart(2, '0'))
@@ -17,13 +20,13 @@ async function hash(str) {
  * @param {string} password Password.
  * @returns {boolean}
  */
-function isSecurePassword(password) {
+function isSecurePassword(password: string) {
     if (password.length < 12) return false;
 
     return true;
 }
 
-function postCreateAccount(username, password) {
+function postCreateAccount(username: string, password: string) {
     const request = new Request('/api/v1/user/create', {
         headers: {
             'Content-Type': 'application/json',
@@ -45,16 +48,16 @@ function postCreateAccount(username, password) {
             });
 }
 
-function toggleInputDisabled(bool) {
+function toggleInputDisabled(bool: boolean) {
     inputUsername.disabled = bool;
     inputPassword.disabled = bool;
     inputReEnterPassword.disabled = bool;
     btnRegisterAccount.disabled = bool;
 }
 
-function setErrorMessage(message) {
-    document.getElementById('warn-register-error').style.display = '';
-    document.getElementById('p-warn-register-error').innerText = message;
+function setErrorMessage(message: string) {
+    divWarnRegisterError.style.display = '';
+    pWarnRegisterError.innerText = message;
 }
 
 btnRegisterAccount.addEventListener('click', () => {

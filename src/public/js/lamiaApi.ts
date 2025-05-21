@@ -1,7 +1,12 @@
 import { decrypt, encrypt, fromBase64, fromBase64ToUint8Array, generateIv, importKey, toBase64 } from "./encryption.js";
+import { StoryIndex } from "./home/homeState.js";
+import { StoryObject } from "./home/storyObject.js";
 
-async function generateEncryptedPayload(data) {
-    const key = await importKey(sessionStorage.getItem('encryption-key'));
+async function generateEncryptedPayload(data: string) {
+    const storedKey = sessionStorage.getItem('encryption-key')
+    if (storedKey == null) return;
+
+    const key = await importKey(storedKey);
     const iv = generateIv();
     const encryptedData = await encrypt(key, iv, new TextEncoder().encode(data));
 
@@ -13,8 +18,11 @@ async function generateEncryptedPayload(data) {
     return payload;
 }
 
-async function decryptPayload(payload) {
-    const key = await importKey(sessionStorage.getItem('encryption-key'));
+async function decryptPayload(payload: { encryptedData64: string; iv: string; }) {
+    const storedKey = sessionStorage.getItem('encryption-key')
+    if (storedKey == null) return;
+
+    const key = await importKey(storedKey);
     const encryptedData = fromBase64(payload.encryptedData64);
     const iv = fromBase64ToUint8Array(payload.iv);
     const encodedStoryContent = await decrypt(key, iv, encryptedData);
@@ -33,7 +41,7 @@ function generateIndexObject() {
     return index;
 }
 
-export async function createStory(storyObject) {
+export async function createStory(storyObject: StoryObject) {
     const payload = await generateEncryptedPayload(JSON.stringify(storyObject));
 
     const request = new Request('/api/v1/story/content', {
@@ -49,7 +57,7 @@ export async function createStory(storyObject) {
     return await res.text();
 }
 
-export async function getStory(storyId) {
+export async function getStory(storyId: string) {
     const request = new Request(`/api/v1/story/content/${storyId}`, {
         method: 'GET',
         headers: {
@@ -61,10 +69,12 @@ export async function getStory(storyId) {
     const payload = await res.json();
     const storyObjectStr = await decryptPayload(payload);
 
-    return JSON.parse(storyObjectStr);
+    if (storyObjectStr) {
+        return JSON.parse(storyObjectStr);
+    }
 }
 
-export async function updateStory(storyId, storyObject) {
+export async function updateStory(storyId: string, storyObject: StoryObject) {
     const payload = await generateEncryptedPayload(JSON.stringify(storyObject));
 
     const request = new Request(`/api/v1/story/content/${storyId}`, {
@@ -94,7 +104,7 @@ export async function getStoryIds() {
     return list;
 }
 
-export async function postIndex(index) {
+export async function postIndex(index: StoryIndex) {
     const encryptedPayload = await generateEncryptedPayload(JSON.stringify(index));
 
     const request = new Request(`/api/v1/story/index`, {
@@ -122,11 +132,17 @@ export async function getIndex() {
     if (!encryptedPayload.encryptedData64)
         return generateIndexObject();
 
-    const index = JSON.parse(await decryptPayload(encryptedPayload));
+    const decryptedPayload = await decryptPayload(encryptedPayload)
+
+    if (!decryptedPayload) {
+        return generateIndexObject();
+    }
+
+    const index = JSON.parse(decryptedPayload);
     return index;
 }
 
-export async function deleteStory(storyId) {
+export async function deleteStory(storyId: string) {
     const request = new Request(`/api/v1/story/content/${storyId}`, {
         method: 'DELETE',
     });

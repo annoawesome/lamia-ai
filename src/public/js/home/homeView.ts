@@ -1,16 +1,23 @@
 import { homeState } from './globalHomeState.js';
 import { emit, newEvent } from '../events.js';
-import { generateEmptyStoryObject, generateStoryObject, storyObjectVersion } from './storyObject.js';
+import { generateEmptyStoryObject, generateStoryObject, StoryObject, storyObjectVersion } from './storyObject.js';
+import { StoryIndex } from './homeState.js';
 
-const btnNewStory = document.getElementById('btn-new-story');
-const panelSubStoryIndex = document.getElementById('panel-sub-story-index');
-const divEditorContent = document.getElementById('div-editor-content');
+const btnNewStory = document.getElementById('btn-new-story') as HTMLButtonElement;
+const panelSubStoryIndex = document.getElementById('panel-sub-story-index') as HTMLDivElement;
+const divEditorContent = document.getElementById('div-editor-content') as HTMLDivElement;
 
-const inputStoryName = document.getElementById('input-story-name');
-const btnDeleteStory = document.getElementById('btn-delete-story');
+const inputStoryName = document.getElementById('input-story-name') as HTMLInputElement;
+const btnDeleteStory = document.getElementById('btn-delete-story') as HTMLButtonElement;
 
-const divEditorDesc = document.getElementById('div-editor-desc');
-const inputStoryTags = document.getElementById('input-story-tags');
+const divEditorDesc = document.getElementById('div-editor-desc') as HTMLDivElement;
+const inputStoryTags = document.getElementById('input-story-tags') as HTMLInputElement;
+
+const pWordCount = document.getElementById('p-word-count') as HTMLParagraphElement;
+const pCharacterCount = document.getElementById('p-character-count') as HTMLParagraphElement;
+
+const inputAiEndpointUrl = document.getElementById('input-ai-endpoint-uri') as HTMLInputElement;
+const btnAiGenerateMore = document.getElementById('btn-ai-generate-more') as HTMLButtonElement;
 
 export const storyInput = newEvent();
 export const indexInput = newEvent();
@@ -21,7 +28,7 @@ export const llmInput = newEvent();
  * @returns {string}
  */
 function getLlmUri() {
-    return document.getElementById('input-ai-endpoint-uri').value;
+    return inputAiEndpointUrl.value;
 }
 
 function getStoryText() {
@@ -32,7 +39,7 @@ function getStoryText() {
  * 
  * @param {string} text 
  */
-function setStoryText(text) {
+function setStoryText(text: string) {
     divEditorContent.innerHTML = text.split('\n').reduce((previous, current) => previous += `<div>${current}</div>`, '');
 }
 
@@ -44,11 +51,13 @@ function fixStoryText() {
  * 
  * @param {string} text 
  */
-function appendToStoryText(text) {
+function appendToStoryText(text: string) {
     fixStoryText(); // Hopefully removes any weird nonsense revolving chrome's handling of contenteditable.
     const splitText = text.split('\n');
 
-    divEditorContent.children[divEditorContent.children.length - 1].innerText += splitText[0];
+    // NOTE: div element assumption may not hold
+    const innerDivElement = divEditorContent.children[divEditorContent.children.length - 1] as HTMLDivElement;
+    innerDivElement.innerText += splitText[0];
 
     if (splitText.length > 1) {
         for (let i = 1; i < splitText.length; i++) {
@@ -70,7 +79,7 @@ async function requestLlmGenerate() {
  * Append text to story. Trigger on generation finish.
  * @param {string} text The generated text to append.
  */
-export function onGenerateStory(text) {
+export function onGenerateStory(text: string) {
     appendToStoryText(text);
 }
 
@@ -81,7 +90,7 @@ export function onGenerateStory(text) {
  * @param {string} text The text to count words from.
  * @returns {number}
  */
-function getWordCount(text) {
+function getWordCount(text: string) {
     return text.split(new RegExp("\\s+")).filter(word => word.length > 0).length;
 }
 
@@ -90,7 +99,7 @@ function getWordCount(text) {
  * @param {string} text The text to count characters from.
  * @returns {number}
  */
-function getCharacterCount(text) {
+function getCharacterCount(text: string) {
     return text.length;
 }
 
@@ -109,7 +118,7 @@ function generateStoryObjectFromGui() {
     );
 }
 
-function whenFinishWriting(domElement, callback) {
+function whenFinishWriting(domElement: HTMLElement, callback: () => void) {
     domElement.addEventListener('blur', () => {
         callback();
     });
@@ -130,7 +139,7 @@ function whenFinishWriting(domElement, callback) {
  * @param {string} storyName Title of story.
  * @param {string} storyContent Contents of story.
  */
-function loadStoryFromEvent(storyObject) {
+function loadStoryFromEvent(storyObject: StoryObject) {
     const overview = storyObject.overview;
 
     setStoryText(storyObject.content);
@@ -144,7 +153,7 @@ function loadStoryFromEvent(storyObject) {
  * @param {string} name Title of story.
  * @param {string} storyId Id of story.
  */
-function addNewStoryToIndexGui(name, storyId) {
+function addNewStoryToIndexGui(name: string, storyId: string) {
     const storySelectButton = document.createElement('button');
     storySelectButton.className = 'btn btn-story-select';
     storySelectButton.type = 'button';
@@ -158,7 +167,7 @@ function addNewStoryToIndexGui(name, storyId) {
  * Remove story from index GUI. Connected to event.
  * @param {string} storyId Id of story.
  */
-function removeStoryInIndexGui(storyId) {
+function removeStoryInIndexGui(storyId: string) {
     const pStoryName = document.getElementById(`index-story-name-${storyId}`);
 
     if (pStoryName) {
@@ -170,7 +179,7 @@ function removeStoryInIndexGui(storyId) {
  * Update story in index GUI.
  * @param {string} storyId Id of story.
  */
-function updateStoryInIndexGui(storyId, storyName) {
+function updateStoryInIndexGui(storyId: string, storyName: string) {
     const pStoryName = document.getElementById(`index-story-name-${storyId}`);
 
     if (pStoryName) {
@@ -209,7 +218,7 @@ function requestCreateNewStory() {
  * @param {string} storyName Title of story.
  * @param {string} storyId Id of story.
  */
-function requestUpdateStoryIndex(storyName, storyId) {
+function requestUpdateStoryIndex(storyName: string, storyId: string) {
     updateStoryInIndexGui(storyId, storyName);
     emit(indexInput, 'update', storyName, storyId);
 }
@@ -222,11 +231,11 @@ function requestSaveCurrentStory() {
     forceRequestSaveCurrentStory(updatedStoryContent.storyId);
 }
 
-function forceRequestSaveCurrentStory(storyId) {
+function forceRequestSaveCurrentStory(storyId: string) {
     emit(storyInput, 'save', generateStoryObjectFromGui(), storyId);
 }
 
-function requestDeleteStoryPermanently(storyId) {
+function requestDeleteStoryPermanently(storyId: string) {
     emit(storyInput, 'delete', storyId);
 }
 
@@ -238,7 +247,7 @@ function requestUpdateStoryIndexGui() {
  * Update story textarea and title input. Trigger on event.
  * @param {StoryObject} storyObject Object representation of a story.
  */
-export function onLoadStory(storyObject) {
+export function onLoadStory(storyObject: StoryObject) {
     loadStoryFromEvent(storyObject);
 }
 
@@ -247,7 +256,7 @@ export function onLoadStory(storyObject) {
  * @param {storyObject} storyObject Object representation of story.
  * @param {string} storyId Id of story.
  */
-export function onCreateNewStory(storyObject, storyId) {
+export function onCreateNewStory(storyObject: StoryObject, storyId: string) {
     loadStoryFromEvent(storyObject);
     addNewStoryToIndexGui('Untitled Story', storyId);
     requestUpdateStoryIndex('Untitled Story', storyId);
@@ -257,7 +266,7 @@ export function onCreateNewStory(storyObject, storyId) {
  * Update left panel story index. Trigger on event.
  * @param {Object} obtainedIndex Index obtained from database.
  */
-export function onGetStoryIndex(obtainedIndex) {
+export function onGetStoryIndex(obtainedIndex: StoryIndex) {
     panelSubStoryIndex.textContent = '';
 
     for (let storyDataEntry of Object.entries(obtainedIndex.stories)) {
@@ -272,7 +281,7 @@ export function onGetStoryIndex(obtainedIndex) {
  * Remove story from index gui and clear story content. Trigger on event.
  * @param {string} storyId Id of story.
  */
-export function onDelete(storyId) {
+export function onDelete(storyId: string) {
     loadStoryFromEvent(generateEmptyStoryObject());
     removeStoryInIndexGui(storyId);
 }
@@ -280,7 +289,7 @@ export function onDelete(storyId) {
 // TODO: move to main home.js
 export function init() {
     btnNewStory.onclick = requestCreateNewStory;
-    document.getElementById('btn-ai-generate-more').onclick = () => requestLlmGenerate();
+    btnAiGenerateMore.onclick = () => requestLlmGenerate();
 
     divEditorContent.addEventListener('blur', () => {
         fixStoryText();
@@ -290,8 +299,8 @@ export function init() {
     btnDeleteStory.onclick = () => requestDeleteStoryPermanently(homeState.currentId.get());
     setInterval(requestSaveCurrentStory, 5000);
     setInterval(() => {
-        document.getElementById('p-word-count').innerText = `${getWordCount(getStoryText())} words`;
-        document.getElementById('p-character-count').innerText = `${getCharacterCount(getStoryText())} characters`;
+        pWordCount.innerText = `${getWordCount(getStoryText())} words`;
+        pCharacterCount.innerText = `${getCharacterCount(getStoryText())} characters`;
     }, 1000);
 
     whenFinishWriting(divEditorDesc, () => forceRequestSaveCurrentStory(homeState.currentId.get()));

@@ -1,13 +1,16 @@
-/**
- * Failure wrapper for errors. May also serve as
- * custom error usable to give to client.
- * @typedef {Object} Failure
- * @property {boolean} isFailure
- * @property {any} artifact
- * @property {number} httpStatusCode
- * @property {string} internalId
- * @property {string} reason
- */
+type SanitizedFailure = {
+    isFailure: boolean,
+    internalId: string,
+    reason: string,
+}
+
+type Failure = SanitizedFailure & {
+    // isFailure: boolean,
+    artifact: NodeJS.ErrnoException | null,
+    httpStatusCode: number,
+    // internalId: string,
+    // reason: string,
+}
 
 /**
  * Make failure wrapper for errors. Attaches a reason and id for failure
@@ -18,7 +21,7 @@
  * @param {string} reason Displayed reason for failure.
  * @returns {Failure}
  */
-export function makeFailure(artifact, httpStatusCode, internalId, reason) {
+export function makeFailure(artifact: NodeJS.ErrnoException | null, httpStatusCode: number, internalId: string, reason: string): Failure {
     return {
         isFailure: true,
         artifact: artifact,
@@ -28,7 +31,7 @@ export function makeFailure(artifact, httpStatusCode, internalId, reason) {
     };
 }
 
-export function isFailure(failure) {
+export function isFailure(failure: Failure) {
     return !!failure && !!failure.isFailure;
 }
 
@@ -37,7 +40,7 @@ export function isFailure(failure) {
  * @param {Failure} failure Failure object
  * @returns {Failure}
  */
-export function sanitizeFailure(failure) {
+export function sanitizeFailure(failure: Failure) {
     return {
         isFailure: true,
         internalId: failure.internalId,
