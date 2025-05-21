@@ -40,7 +40,10 @@ export function obtainStoryIndex() {
  */
 export function updateStoryIndex(storyName: string, storyId: string) {
     putStoryInIndex(homeState, storyName, storyId);
-    lamiaApi.postIndex(homeState.index.get() as StoryIndex)
+
+    const index = homeState.index.get() as StoryIndex;
+
+    lamiaApi.postIndex(index)
         .then(() => emit(indexOutput, 'update'));
 }
 

@@ -13,6 +13,12 @@ const btnDeleteStory = document.getElementById('btn-delete-story') as HTMLButton
 const divEditorDesc = document.getElementById('div-editor-desc') as HTMLDivElement;
 const inputStoryTags = document.getElementById('input-story-tags') as HTMLInputElement;
 
+const pWordCount = document.getElementById('p-word-count') as HTMLParagraphElement;
+const pCharacterCount = document.getElementById('p-character-count') as HTMLParagraphElement;
+
+const inputAiEndpointUrl = document.getElementById('input-ai-endpoint-uri') as HTMLInputElement;
+const btnAiGenerateMore = document.getElementById('btn-ai-generate-more') as HTMLButtonElement;
+
 export const storyInput = newEvent();
 export const indexInput = newEvent();
 export const llmInput = newEvent();
@@ -22,7 +28,7 @@ export const llmInput = newEvent();
  * @returns {string}
  */
 function getLlmUri() {
-    return (document.getElementById('input-ai-endpoint-uri') as HTMLInputElement).value;
+    return inputAiEndpointUrl.value;
 }
 
 function getStoryText() {
@@ -50,7 +56,8 @@ function appendToStoryText(text: string) {
     const splitText = text.split('\n');
 
     // NOTE: div element assumption may not hold
-    (divEditorContent.children[divEditorContent.children.length - 1] as HTMLDivElement).innerText += splitText[0];
+    const innerDivElement = divEditorContent.children[divEditorContent.children.length - 1] as HTMLDivElement;
+    innerDivElement.innerText += splitText[0];
 
     if (splitText.length > 1) {
         for (let i = 1; i < splitText.length; i++) {
@@ -282,7 +289,7 @@ export function onDelete(storyId: string) {
 // TODO: move to main home.js
 export function init() {
     btnNewStory.onclick = requestCreateNewStory;
-    (document.getElementById('btn-ai-generate-more') as HTMLButtonElement).onclick = () => requestLlmGenerate();
+    btnAiGenerateMore.onclick = () => requestLlmGenerate();
 
     divEditorContent.addEventListener('blur', () => {
         fixStoryText();
@@ -292,8 +299,8 @@ export function init() {
     btnDeleteStory.onclick = () => requestDeleteStoryPermanently(homeState.currentId.get());
     setInterval(requestSaveCurrentStory, 5000);
     setInterval(() => {
-        (document.getElementById('p-word-count') as HTMLParagraphElement).innerText = `${getWordCount(getStoryText())} words`;
-        (document.getElementById('p-character-count') as HTMLParagraphElement).innerText = `${getCharacterCount(getStoryText())} characters`;
+        pWordCount.innerText = `${getWordCount(getStoryText())} words`;
+        pCharacterCount.innerText = `${getCharacterCount(getStoryText())} characters`;
     }, 1000);
 
     whenFinishWriting(divEditorDesc, () => forceRequestSaveCurrentStory(homeState.currentId.get()));

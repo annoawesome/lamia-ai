@@ -4,6 +4,9 @@ const inputUsername = document.getElementById('input-username') as HTMLInputElem
 const inputPassword = document.getElementById('input-password') as HTMLInputElement;
 const inputReEnterPassword = document.getElementById('input-re-enter-password') as HTMLInputElement;
 
+const divWarnRegisterError = document.getElementById('warn-register-error') as HTMLDivElement;
+const pWarnRegisterError = document.getElementById('p-warn-register-error') as HTMLDivElement;
+
 async function hash(str: string) {
     const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
     return Array.from(new Uint8Array(hashBuffer))
@@ -53,8 +56,8 @@ function toggleInputDisabled(bool: boolean) {
 }
 
 function setErrorMessage(message: string) {
-    (document.getElementById('warn-register-error') as HTMLDivElement).style.display = '';
-    (document.getElementById('p-warn-register-error') as HTMLDivElement).innerText = message;
+    divWarnRegisterError.style.display = '';
+    pWarnRegisterError.innerText = message;
 }
 
 btnRegisterAccount.addEventListener('click', () => {
