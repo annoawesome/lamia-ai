@@ -1,18 +1,39 @@
-import { defineConfig } from "eslint/config";
-import globals from "globals";
-import js from "@eslint/js";
+import globals from 'globals';
+import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
+import stylistic from '@stylistic/eslint-plugin';
 
-export default defineConfig([
-  { files: ["src/public/**/*.{js,mjs,cjs,ts}"], languageOptions: { globals: globals.browser } },
-  { files: ["src/**/*.{js,mjs,cjs,ts}"], languageOptions: { globals: globals.node } },
-  { files: ["**/*.{js,mjs,cjs}"], plugins: { js }, extends: ["js/recommended"] },
-  { 
-    plugins: [
-      '@typescript-eslint'
-    ],
-    rules: {
-      semi: [ 'error' ],
-      eqeqeq: [ 'error', 'always', { 'null': 'ignore' } ],
-    }
-  }
-]);
+const globalConfig = {
+  plugins: {
+    '@stylistic': stylistic
+  },
+  rules: {
+    '@stylistic/semi': 'error',
+    'eqeqeq': [ 'error', 'always', { 'null': 'ignore' } ],
+    'no-undef': 'off',
+  },
+};
+
+const nodeJsEnvConfig = {
+  files: [ 'src/**/*.ts' ],
+  ignores: [ 'src/public/**/*.ts' ],
+  languageOptions: {
+    globals: globals.node
+  },
+};
+
+const browserEnvConfig = {
+  files: [ 'src/public/**/*.ts' ],
+  languageOptions: {
+    globals: globals.browser
+  },
+};
+
+export default tseslint.config(
+  tseslint.configs.recommended,
+  eslint.configs.recommended,
+
+  globalConfig,
+  nodeJsEnvConfig,
+  browserEnvConfig,
+);
