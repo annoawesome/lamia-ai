@@ -2,7 +2,7 @@ type SanitizedFailure = {
     isFailure: boolean,
     internalId: string,
     reason: string,
-}
+};
 
 type Failure = SanitizedFailure & {
     // isFailure: boolean,
@@ -10,7 +10,7 @@ type Failure = SanitizedFailure & {
     httpStatusCode: number,
     // internalId: string,
     // reason: string,
-}
+};
 
 /**
  * Make failure wrapper for errors. Attaches a reason and id for failure

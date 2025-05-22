@@ -28,7 +28,7 @@ async function createUser(username: string, passwordHash: string) {
     fs.writeFileSync(path.join(dataPath, '/userdata'), JSON.stringify({
         username: username,
         passwordHash: passwordHash
-    }))
+    }));
 
     return true;
 }

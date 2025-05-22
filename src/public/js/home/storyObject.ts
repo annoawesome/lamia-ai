@@ -10,7 +10,7 @@ export type StoryObject = {
         description: any;
         tags: any;
     };
-}
+};
 
 export function generateStoryObject(storyVersion: string, storyTitle: string, storyContent: string, storyDesc: string, storyTags: string[]): StoryObject {
     return {

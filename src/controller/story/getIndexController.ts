@@ -8,6 +8,6 @@ export async function getIndexController(req: AuthenticatedRequest, res: Respons
         return;
     }
 
-    const data = await storyDao.getIndex(req.username)
+    const data = await storyDao.getIndex(req.username);
     res.set('Content-Type', 'application/json').status(200).send(data);
 }

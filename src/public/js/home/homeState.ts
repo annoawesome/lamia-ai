@@ -4,13 +4,13 @@ export type StoryIndex = {
     stories: { [storyId: string]: {
         storyName: string
     }; }
-}
+};
 
 export type HomeState = {
     lastSeenText: ReactiveVariable<string>;
     currentId: ReactiveVariable<string>;
     index: ReactiveVariable<StoryIndex | {}>;
-}
+};
 
 class ReactiveVariable<T> {
     name;

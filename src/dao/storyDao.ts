@@ -13,7 +13,7 @@ async function getStory(username: string, storyId: string) {
         return;
     }
 
-    return readDocument(getStoriesDirectory(userDirectory), storyId)
+    return readDocument(getStoriesDirectory(userDirectory), storyId);
 }
 
 async function createStory(username: string, data: string) {
@@ -46,7 +46,7 @@ async function deleteStory(username: string, storyId: string) {
         return;
     }
 
-    removeDocument(getStoriesDirectory(userDirectory), storyId)
+    removeDocument(getStoriesDirectory(userDirectory), storyId);
 }
 
 async function getStoryIds(username: string) {
@@ -66,7 +66,7 @@ async function getIndex(username: string) {
         return;
     }
 
-    return readDocumentWithDefaults(userDirectory, 'storyIndex', '{}')
+    return readDocumentWithDefaults(userDirectory, 'storyIndex', '{}');
 }
 
 async function writeIndex(username: string, data: string) {
@@ -76,7 +76,7 @@ async function writeIndex(username: string, data: string) {
         return;
     }
 
-    return writeDocument(userDirectory, 'storyIndex', data)
+    return writeDocument(userDirectory, 'storyIndex', data);
 }
 
 export const storyDao = {

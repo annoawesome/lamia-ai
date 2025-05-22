@@ -3,7 +3,7 @@ import { StoryIndex } from "./home/homeState.js";
 import { StoryObject } from "./home/storyObject.js";
 
 async function generateEncryptedPayload(data: string) {
-    const storedKey = sessionStorage.getItem('encryption-key')
+    const storedKey = sessionStorage.getItem('encryption-key');
     if (storedKey == null) return;
 
     const key = await importKey(storedKey);
@@ -19,7 +19,7 @@ async function generateEncryptedPayload(data: string) {
 }
 
 async function decryptPayload(payload: { encryptedData64: string; iv: string; }) {
-    const storedKey = sessionStorage.getItem('encryption-key')
+    const storedKey = sessionStorage.getItem('encryption-key');
     if (storedKey == null) return;
 
     const key = await importKey(storedKey);
@@ -132,7 +132,7 @@ export async function getIndex() {
     if (!encryptedPayload.encryptedData64)
         return generateIndexObject();
 
-    const decryptedPayload = await decryptPayload(encryptedPayload)
+    const decryptedPayload = await decryptPayload(encryptedPayload);
 
     if (!decryptedPayload) {
         return generateIndexObject();

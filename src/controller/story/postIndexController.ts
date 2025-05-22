@@ -8,6 +8,6 @@ export async function postIndexController(req: AuthenticatedRequest, res: Respon
         return;
     }
 
-    await storyDao.writeIndex(req.username, JSON.stringify(req.body))
-    res.sendStatus(200)
+    await storyDao.writeIndex(req.username, JSON.stringify(req.body));
+    res.sendStatus(200);
 }

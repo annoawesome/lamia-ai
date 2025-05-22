@@ -8,6 +8,6 @@ export async function postStoryController(req: AuthenticatedRequest, res: Respon
         return;
     }
 
-    const uuid = await storyDao.createStory(req.username, JSON.stringify(req.body))
+    const uuid = await storyDao.createStory(req.username, JSON.stringify(req.body));
     res.status(200).send(uuid);
 }

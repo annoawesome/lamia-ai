@@ -14,7 +14,7 @@ type Config = {
         LAMIA_URL: string;
         LAMIA_PORT: number;
     };
-}
+};
 
 export let config = {
     metadata: {
@@ -67,7 +67,7 @@ export async function getConfig() {
  * @param {string} variableName Name of variable
  */
 export function getEnvVar(variableName: string) {
-    const configEnv = config.env as {[x: string]: any}
+    const configEnv = config.env as {[x: string]: any};
 
     if (process.env[variableName]) return process.env[variableName];
     else return configEnv[variableName];

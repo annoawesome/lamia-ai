@@ -1,4 +1,4 @@
-type StatedEvent = { [x: string]: any; }
+type StatedEvent = { [x: string]: any; };
 
 /**
  * Creates an empty event
