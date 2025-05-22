@@ -1,3 +1,44 @@
+function extractDataFromEvent(eventChunk: string) {
+    const matches = eventChunk.match(/data:\s*(.*)/);
+
+    if (matches && matches[1]) {
+        return JSON.parse(matches[1]);
+    }
+}
+
+/**
+ * Listens to SSE with custom request.
+ * 
+ * KoboldCpp API notes that to use SSE streaming, we need to create a POST request.
+ * However, `EventSource` provided by vanilla JS does not allow this. This necessitates the need for a custom implementation.
+ * 
+ * Additionally, this implementation makes the assumption that only one event occurs at a time. This is only true for KoboldCpp's API endpoint
+ * as a consequence of LLMs being inherently slow.
+ */
+async function listenToSse(request: Request, callback: (json: any) => void) {
+    const response = await fetch(request);
+
+    if (!response.ok || !response.body) {
+        console.error('Failed to fetch SSE: ' + response.status);
+        return;
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let done = false;
+
+    do {
+        const readValueResult = await reader.read();
+        const chunk = decoder.decode(readValueResult.value, { stream: true });
+        done = readValueResult.done;
+        
+        const json = extractDataFromEvent(chunk);
+
+        if (json) {
+            callback(json);
+        }
+    } while (!done);
+};
 
 /**
  * Send request to llm to continue the text.
@@ -21,4 +62,21 @@ export async function postRequestGenerate(text: string, url: string) {
     const json = await res.json();
 
     return json;
+}
+
+export async function postRequestGenerateSse(text: string, baseUrl: string, callback: (data: any) => void) {
+    console.log("Requesting ai generation with sse");
+
+    const request = new Request(`${baseUrl}/api/extra/generate/stream`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'text/event-stream'
+        },
+        body: JSON.stringify({
+            max_length: 128,
+            prompt: text,
+        })
+    });
+
+    await listenToSse(request, callback);
 }

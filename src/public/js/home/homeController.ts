@@ -106,14 +106,26 @@ export function deleteStory(storyId: string) {
         });
 }
 
+// option to use sse streaming
+// should be customizable in the future
+const useSse = true;
+
 /**
  * Send request to llm to continue the story.
  * @param {string} text Prompt to give to the llm.
  * @param {string} url The url to send the request to.
  */
 export function generateStory(text: string, url: string) {
-    koboldCppApi.postRequestGenerate(text, url)
-        .then(json => {
-            emit(llmOutput, 'generate', json.results[0].text);
+    if (useSse) {
+        koboldCppApi.postRequestGenerateSse(text, url, (data: any) => {
+            if (data && data.token) {
+                emit(llmOutput, 'generate.stream', data.token);
+            }
         });
+    } else {
+        koboldCppApi.postRequestGenerate(text, url)
+            .then(json => {
+                emit(llmOutput, 'generate', json.results[0].text);
+            });
+    }
 }

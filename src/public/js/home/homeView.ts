@@ -52,7 +52,6 @@ function fixStoryText() {
  * @param {string} text 
  */
 function appendToStoryText(text: string) {
-    fixStoryText(); // Hopefully removes any weird nonsense revolving chrome's handling of contenteditable.
     const splitText = text.split('\n');
 
     // NOTE: div element assumption may not hold
@@ -72,6 +71,8 @@ async function requestLlmGenerate() {
     const text = getStoryText();
     const url = getLlmUri();
 
+    fixStoryText();
+
     emit(llmInput, 'generate', text, url);
 }
 
@@ -80,7 +81,12 @@ async function requestLlmGenerate() {
  * @param {string} text The generated text to append.
  */
 export function onGenerateStory(text: string) {
+    fixStoryText();
     appendToStoryText(text);
+}
+
+export function onSseStreamedGenerateStory(textChunk: string) {
+    appendToStoryText(textChunk);
 }
 
 // update story data stuff

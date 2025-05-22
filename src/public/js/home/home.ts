@@ -52,4 +52,8 @@ subscribe(homeController.llmOutput, 'generate', text => {
     homeView.onGenerateStory(text);
 });
 
+subscribe(homeController.llmOutput, 'generate.stream', (text) => {
+    homeView.onSseStreamedGenerateStory(text);
+});
+
 homeView.init();
