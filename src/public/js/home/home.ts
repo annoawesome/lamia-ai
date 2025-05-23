@@ -1,6 +1,7 @@
 import { subscribe } from "../events.js";
 import * as homeView from "./homeView.js";
 import * as homeController from "./homeController.js";
+import * as storyOverviewTabsView from "./storyOverviewTabsView.js";
 
 subscribe(homeView.indexInput, 'update', (storyName, storyId) => {
     homeController.updateStoryIndex(storyName, storyId);
@@ -57,3 +58,4 @@ subscribe(homeController.llmOutput, 'generate.stream', (text) => {
 });
 
 homeView.init();
+storyOverviewTabsView.init();

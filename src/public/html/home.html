@@ -1,4 +1,5 @@
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -6,6 +7,7 @@
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/home.css">
 </head>
+
 <body>
   <header class="topbar">
     <!-- hamburger -->
@@ -13,11 +15,17 @@
     <nav class="div div-topbar-group topbar-group-left">
 
       <button class="btn btn-topbar btn-menu">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1m0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1M3 7c0 .55.45 1 1 1h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path fill="currentColor"
+            d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1m0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1M3 7c0 .55.45 1 1 1h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1" />
+        </svg>
       </button>
 
       <button type="button" class="btn btn-topbar btn-new-story" id="btn-new-story">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 17.46v3.04c0 .28.22.5.5.5h3.04c.13 0 .26-.05.35-.15L17.81 9.94l-3.75-3.75L3.15 17.1q-.15.15-.15.36M20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83l3.75 3.75z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path fill="currentColor"
+            d="M3 17.46v3.04c0 .28.22.5.5.5h3.04c.13 0 .26-.05.35-.15L17.81 9.94l-3.75-3.75L3.15 17.1q-.15.15-.15.36M20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83l3.75 3.75z" />
+        </svg>
       </button>
 
     </nav>
@@ -57,7 +65,12 @@
 
     <div class="panel-right">
 
-      <div class="div div-story-overview">
+      <nav class="div div-story-overview-tabs">
+        <button type="button" class="btn btn-overview-tab" id="btn-overview-tab-story">Story</button>
+        <button type="button" class="btn btn-overview-tab" id="btn-overview-tab-llm">AI</button>
+      </nav>
+
+      <div class="div div-story-overview" id="div-story-overview-stats">
 
         <div class="div">
           <label for="story-description">Description</label>
@@ -99,6 +112,17 @@
           </button>
 
         </div>
+      </div>
+
+      <div class="div div-story-overview gr-hidden" id="div-story-overview-llm-settings">
+        <label for="ctx-len" title="Maximum number of tokens visible to the LLM">Context Length</label>
+        <input type="number" name="llm-ctx-len" class="input input-llm" id="input-llm-ctx-len" min="256" step="1" value="2048" placeholder="2048">
+
+        <label for="ctx-len" title="Amount of tokens to generate">Response Length</label>
+        <input type="number" name="llm-ctx-len" class="input input-llm" id="input-llm-ctx-len" min="256" step="1" value="2048" placeholder="2048">
+
+        <label for="llm-temp" title="How creative the LLM should be">Temperature</label>
+        <input type="number" name="llm-temp" class="input input-llm" id="input-llm-temp" min="0">
       </div>
     </div>
   </div>

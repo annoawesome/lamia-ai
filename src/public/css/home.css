@@ -192,3 +192,19 @@ body {
     color: white;
     padding: 0px 24px;
 }
+
+.div-story-overview-tabs {
+    margin: 10px;
+}
+
+/* story overview tabs */
+.btn-overview-tab {
+    background-color: var(--btn-inset);
+    border: 1px solid var(--border-color);
+    border-radius: 12px 12px 0 0;
+    padding: 8px 16px;
+}
+
+.input-llm {
+    width: 80%;
+}
