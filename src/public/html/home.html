@@ -115,14 +115,31 @@
       </div>
 
       <div class="div div-story-overview gr-hidden" id="div-story-overview-llm-settings">
-        <label for="ctx-len" title="Maximum number of tokens visible to the LLM">Context Length</label>
+        <label for="llm-ctx-len" title="Maximum number of tokens visible to the LLM">Context Length</label>
         <input type="number" name="llm-ctx-len" class="input input-llm" id="input-llm-ctx-len" min="256" step="1" value="2048" placeholder="2048">
 
-        <label for="ctx-len" title="Amount of tokens to generate">Response Length</label>
-        <input type="number" name="llm-ctx-len" class="input input-llm" id="input-llm-ctx-len" min="256" step="1" value="2048" placeholder="2048">
+        <label for="llm-res-len" title="Amount of tokens to generate">Response Length</label>
+        <input type="number" name="llm-res-len" class="input input-llm" id="input-llm-res-len" min="1" step="1" value="120">
 
         <label for="llm-temp" title="How creative the LLM should be">Temperature</label>
-        <input type="number" name="llm-temp" class="input input-llm" id="input-llm-temp" min="0">
+        <input type="number" name="llm-temp" class="input input-llm" id="input-llm-temp" min="0" value="1.15">
+
+        <label for="llm-rep-pen" title="How creative the LLM should be">Repetition Penalty</label>
+        <input type="number" name="llm-rep-pen" class="input input-llm" id="input-llm-rep-pen" min="1" value="1.07">
+
+        <label for="llm-top-p" title="Makes unlikely tokens less likely to appear">Top-p</label>
+        <input type="number" name="llm-top-p" class="input input-llm" id="input-llm-top-p" min="0" max="1" value="0.92">
+
+        <label for="llm-top-k" title="Allow only the k-th most likely tokens to appear">Top-k</label>
+        <input type="number" name="llm-top-k" class="input input-llm" id="input-llm-top-k" min="1" value="100">
+
+        <!-- TODO: style this -->
+        <label for="llm-stream-type">Streaming Mode</label>
+        <select name="llm-stream-type" id="select-llm-stream-type">
+          <option value="sse" selected>SSE</option>
+          <option value="polling">Polling</option>
+          <option value="none">None</option>
+        </select>
       </div>
     </div>
   </div>

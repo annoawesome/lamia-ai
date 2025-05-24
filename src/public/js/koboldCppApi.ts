@@ -1,3 +1,13 @@
+export type KoboldCppRequestBody = {
+    prompt?: string,
+    max_length?: number,
+    max_context_length?: number,
+    rep_pen?: number,
+    temperature?: number,
+    top_k?: number,
+    top_p?: number,
+};
+
 function extractDataFromEvent(eventChunk: string) {
     const matches = eventChunk.match(/data:\s*(.*)/);
 
@@ -46,16 +56,15 @@ async function listenToSse(request: Request, callback: (json: any) => void) {
  * @param {string} url The url to send the request to.
  * @returns {Object}
  */
-export async function postRequestGenerate(text: string, url: string) {
+export async function postRequestGenerate(text: string, url: string, body: KoboldCppRequestBody) {
     console.log("Requesting ai generation");
+
+    body.prompt = text;
 
     // koboldai api request
     const request = new Request(`${url}/api/v1/generate`, {
         method: 'POST',
-        body: JSON.stringify({
-            max_length: 128,
-            prompt: text,
-        })
+        body: JSON.stringify(body)
     });
 
     const res = await fetch(request);
@@ -64,18 +73,17 @@ export async function postRequestGenerate(text: string, url: string) {
     return json;
 }
 
-export async function postRequestGenerateSse(text: string, baseUrl: string, callback: (data: any) => void) {
+export async function postRequestGenerateSse(text: string, baseUrl: string, body: KoboldCppRequestBody, callback: (data: any) => void) {
     console.log("Requesting ai generation with sse");
+
+    body.prompt = text;
 
     const request = new Request(`${baseUrl}/api/extra/generate/stream`, {
         method: 'POST',
         headers: {
             'Accept': 'text/event-stream'
         },
-        body: JSON.stringify({
-            max_length: 128,
-            prompt: text,
-        })
+        body: JSON.stringify(body)
     });
 
     await listenToSse(request, callback);
