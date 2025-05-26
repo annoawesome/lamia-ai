@@ -33,7 +33,7 @@ function postLoginAccount(username: string, password: string) {
         });
 }
 
-function setInput(bool: boolean) {
+function setInputDisabled(bool: boolean) {
     inputUsername.disabled = bool;
     inputPassword.disabled = bool;
 }
@@ -42,16 +42,16 @@ btnLogin.addEventListener('click', () => {
     const username = inputUsername.value;
     const password = inputPassword.value;
 
-    setInput(false);
+    setInputDisabled(true);
 
     generateSalt(password + username + '_lamia')
         .then(async salt => await generateEncryptionKey(password, salt))
         .then(async key => await exportKey(key))
         .then(encodedKey => sessionStorage.setItem('encryption-key', encodedKey))
         .then(async () => await hash(password))
-        .then(passwordHash => postLoginAccount(username, passwordHash))
+        .then(async passwordHash => await postLoginAccount(username, passwordHash))
         .then(() => window.location.replace('home'))
         .catch(() => {
-            setInput(true);
+            setInputDisabled(false);
         });
 });

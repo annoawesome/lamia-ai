@@ -34,15 +34,20 @@ async function createUser(username: string, passwordHash: string) {
 }
 
 async function getUserMetadata(username: string) {
-    const dataPath = await getLamiaUserDirectory(username);
+    try {
+        const dataPath = await getLamiaUserDirectory(username);
+        
+        // should never happen, error gets caught and the catch block is ran
+        if (typeof(dataPath) !== 'string') {
+            return false;
+        }
 
-    if (typeof(dataPath) !== 'string') {
+        return fs.readFileSync(path.join(dataPath, '/userdata'), {
+            encoding: 'utf-8',
+        });
+    } catch (e) {
         return false;
     }
-
-    return fs.readFileSync(path.join(dataPath, '/userdata'), {
-        encoding: 'utf-8',
-    });
 }
 
 export const userDao = {
