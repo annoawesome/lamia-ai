@@ -16,7 +16,8 @@ const inputStoryTags = document.getElementById('input-story-tags') as HTMLInputE
 const pWordCount = document.getElementById('p-word-count') as HTMLParagraphElement;
 const pCharacterCount = document.getElementById('p-character-count') as HTMLParagraphElement;
 
-const inputAiEndpointUrl = document.getElementById('input-ai-endpoint-uri') as HTMLInputElement;
+const inputLlmEndpointUrl = document.getElementById('input-llm-endpoint-uri') as HTMLInputElement;
+const pLlmModelName = document.getElementById('p-llm-model-name') as HTMLParagraphElement;
 const btnAiGenerateMore = document.getElementById('btn-ai-generate-more') as HTMLButtonElement;
 
 export const storyInput = newEvent();
@@ -28,7 +29,7 @@ export const llmInput = newEvent();
  * @returns {string}
  */
 function getLlmUri() {
-    return inputAiEndpointUrl.value;
+    return inputLlmEndpointUrl.value;
 }
 
 function getStoryText() {
@@ -249,6 +250,10 @@ function requestUpdateStoryIndexGui() {
     emit(indexInput, 'get');
 }
 
+function requestSetLlmInputUri() {
+    emit(llmInput, 'setEndpoint', getLlmUri());
+}
+
 /**
  * Update story textarea and title input. Trigger on event.
  * @param {StoryObject} storyObject Object representation of a story.
@@ -292,6 +297,10 @@ export function onDelete(storyId: string) {
     removeStoryInIndexGui(storyId);
 }
 
+export function setModelName(modelName: string) {
+    pLlmModelName.innerText = `Model: ${modelName}`;
+}
+
 // TODO: move to main home.js
 export function init() {
     btnNewStory.onclick = requestCreateNewStory;
@@ -311,6 +320,8 @@ export function init() {
 
     whenFinishWriting(divEditorDesc, () => forceRequestSaveCurrentStory(homeState.currentId.get()));
     whenFinishWriting(inputStoryTags, () => forceRequestSaveCurrentStory(homeState.currentId.get()));
+
+    whenFinishWriting(inputLlmEndpointUrl, () => requestSetLlmInputUri());
 
     requestUpdateStoryIndexGui();
 }

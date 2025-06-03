@@ -88,3 +88,23 @@ export async function postRequestGenerateSse(text: string, baseUrl: string, body
 
     await listenToSse(request, callback);
 }
+
+/**
+ * Gets the current loaded model
+ */
+export async function getLoadedModel(baseUri: string): Promise<string> {
+    const request = new Request(`${baseUri}/api/v1/model`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json'
+        }
+    });
+
+    const response = await fetch(request);
+
+    if (response.ok) {
+        return (await response.json()).result;
+    } else {
+        return '';
+    }
+}

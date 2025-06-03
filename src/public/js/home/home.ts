@@ -3,6 +3,7 @@ import * as homeView from "./homeView.js";
 import * as homeController from "./homeController.js";
 import * as storyOverviewTabsView from "./storyOverviewTabsView.js";
 import * as storyOverviewLlm from "./storyOverviewLlm.js";
+import * as llmSelector from "./llmSelector.js";
 
 subscribe(homeView.indexInput, 'update', (storyName, storyId) => {
     homeController.updateStoryIndex(storyName, storyId);
@@ -27,6 +28,10 @@ subscribe(homeView.indexInput, 'get', () => {
 
 subscribe(homeView.storyInput, 'delete', storyId => {
     homeController.deleteStory(storyId);
+});
+
+subscribe(homeView.llmInput, 'setEndpoint', (uri: string) => {
+    homeController.setLlmUri(uri);
 });
 
 subscribe(homeView.llmInput, 'generate', (text, url) => {
@@ -58,6 +63,11 @@ subscribe(homeController.llmOutput, 'generate.stream', (text) => {
     homeView.onSseStreamedGenerateStory(text);
 });
 
+subscribe(homeController.llmOutput, 'modelName', (modelName: string) => {
+    homeView.setModelName(modelName);
+});
+
 homeView.init();
 storyOverviewTabsView.init();
 storyOverviewLlm.init();
+llmSelector.init();

@@ -135,3 +135,22 @@ export function generateStory(text: string, url: string) {
             });
     }
 }
+
+function isValidUrl(url: string) {
+    try {
+        const urlObject = new URL(url);
+
+        return urlObject.protocol === 'http:' || urlObject.protocol === 'https:';
+    } catch {
+        return false;
+    }
+}
+
+export function setLlmUri(uri: string) {
+    llmSettings.uri = isValidUrl(uri) ? uri : 'http://localhost:5001';
+
+    koboldCppApi.getLoadedModel(uri)
+        .then(modelName => {
+            emit(llmOutput, 'modelName', modelName);
+        });
+}

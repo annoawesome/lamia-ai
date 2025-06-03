@@ -20,6 +20,7 @@ function whenFinishWriting(domElement: HTMLElement, callback: () => void) {
 
 // No separation of logic and user interface yet, too simple
 export const llmSettings = {
+    uri: 'http://localhost:5001',
     contextLength: 2048,
     responseLength: 120,
     temperature: 1.15,
