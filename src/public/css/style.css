@@ -5,7 +5,12 @@ body {
     --btn-inset: rgb(20, 20, 20);
     --bg-inset: rgb(20, 20, 20);
     --text-color: rgb(200, 200, 200);
+
     --div-info-bg-color: rgba(0, 150, 255, 0.2);
+    --div-info-border-color: rgb(0, 200, 255);
+    --div-warn-bg-color: rgba(255, 0, 0, 0.1);
+    --div-warn-border-color: rgb(255, 0, 0);
+
     --border-color: rgb(100, 100, 100);
 
     background-color: var(--bg-color);
@@ -27,13 +32,14 @@ h1 {
     border: 0;
 }
 
+/* Links for login and register in index.html */
 a.btn {
     display: block;
     margin: auto;
     margin-bottom: 10px;
 
     padding: 10px;
-    width: 50%;
+    width: min(400px, 50%);
 }
 
 .div-form {
@@ -64,22 +70,25 @@ input {
     background-color: var(--btn-inset)
 }
 
-form > .info {
+.info {
     background-color: var(--div-info-bg-color);
     padding: 6px 12px;
-    border: 1px solid rgb(0, 200, 255);
+    border: 1px solid var(--div-info-border-color);
     border-radius: 8px;
     margin: 15px;
 }
 
 .warn {
+    background-color: var(--div-warn-bg-color);
+    border: 1px solid var(--div-warn-border-color);
+    border-radius: 8px;
+    padding: 5px;
+}
+
+#warn-register-error {
     margin: auto;
     text-align: center;
-    background-color: rgba(255, 0, 0, 0.25);
-    border: 1px solid rgb(255, 0, 0);
-    border-radius: 8px;
     width: 60%;
-    padding: 5px;
     margin-bottom: 16px;
 }
 
