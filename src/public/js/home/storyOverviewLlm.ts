@@ -1,3 +1,5 @@
+import { whenFinishWriting } from "./homeViewUtil.js";
+
 const inputLlmCtxLen = document.getElementById('input-llm-ctx-len') as HTMLInputElement;
 const inputLlmResLen = document.getElementById('input-llm-res-len') as HTMLInputElement;
 const inputLlmTemp = document.getElementById('input-llm-temp') as HTMLInputElement;
@@ -5,18 +7,6 @@ const inputLlmRepPen = document.getElementById('input-llm-rep-pen') as HTMLInput
 const inputLlmTopP = document.getElementById('input-llm-top-p') as HTMLInputElement;
 const inputLlmTopK = document.getElementById('input-llm-top-k') as HTMLInputElement;
 const selectLlmStreamType = document.getElementById('select-llm-stream-type') as HTMLSelectElement;
-
-function whenFinishWriting(domElement: HTMLElement, callback: () => void) {
-    domElement.addEventListener('blur', () => {
-        callback();
-    });
-
-    domElement.addEventListener('keypress', ev => {
-        if (ev.key === 'Enter') {
-            domElement.blur();
-        }
-    });
-}
 
 // No separation of logic and user interface yet, too simple
 export const llmSettings = {

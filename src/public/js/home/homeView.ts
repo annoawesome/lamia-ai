@@ -1,7 +1,8 @@
 import { homeState } from './globalHomeState.js';
 import { emit, newEvent } from '../events.js';
-import { generateEmptyStoryObject, generateStoryObject, StoryObject, storyObjectVersion } from './storyObject.js';
+import { generateEmptyStoryObject, StoryObject } from './storyObject.js';
 import { StoryIndex } from './homeState.js';
+import { appendToStoryText, fixStoryText, generateStoryObjectFromGui, getLlmUri, getStoryText, setStoryText, whenFinishWriting } from './homeViewUtil.js';
 
 const btnNewStory = document.getElementById('btn-new-story') as HTMLButtonElement;
 const panelSubStoryIndex = document.getElementById('panel-sub-story-index') as HTMLDivElement;
@@ -23,50 +24,6 @@ const btnAiGenerateMore = document.getElementById('btn-ai-generate-more') as HTM
 export const storyInput = newEvent();
 export const indexInput = newEvent();
 export const llmInput = newEvent();
-
-/**
- * Get uri for ai endpoint
- * @returns {string}
- */
-function getLlmUri() {
-    return inputLlmEndpointUrl.value;
-}
-
-function getStoryText() {
-    return divEditorContent.innerText;
-}
-
-/**
- * 
- * @param {string} text 
- */
-function setStoryText(text: string) {
-    divEditorContent.innerHTML = text.split('\n').reduce((previous, current) => previous += `<div>${current}</div>`, '');
-}
-
-function fixStoryText() {
-    setStoryText(getStoryText());
-}
-
-/**
- * 
- * @param {string} text 
- */
-function appendToStoryText(text: string) {
-    const splitText = text.split('\n');
-
-    // NOTE: div element assumption may not hold
-    const innerDivElement = divEditorContent.children[divEditorContent.children.length - 1] as HTMLDivElement;
-    innerDivElement.innerText += splitText[0];
-
-    if (splitText.length > 1) {
-        for (let i = 1; i < splitText.length; i++) {
-            const divTextChunk = document.createElement('div');
-            divTextChunk.textContent = splitText[i];
-            divEditorContent.append(divTextChunk);
-        }
-    }
-}
 
 async function requestLlmGenerate() {
     const text = getStoryText();
@@ -100,44 +57,6 @@ export function onSseStreamedGenerateStory(textChunk: string) {
 function getWordCount(text: string) {
     return text.split(new RegExp("\\s+")).filter(word => word.length > 0).length;
 }
-
-/**
- * Get the character count of text.
- * @param {string} text The text to count characters from.
- * @returns {number}
- */
-function getCharacterCount(text: string) {
-    return text.length;
-}
-
-function generateStoryObjectFromGui() {
-    const storyTitle = inputStoryName.value;
-    const storyContent = getStoryText();
-    const storyDesc = divEditorDesc.innerText;
-    const storyTags = inputStoryTags.value.split(new RegExp('\\s*,\\s*')).filter(str => str.length > 0);
-
-    return generateStoryObject(
-        storyObjectVersion,
-        storyTitle,
-        storyContent,
-        storyDesc,
-        storyTags
-    );
-}
-
-function whenFinishWriting(domElement: HTMLElement, callback: () => void) {
-    domElement.addEventListener('blur', () => {
-        callback();
-    });
-
-    domElement.addEventListener('keypress', ev => {
-        if (ev.key === 'Enter') {
-            domElement.blur();
-        }
-    });
-}
-
-
 
 // update ui
 
@@ -280,7 +199,7 @@ export function onCreateNewStory(storyObject: StoryObject, storyId: string) {
 export function onGetStoryIndex(obtainedIndex: StoryIndex) {
     panelSubStoryIndex.textContent = '';
 
-    for (let storyDataEntry of Object.entries(obtainedIndex.stories)) {
+    for (const storyDataEntry of Object.entries(obtainedIndex.stories)) {
         const storyId = storyDataEntry[0];
         const storyData = storyDataEntry[1];
 
@@ -315,7 +234,7 @@ export function init() {
     setInterval(requestSaveCurrentStory, 5000);
     setInterval(() => {
         pWordCount.innerText = `${getWordCount(getStoryText())} words`;
-        pCharacterCount.innerText = `${getCharacterCount(getStoryText())} characters`;
+        pCharacterCount.innerText = `${getStoryText().length} characters`;
     }, 1000);
 
     whenFinishWriting(divEditorDesc, () => forceRequestSaveCurrentStory(homeState.currentId.get()));

@@ -3,6 +3,7 @@ import * as homeView from "./homeView.js";
 import * as homeController from "./homeController.js";
 import * as storyOverviewTabsView from "./storyOverviewTabsView.js";
 import * as storyOverviewLlm from "./storyOverviewLlm.js";
+import * as storyOverviewExport from "./storyOverviewExport.js";
 import * as llmSelector from "./llmSelector.js";
 
 subscribe(homeView.indexInput, 'update', (storyName, storyId) => {
@@ -71,3 +72,4 @@ homeView.init();
 storyOverviewTabsView.init();
 storyOverviewLlm.init();
 llmSelector.init();
+storyOverviewExport.init();
