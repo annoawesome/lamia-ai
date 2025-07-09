@@ -21,9 +21,8 @@ export async function startServer() {
     server.use('/api/v1/user', userRouter);
     server.use('/api/v1/story', storyRouter);
 
-    server.use('/js', express.static('dist/public/js'));
-    server.use('/css', express.static('src/public/css')); // No build tools? (megamind)
-    server.use('/', express.static('src/public/html', { extensions: ['html'] })); // No build tools? (megamind)
+    // say YES to build tools!
+    server.use(express.static('dist/public', { extensions: [ 'html' ] }));
 
     server.listen(defaultPort, () => {
         log('Server listening at port ' + defaultPort);

@@ -1,0 +1,20 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "vite: watch",
+            "type": "shell",
+            "command": "cd ./src/public && npx vite build --watch --emptyOutDir", // windows: probably runs with powershell 7?
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "isBackground": true,
+        }
+    ]
+}
