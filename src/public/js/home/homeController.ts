@@ -1,7 +1,7 @@
 import { emit, newEvent } from "../events.js";
 import { homeState } from "./globalHomeState.js";
 import { putStoryInIndex, removeStoryInIndex, StoryIndex } from "./homeState.js";
-import { convertStoryObject, generateStoryObject, StoryObject } from "./storyObject.js";
+import { convertStoryObject, generateDifference, generateStoryObject, redoStoryContent, StoryObject, syncStoryObject, undoStoryContent } from "./storyObject.js";
 
 import * as lamiaApi from '../lamiaApi.js';
 import * as koboldCppApi from '../koboldCppApi.js';
@@ -15,10 +15,17 @@ const storyObjectVersion = '0.2.0';
 
 
 /**
- * Update global state last seen text.
+ * Updates current story object
  * @param {string} updatedText Updated text.
  */
-export function updateStoryLastSeenText(updatedText: string) {
+export function updateCurrentStoryObject(updatedStoryObject: StoryObject) {
+    if (!homeState.currentStoryObject) return;
+
+    const updatedText = updatedStoryObject.content;
+
+    generateDifference(homeState.currentStoryObject, homeState.lastSeenText.get() as string, updatedText);
+    syncStoryObject(homeState.currentStoryObject, updatedStoryObject);
+
     homeState.lastSeenText.set(updatedText);
 }
 
@@ -50,6 +57,7 @@ export function updateStoryIndex(storyName: string, storyId: string) {
 
 export function createNewStory() {
     const storyObject = generateStoryObject(storyObjectVersion, 'Untitled Story', '', '', []);
+    homeState.currentStoryObject = storyObject;
 
     lamiaApi.createStory(storyObject)
         .then(storyId => {
@@ -73,6 +81,9 @@ export function loadStory(storyId: string) {
             console.log('Got story id ' + storyId);
             homeState.currentId.set(storyId);
             homeState.lastSeenText.set(storyObject.content);
+
+            homeState.currentStoryObject = storyObject;
+
             emit(storyOutput, 'load', storyObject, storyId);
         });
 }
@@ -102,6 +113,7 @@ export function deleteStory(storyId: string) {
                 homeState.lastSeenText.set('');
                 removeStoryInIndex(homeState, storyId);
                 lamiaApi.postIndex(homeState.index.get() as StoryIndex);
+                homeState.currentStoryObject = null;
                 emit(storyOutput, 'delete', storyId);
             }
         });
@@ -123,7 +135,7 @@ export function generateStory(text: string, url: string) {
     };
 
     if (llmSettings.streamingMode === 'sse') {
-        koboldCppApi.postRequestGenerateSse(text, url, body, (data: any) => {
+        koboldCppApi.postRequestGenerateSse(text, url, body, (data) => {
             if (data && data.token) {
                 emit(llmOutput, 'generate.stream', data.token);
             }
@@ -153,4 +165,24 @@ export function setLlmUri(uri: string) {
         .then(modelName => {
             emit(llmOutput, 'modelName', modelName);
         });
+}
+
+/* HISTORY */
+
+export function performUndo() {
+    const currentStoryObject = homeState.currentStoryObject;
+
+    if (currentStoryObject) {
+        undoStoryContent(currentStoryObject);
+        emit(storyOutput, 'history:undo', currentStoryObject.content);
+    }
+}
+
+export function performRedo() {
+    const currentStoryObject = homeState.currentStoryObject;
+
+    if (currentStoryObject) {
+        redoStoryContent(currentStoryObject);
+        emit(storyOutput, 'history:redo', currentStoryObject.content);
+    }
 }

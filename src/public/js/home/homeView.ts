@@ -21,6 +21,9 @@ const inputLlmEndpointUrl = document.getElementById('input-llm-endpoint-uri') as
 const pLlmModelName = document.getElementById('p-llm-model-name') as HTMLParagraphElement;
 const btnAiGenerateMore = document.getElementById('btn-ai-generate-more') as HTMLButtonElement;
 
+const btnUndo = document.getElementById('btn-undo') as HTMLButtonElement;
+const btnRedo = document.getElementById('btn-redo') as HTMLButtonElement;
+
 export const storyInput = newEvent();
 export const indexInput = newEvent();
 export const llmInput = newEvent();
@@ -131,6 +134,11 @@ function getUpdatedStoryContent() {
         return updatedStoryContent;
     }
 
+    // TODO: not compatible with edits made when pointer is greater than 0. Fix by somehow allowing saving when new changes are introduced.
+    if (homeState.currentStoryObject?.history.pointer !== 0) {
+        return updatedStoryContent;
+    }
+
     updatedStoryContent.updated = true;
     return updatedStoryContent;
 }
@@ -172,6 +180,17 @@ function requestUpdateStoryIndexGui() {
 function requestSetLlmInputUri() {
     emit(llmInput, 'setEndpoint', getLlmUri());
 }
+
+/* HISTORY */
+
+function requestUndo() {
+    emit(storyInput, 'history:undo');
+}
+
+function requestRedo() {
+    emit(storyInput, 'history:redo');
+}
+
 
 /**
  * Update story textarea and title input. Trigger on event.
@@ -220,6 +239,17 @@ export function setModelName(modelName: string) {
     pLlmModelName.innerText = `Model: ${modelName}`;
 }
 
+/* HISTORY */
+
+/**
+ * Use for both undo/redo, or anything that needs direct editing of text
+ * @param newContent 
+ */
+export function onRequestUpdateText(newContent: string) {
+    setStoryText(newContent);
+}
+
+
 // TODO: move to main home.js
 export function init() {
     btnNewStory.onclick = requestCreateNewStory;
@@ -241,6 +271,9 @@ export function init() {
     whenFinishWriting(inputStoryTags, () => forceRequestSaveCurrentStory(homeState.currentId.get()));
 
     whenFinishWriting(inputLlmEndpointUrl, () => requestSetLlmInputUri());
+
+    btnUndo.addEventListener('click', requestUndo);
+    btnRedo.addEventListener('click', requestRedo);
 
     requestUpdateStoryIndexGui();
 }
