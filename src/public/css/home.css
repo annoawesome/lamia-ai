@@ -126,9 +126,12 @@ body {
 }
 
 #btn-ai-generate-more {
+    float: right;
+}
+
+.btn-middle-panel {
     margin: 10px;
     padding: 10px;
-    float: right;
 }
 
 /* Right panel */

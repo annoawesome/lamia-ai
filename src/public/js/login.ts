@@ -1,3 +1,5 @@
+import '../css/style.css';
+
 import { exportKey, generateEncryptionKey, generateSalt } from "./encryption.js";
 
 const btnLogin = document.getElementById('btn-login') as HTMLButtonElement;

@@ -1,4 +1,5 @@
 import { emit, newEvent, subscribe } from "../events.js";
+import { generateEmptyStoryObject, StoryObject } from "./storyObject.js";
 
 export type StoryIndex = { 
     stories: { [storyId: string]: {
@@ -9,7 +10,12 @@ export type StoryIndex = {
 export type HomeState = {
     lastSeenText: ReactiveVariable<string>;
     currentId: ReactiveVariable<string>;
-    index: ReactiveVariable<StoryIndex | {}>;
+    index: ReactiveVariable<StoryIndex | object>;
+
+    // may be easier to keep a global story object for further use
+    // at this point... we don't constantly generate
+    // but we need to constantly synchronize?
+    currentStoryObject: StoryObject | null;
 };
 
 class ReactiveVariable<T> {
@@ -31,7 +37,7 @@ class ReactiveVariable<T> {
         emit(this.event, 'update', value);
     }
 
-    onUpdate(callback: (value: T) => void) {
+    onUpdate(callback: () => void) {
         subscribe(this.event, 'update', callback);
     }
 }
@@ -48,6 +54,7 @@ export function generateHomeState(): HomeState {
         lastSeenText: new ReactiveVariable('lastSeenText', ''),
         currentId: new ReactiveVariable('currentId', ''),
         index: new ReactiveVariable('index', {}),
+        currentStoryObject: generateEmptyStoryObject(),
     };
 }
 

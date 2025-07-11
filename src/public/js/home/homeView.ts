@@ -21,6 +21,9 @@ const inputLlmEndpointUrl = document.getElementById('input-llm-endpoint-uri') as
 const pLlmModelName = document.getElementById('p-llm-model-name') as HTMLParagraphElement;
 const btnAiGenerateMore = document.getElementById('btn-ai-generate-more') as HTMLButtonElement;
 
+const btnUndo = document.getElementById('btn-undo') as HTMLButtonElement;
+const btnRedo = document.getElementById('btn-redo') as HTMLButtonElement;
+
 export const storyInput = newEvent();
 export const indexInput = newEvent();
 export const llmInput = newEvent();
@@ -45,6 +48,10 @@ export function onGenerateStory(text: string) {
 
 export function onSseStreamedGenerateStory(textChunk: string) {
     appendToStoryText(textChunk);
+}
+
+export function onSseStreamFinish() {
+    requestSaveCurrentStory();
 }
 
 // update story data stuff
@@ -173,6 +180,17 @@ function requestSetLlmInputUri() {
     emit(llmInput, 'setEndpoint', getLlmUri());
 }
 
+/* HISTORY */
+
+function requestUndo() {
+    emit(storyInput, 'history:undo');
+}
+
+function requestRedo() {
+    emit(storyInput, 'history:redo');
+}
+
+
 /**
  * Update story textarea and title input. Trigger on event.
  * @param {StoryObject} storyObject Object representation of a story.
@@ -220,6 +238,17 @@ export function setModelName(modelName: string) {
     pLlmModelName.innerText = `Model: ${modelName}`;
 }
 
+/* HISTORY */
+
+/**
+ * Use for both undo/redo, or anything that needs direct editing of text
+ * @param newContent 
+ */
+export function onRequestUpdateText(newContent: string) {
+    setStoryText(newContent);
+}
+
+
 // TODO: move to main home.js
 export function init() {
     btnNewStory.onclick = requestCreateNewStory;
@@ -231,7 +260,11 @@ export function init() {
 
     whenFinishWriting(inputStoryName, () => requestUpdateStoryIndex(inputStoryName.value, homeState.currentId.get()));
     btnDeleteStory.onclick = () => requestDeleteStoryPermanently(homeState.currentId.get());
-    setInterval(requestSaveCurrentStory, 5000);
+
+    whenFinishWriting(divEditorContent, () => {
+        requestSaveCurrentStory();
+    });
+
     setInterval(() => {
         pWordCount.innerText = `${getWordCount(getStoryText())} words`;
         pCharacterCount.innerText = `${getStoryText().length} characters`;
@@ -241,6 +274,9 @@ export function init() {
     whenFinishWriting(inputStoryTags, () => forceRequestSaveCurrentStory(homeState.currentId.get()));
 
     whenFinishWriting(inputLlmEndpointUrl, () => requestSetLlmInputUri());
+
+    btnUndo.addEventListener('click', requestUndo);
+    btnRedo.addEventListener('click', requestRedo);
 
     requestUpdateStoryIndexGui();
 }

@@ -1,3 +1,6 @@
+import '../../css/style.css';
+import '../../css/home.css';
+
 import { subscribe } from "../events.js";
 import * as homeView from "./homeView.js";
 import * as homeController from "./homeController.js";
@@ -5,6 +8,7 @@ import * as storyOverviewTabsView from "./storyOverviewTabsView.js";
 import * as storyOverviewLlm from "./storyOverviewLlm.js";
 import * as storyOverviewExport from "./storyOverviewExport.js";
 import * as llmSelector from "./llmSelector.js";
+import { StoryObject } from './storyObject.js';
 
 subscribe(homeView.indexInput, 'update', (storyName, storyId) => {
     homeController.updateStoryIndex(storyName, storyId);
@@ -18,9 +22,8 @@ subscribe(homeView.storyInput, 'load', (storyId) => {
     homeController.loadStory(storyId);
 });
 
-subscribe(homeView.storyInput, 'save', (storyObject, storyId) => {
-    homeController.updateStoryLastSeenText(storyObject.content);
-    homeController.saveStory(storyObject, storyId);
+subscribe(homeView.storyInput, 'save', (storyObjectSnapshot: StoryObject, storyId: string) => {
+    homeController.saveStory(storyObjectSnapshot, storyId);
 });
 
 subscribe(homeView.indexInput, 'get', () => {
@@ -37,6 +40,14 @@ subscribe(homeView.llmInput, 'setEndpoint', (uri: string) => {
 
 subscribe(homeView.llmInput, 'generate', (text, url) => {
     homeController.generateStory(text, url);
+});
+
+subscribe(homeView.storyInput, 'history:undo', () => {
+    homeController.performUndo();
+});
+
+subscribe(homeView.storyInput, 'history:redo', () => {
+    homeController.performRedo();
 });
 
 
@@ -64,8 +75,20 @@ subscribe(homeController.llmOutput, 'generate.stream', (text) => {
     homeView.onSseStreamedGenerateStory(text);
 });
 
+subscribe(homeController.llmOutput, 'generate.stream:done', () => {
+    homeView.onSseStreamFinish();
+});
+
 subscribe(homeController.llmOutput, 'modelName', (modelName: string) => {
     homeView.setModelName(modelName);
+});
+
+subscribe(homeController.storyOutput, 'history:undo', (content: string) => {
+    homeView.onRequestUpdateText(content);
+});
+
+subscribe(homeController.storyOutput, 'history:redo', (content: string) => {
+    homeView.onRequestUpdateText(content);
 });
 
 homeView.init();

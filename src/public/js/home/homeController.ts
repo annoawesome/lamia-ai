@@ -1,7 +1,7 @@
 import { emit, newEvent } from "../events.js";
 import { homeState } from "./globalHomeState.js";
 import { putStoryInIndex, removeStoryInIndex, StoryIndex } from "./homeState.js";
-import { convertStoryObject, generateStoryObject, StoryObject } from "./storyObject.js";
+import { convertStoryObject__0_1_0t0_2_0, convertStoryObject__0_2_0t0_3_0, generateDifference, generateStoryObject, redoAllStoryContent, redoStoryContent, StoryObject, syncStoryObject, undoStoryContent } from "./storyObject.js";
 
 import * as lamiaApi from '../lamiaApi.js';
 import * as koboldCppApi from '../koboldCppApi.js';
@@ -15,10 +15,22 @@ const storyObjectVersion = '0.2.0';
 
 
 /**
- * Update global state last seen text.
+ * Updates current story object
  * @param {string} updatedText Updated text.
  */
-export function updateStoryLastSeenText(updatedText: string) {
+export function updateCurrentStoryObject(updatedStoryObject: StoryObject) {
+    if (!homeState.currentStoryObject) return;
+
+    const updatedText = updatedStoryObject.content;
+
+    if (homeState.currentStoryObject.history.pointer !== 0) {
+        redoAllStoryContent(homeState.currentStoryObject);
+        homeState.lastSeenText.set(homeState.currentStoryObject.content);
+    }
+
+    generateDifference(homeState.currentStoryObject, homeState.lastSeenText.get() as string, updatedText);
+    syncStoryObject(homeState.currentStoryObject, updatedStoryObject);
+
     homeState.lastSeenText.set(updatedText);
 }
 
@@ -50,6 +62,7 @@ export function updateStoryIndex(storyName: string, storyId: string) {
 
 export function createNewStory() {
     const storyObject = generateStoryObject(storyObjectVersion, 'Untitled Story', '', '', []);
+    homeState.currentStoryObject = storyObject;
 
     lamiaApi.createStory(storyObject)
         .then(storyId => {
@@ -69,10 +82,15 @@ export function createNewStory() {
 export function loadStory(storyId: string) {
     lamiaApi.getStory(storyId)
         .then(storyObject => {
-            storyObject = convertStoryObject(storyObject);
+            storyObject = convertStoryObject__0_1_0t0_2_0(storyObject);
+            storyObject = convertStoryObject__0_2_0t0_3_0(storyObject);
+            
             console.log('Got story id ' + storyId);
             homeState.currentId.set(storyId);
             homeState.lastSeenText.set(storyObject.content);
+
+            homeState.currentStoryObject = storyObject;
+
             emit(storyOutput, 'load', storyObject, storyId);
         });
 }
@@ -83,11 +101,17 @@ export function loadStory(storyId: string) {
  * @param {string} storyName Title of story.
  * @param {string} storyContent Content of story.
  */
-export function saveStory(storyObject: StoryObject, storyId: string) {
-    lamiaApi.updateStory(storyId, storyObject)
-        .then(() => {
-            console.log('Updated id ' + storyId);
-        });
+export function saveStory(storyObjectSnapshot: StoryObject, storyId: string) {
+    const currentStoryObject = homeState.currentStoryObject;
+
+    if (currentStoryObject) {
+        updateCurrentStoryObject(storyObjectSnapshot);
+
+        lamiaApi.updateStory(storyId, currentStoryObject)
+            .then(() => {
+                console.log('Updated id ' + storyId);
+            });
+    }
 }
 
 /**
@@ -102,6 +126,7 @@ export function deleteStory(storyId: string) {
                 homeState.lastSeenText.set('');
                 removeStoryInIndex(homeState, storyId);
                 lamiaApi.postIndex(homeState.index.get() as StoryIndex);
+                homeState.currentStoryObject = null;
                 emit(storyOutput, 'delete', storyId);
             }
         });
@@ -123,10 +148,12 @@ export function generateStory(text: string, url: string) {
     };
 
     if (llmSettings.streamingMode === 'sse') {
-        koboldCppApi.postRequestGenerateSse(text, url, body, (data: any) => {
+        koboldCppApi.postRequestGenerateSse(text, url, body, (data) => {
             if (data && data.token) {
                 emit(llmOutput, 'generate.stream', data.token);
             }
+        }).then(() => {
+            emit(llmOutput, 'generate.stream:done');
         });
     } else {
         koboldCppApi.postRequestGenerate(text, url, body)
@@ -153,4 +180,24 @@ export function setLlmUri(uri: string) {
         .then(modelName => {
             emit(llmOutput, 'modelName', modelName);
         });
+}
+
+/* HISTORY */
+
+export function performUndo() {
+    const currentStoryObject = homeState.currentStoryObject;
+
+    if (currentStoryObject) {
+        undoStoryContent(currentStoryObject);
+        emit(storyOutput, 'history:undo', currentStoryObject.content);
+    }
+}
+
+export function performRedo() {
+    const currentStoryObject = homeState.currentStoryObject;
+
+    if (currentStoryObject) {
+        redoStoryContent(currentStoryObject);
+        emit(storyOutput, 'history:redo', currentStoryObject.content);
+    }
 }
