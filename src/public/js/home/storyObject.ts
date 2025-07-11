@@ -107,8 +107,6 @@ export function undoStoryContent(storyObject: StoryObject) {
     const undoneContent = applyPatch(storyObject.content, reversedPatch);
 
     if (undoneContent) {
-        console.log(`Now pointer: ${storyHistory.pointer}, total size: ${storyHistory.patches.length}`);
-        console.log(`Content undone. Original was ${storyObject.content}, new is ${undoneContent}`);
         storyObject.content = undoneContent;
     }
 

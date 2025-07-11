@@ -50,6 +50,10 @@ export function onSseStreamedGenerateStory(textChunk: string) {
     appendToStoryText(textChunk);
 }
 
+export function onSseStreamFinish() {
+    requestSaveCurrentStory();
+}
+
 // update story data stuff
 
 /**
@@ -131,11 +135,6 @@ function getUpdatedStoryContent() {
     }
 
     if (currentId === '') {
-        return updatedStoryContent;
-    }
-
-    // TODO: not compatible with edits made when pointer is greater than 0. Fix by somehow allowing saving when new changes are introduced.
-    if (homeState.currentStoryObject?.history.pointer !== 0) {
         return updatedStoryContent;
     }
 
@@ -261,7 +260,11 @@ export function init() {
 
     whenFinishWriting(inputStoryName, () => requestUpdateStoryIndex(inputStoryName.value, homeState.currentId.get()));
     btnDeleteStory.onclick = () => requestDeleteStoryPermanently(homeState.currentId.get());
-    setInterval(requestSaveCurrentStory, 5000);
+
+    whenFinishWriting(divEditorContent, () => {
+        requestSaveCurrentStory();
+    });
+
     setInterval(() => {
         pWordCount.innerText = `${getWordCount(getStoryText())} words`;
         pCharacterCount.innerText = `${getStoryText().length} characters`;

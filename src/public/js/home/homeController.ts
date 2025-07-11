@@ -1,7 +1,7 @@
 import { emit, newEvent } from "../events.js";
 import { homeState } from "./globalHomeState.js";
 import { putStoryInIndex, removeStoryInIndex, StoryIndex } from "./homeState.js";
-import { convertStoryObject, generateDifference, generateStoryObject, redoStoryContent, StoryObject, syncStoryObject, undoStoryContent } from "./storyObject.js";
+import { convertStoryObject, generateDifference, generateStoryObject, redoAllStoryContent, redoStoryContent, StoryObject, syncStoryObject, undoStoryContent } from "./storyObject.js";
 
 import * as lamiaApi from '../lamiaApi.js';
 import * as koboldCppApi from '../koboldCppApi.js';
@@ -22,6 +22,11 @@ export function updateCurrentStoryObject(updatedStoryObject: StoryObject) {
     if (!homeState.currentStoryObject) return;
 
     const updatedText = updatedStoryObject.content;
+
+    if (homeState.currentStoryObject.history.pointer !== 0) {
+        redoAllStoryContent(homeState.currentStoryObject);
+        homeState.lastSeenText.set(updatedText);
+    }
 
     generateDifference(homeState.currentStoryObject, homeState.lastSeenText.get() as string, updatedText);
     syncStoryObject(homeState.currentStoryObject, updatedStoryObject);
@@ -139,6 +144,8 @@ export function generateStory(text: string, url: string) {
             if (data && data.token) {
                 emit(llmOutput, 'generate.stream', data.token);
             }
+        }).then(() => {
+            emit(llmOutput, 'generate.stream:done');
         });
     } else {
         koboldCppApi.postRequestGenerate(text, url, body)
