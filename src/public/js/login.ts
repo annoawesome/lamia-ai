@@ -7,11 +7,22 @@ const btnLogin = document.getElementById('btn-login') as HTMLButtonElement;
 const inputUsername = document.getElementById('input-username') as HTMLInputElement;
 const inputPassword = document.getElementById('input-password') as HTMLInputElement;
 
+const divWarnLoginError = document.getElementById('warn-login-error') as HTMLDivElement;
+const pWarnLoginError = document.getElementById('p-warn-login-error') as HTMLParagraphElement;
+
 async function hash(str: string | undefined) {
     const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
     return Array.from(new Uint8Array(hashBuffer))
         .map(char => char.toString(16).padStart(2, '0'))
         .join('');
+}
+
+function preprocessResponse(res: Response) {
+    if (!res.ok) {
+        throw new Error(res.statusText);
+    } else {
+        return res.json();
+    }
 }
 
 function postLoginAccount(username: string, password: string) {
@@ -29,7 +40,7 @@ function postLoginAccount(username: string, password: string) {
     });
 
     return fetch(request)
-        .then(res => res.json())
+        .then(res => preprocessResponse(res))
         .then(res => {
             console.log(res);
         });
@@ -53,7 +64,18 @@ btnLogin.addEventListener('click', () => {
         .then(async () => await hash(password))
         .then(async passwordHash => await postLoginAccount(username, passwordHash))
         .then(() => window.location.replace('home'))
-        .catch(() => {
+        .catch((err: Error) => {
             setInputDisabled(false);
+
+            switch (err.message) {
+                case 'Conflict':
+                    pWarnLoginError.innerText = 'Failed to log in. Did you put in the correct username or password?';
+                    break;
+                default:
+                    pWarnLoginError.innerText = 'Failed to log in. An unknown error has occurred. Please try again in a few minutes.';
+                    break;
+            }
+
+            divWarnLoginError.classList.remove('gr-hidden');
         });
 });

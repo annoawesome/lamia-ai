@@ -85,12 +85,19 @@ input {
     padding: 5px;
 }
 
-#warn-register-error {
+.warn-popup {
     margin: auto;
     text-align: center;
     width: 60%;
     margin-bottom: 16px;
 }
+
+/* #warn-register-error {
+    margin: auto;
+    text-align: center;
+    width: 60%;
+    margin-bottom: 16px;
+} */
 
 input.btn {
     width: 50%;
