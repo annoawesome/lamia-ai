@@ -99,11 +99,17 @@ export function loadStory(storyId: string) {
  * @param {string} storyName Title of story.
  * @param {string} storyContent Content of story.
  */
-export function saveStory(storyObject: StoryObject, storyId: string) {
-    lamiaApi.updateStory(storyId, storyObject)
-        .then(() => {
-            console.log('Updated id ' + storyId);
-        });
+export function saveStory(storyObjectSnapshot: StoryObject, storyId: string) {
+    const currentStoryObject = homeState.currentStoryObject;
+
+    if (currentStoryObject) {
+        updateCurrentStoryObject(storyObjectSnapshot);
+
+        lamiaApi.updateStory(storyId, currentStoryObject)
+            .then(() => {
+                console.log('Updated id ' + storyId);
+            });
+    }
 }
 
 /**

@@ -22,9 +22,8 @@ subscribe(homeView.storyInput, 'load', (storyId) => {
     homeController.loadStory(storyId);
 });
 
-subscribe(homeView.storyInput, 'save', (storyObject: StoryObject, storyId: string) => {
-    homeController.updateCurrentStoryObject(storyObject);
-    homeController.saveStory(storyObject, storyId);
+subscribe(homeView.storyInput, 'save', (storyObjectSnapshot: StoryObject, storyId: string) => {
+    homeController.saveStory(storyObjectSnapshot, storyId);
 });
 
 subscribe(homeView.indexInput, 'get', () => {
