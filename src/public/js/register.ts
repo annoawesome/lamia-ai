@@ -1,3 +1,5 @@
+import '../css/style.css';
+
 const btnRegisterAccount = document.getElementById('btn-register-account') as HTMLButtonElement;
 
 const inputUsername = document.getElementById('input-username') as HTMLInputElement;
