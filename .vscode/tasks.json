@@ -2,19 +2,71 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "vite: watch",
+            "label": "vite: server",
             "type": "shell",
-            "command": "cd ./src/public && npx vite build --watch --emptyOutDir", // windows: probably runs with powershell 7?
+            "command": "cd ./src/public && npx vite",
             "group": "build",
             "presentation": {
                 "echo": true,
-                "reveal": "always",
-                "focus": false,
                 "panel": "shared",
                 "showReuseMessage": true,
                 "clear": false
             },
             "isBackground": true,
+            "runOptions": {
+                "runOn": "folderOpen"
+            }
+        },
+        {
+            "label": "vite: build",
+            "type": "shell",
+            "command": "cd ./src/public && npx vite build --emptyOutDir",
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "isBackground": true,
+        },
+        {
+            "label": "vite: watch",
+            "type": "shell",
+            "command": "cd ./src/public && npx vite build --watch --emptyOutDir",
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "isBackground": true,
+            "runOptions": {
+                "runOn": "folderOpen"
+            }
+        },
+        {
+            "type": "typescript",
+            "tsconfig": "tsconfig.json",
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "group": "build",
+            "label": "tsc: build - tsconfig.json"
+        },
+        {
+            "type": "typescript",
+            "tsconfig": "tsconfig.json",
+            "option": "watch",
+            "problemMatcher": [
+                "$tsc-watch"
+            ],
+            "group": "build",
+            "label": "tsc: watch - tsconfig.json",
+            "runOptions": {
+                "runOn": "folderOpen"
+            }
         }
     ]
 }
