@@ -18,10 +18,10 @@ export type StoryObject = {
     };
 };
 
-export function generateStoryObject(storyVersion: string, storyTitle: string, storyContent: string, storyDesc: string, storyTags: string[]): StoryObject {
+export function generateStoryObject(storyTitle: string, storyContent: string, storyDesc: string, storyTags: string[]): StoryObject {
     return {
         metadata: {
-            version: storyVersion,
+            version: storyObjectVersion,
         },
 
         title: storyTitle,
@@ -38,7 +38,7 @@ export function generateStoryObject(storyVersion: string, storyTitle: string, st
 }
 
 export function generateEmptyStoryObject() {
-    return generateStoryObject(storyObjectVersion, '', '', '', []);
+    return generateStoryObject('', '', '', []);
 }
 
 /**

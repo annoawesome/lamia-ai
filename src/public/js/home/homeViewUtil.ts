@@ -2,7 +2,7 @@
  * Utility script for various functions that gets data from ui elements
  */
 
-import { generateStoryObject, storyObjectVersion } from './storyObject.js';
+import { generateStoryObject } from './storyObject.js';
 
 const divEditorContent = document.getElementById('div-editor-content') as HTMLDivElement;
 
@@ -57,13 +57,12 @@ export function appendToStoryText(text: string) {
 }
 
 export function generateStoryObjectFromGui() {
-    const storyTitle = inputStoryName.value;
+    const storyTitle = inputStoryName.value || 'Untitled Story';
     const storyContent = getStoryText();
     const storyDesc = divEditorDesc.innerText;
     const storyTags = inputStoryTags.value.split(new RegExp('\\s*,\\s*')).filter(str => str.length > 0);
 
     return generateStoryObject(
-        storyObjectVersion,
         storyTitle,
         storyContent,
         storyDesc,

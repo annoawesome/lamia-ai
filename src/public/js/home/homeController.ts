@@ -1,7 +1,7 @@
 import { emit, newEvent } from "../events.js";
 import { homeState } from "./globalHomeState.js";
 import { putStoryInIndex, removeStoryInIndex, StoryIndex } from "./homeState.js";
-import { convertStoryObject__0_1_0t0_2_0, convertStoryObject__0_2_0t0_3_0, generateDifference, generateStoryObject, redoAllStoryContent, redoStoryContent, StoryObject, syncStoryObject, undoStoryContent } from "./storyObject.js";
+import { convertStoryObject__0_1_0t0_2_0, convertStoryObject__0_2_0t0_3_0, generateDifference, redoAllStoryContent, redoStoryContent, StoryObject, syncStoryObject, undoStoryContent } from "./storyObject.js";
 
 import * as lamiaApi from '../lamiaApi.js';
 import * as koboldCppApi from '../koboldCppApi.js';
@@ -10,8 +10,6 @@ import { llmSettings } from "./storyOverviewLlm.js";
 export const storyOutput = newEvent();
 export const indexOutput = newEvent();
 export const llmOutput = newEvent();
-
-const storyObjectVersion = '0.2.0';
 
 
 /**
@@ -60,8 +58,8 @@ export function updateStoryIndex(storyName: string, storyId: string) {
         .then(() => emit(indexOutput, 'update'));
 }
 
-export function createNewStory() {
-    const storyObject = generateStoryObject(storyObjectVersion, 'Untitled Story', '', '', []);
+export function createNewStory(protoStoryObject: StoryObject) {
+    const storyObject = protoStoryObject;
     homeState.currentStoryObject = storyObject;
 
     lamiaApi.createStory(storyObject)

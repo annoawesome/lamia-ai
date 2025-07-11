@@ -1,6 +1,6 @@
 import { homeState } from './globalHomeState.js';
 import { emit, newEvent } from '../events.js';
-import { generateEmptyStoryObject, StoryObject } from './storyObject.js';
+import { generateEmptyStoryObject, generateStoryObject, StoryObject } from './storyObject.js';
 import { StoryIndex } from './homeState.js';
 import { appendToStoryText, fixStoryText, generateStoryObjectFromGui, getLlmUri, getStoryText, setStoryText, whenFinishWriting } from './homeViewUtil.js';
 
@@ -120,6 +120,10 @@ function updateStoryInIndexGui(storyId: string, storyName: string) {
     }
 }
 
+function isStoryLoaded() {
+    return homeState.currentId.get() !== '';
+}
+
 function getUpdatedStoryContent() {
     const currentText = getStoryText();
     const currentId = homeState.currentId.get();
@@ -134,7 +138,7 @@ function getUpdatedStoryContent() {
         return updatedStoryContent;
     }
 
-    if (currentId === '') {
+    if (!isStoryLoaded()) {
         return updatedStoryContent;
     }
 
@@ -142,8 +146,8 @@ function getUpdatedStoryContent() {
     return updatedStoryContent;
 }
 
-function requestCreateNewStory() {
-    emit(storyInput, 'create');
+function requestCreateNewStory(protoStoryObject: StoryObject) {
+    emit(storyInput, 'create', protoStoryObject);
 }
 
 /**
@@ -165,7 +169,11 @@ function requestSaveCurrentStory() {
 }
 
 function forceRequestSaveCurrentStory(storyId: string) {
-    emit(storyInput, 'save', generateStoryObjectFromGui(), storyId);
+    if (!isStoryLoaded()) {
+        requestCreateNewStory(generateStoryObjectFromGui());
+    } else {
+        emit(storyInput, 'save', generateStoryObjectFromGui(), storyId);
+    }
 }
 
 function requestDeleteStoryPermanently(storyId: string) {
@@ -206,8 +214,8 @@ export function onLoadStory(storyObject: StoryObject) {
  */
 export function onCreateNewStory(storyObject: StoryObject, storyId: string) {
     loadStoryFromEvent(storyObject);
-    addNewStoryToIndexGui('Untitled Story', storyId);
-    requestUpdateStoryIndex('Untitled Story', storyId);
+    addNewStoryToIndexGui(storyObject.title, storyId);
+    requestUpdateStoryIndex(storyObject.title, storyId);
 }
 
 /**
@@ -251,14 +259,22 @@ export function onRequestUpdateText(newContent: string) {
 
 // TODO: move to main home.js
 export function init() {
-    btnNewStory.onclick = requestCreateNewStory;
+    btnNewStory.onclick = () => requestCreateNewStory(generateStoryObject('Untitled Story', '', '', []));
     btnAiGenerateMore.onclick = () => requestLlmGenerate();
 
     divEditorContent.addEventListener('blur', () => {
         fixStoryText();
     });
 
-    whenFinishWriting(inputStoryName, () => requestUpdateStoryIndex(inputStoryName.value, homeState.currentId.get()));
+    whenFinishWriting(inputStoryName, () => {
+        if (isStoryLoaded()) {
+            requestUpdateStoryIndex(inputStoryName.value, homeState.currentId.get());
+            forceRequestSaveCurrentStory(homeState.currentId.get());
+        } else {
+            requestCreateNewStory(generateStoryObjectFromGui());
+        }
+    });
+
     btnDeleteStory.onclick = () => requestDeleteStoryPermanently(homeState.currentId.get());
 
     whenFinishWriting(divEditorContent, () => {

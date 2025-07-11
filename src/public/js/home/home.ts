@@ -14,8 +14,8 @@ subscribe(homeView.indexInput, 'update', (storyName, storyId) => {
     homeController.updateStoryIndex(storyName, storyId);
 });
 
-subscribe(homeView.storyInput, 'create', () => {
-    homeController.createNewStory();
+subscribe(homeView.storyInput, 'create', (protoStoryObject: StoryObject) => {
+    homeController.createNewStory(protoStoryObject);
 });
 
 subscribe(homeView.storyInput, 'load', (storyId) => {
