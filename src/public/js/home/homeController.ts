@@ -25,7 +25,7 @@ export function updateCurrentStoryObject(updatedStoryObject: StoryObject) {
 
     if (homeState.currentStoryObject.history.pointer !== 0) {
         redoAllStoryContent(homeState.currentStoryObject);
-        homeState.lastSeenText.set(updatedText);
+        homeState.lastSeenText.set(homeState.currentStoryObject.content);
     }
 
     generateDifference(homeState.currentStoryObject, homeState.lastSeenText.get() as string, updatedText);
