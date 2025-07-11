@@ -1,7 +1,7 @@
 import { emit, newEvent } from "../events.js";
 import { homeState } from "./globalHomeState.js";
 import { putStoryInIndex, removeStoryInIndex, StoryIndex } from "./homeState.js";
-import { convertStoryObject, generateDifference, generateStoryObject, redoAllStoryContent, redoStoryContent, StoryObject, syncStoryObject, undoStoryContent } from "./storyObject.js";
+import { convertStoryObject__0_1_0t0_2_0, convertStoryObject__0_2_0t0_3_0, generateDifference, generateStoryObject, redoAllStoryContent, redoStoryContent, StoryObject, syncStoryObject, undoStoryContent } from "./storyObject.js";
 
 import * as lamiaApi from '../lamiaApi.js';
 import * as koboldCppApi from '../koboldCppApi.js';
@@ -82,7 +82,9 @@ export function createNewStory() {
 export function loadStory(storyId: string) {
     lamiaApi.getStory(storyId)
         .then(storyObject => {
-            storyObject = convertStoryObject(storyObject);
+            storyObject = convertStoryObject__0_1_0t0_2_0(storyObject);
+            storyObject = convertStoryObject__0_2_0t0_3_0(storyObject);
+            
             console.log('Got story id ' + storyId);
             homeState.currentId.set(storyId);
             homeState.lastSeenText.set(storyObject.content);

@@ -1,6 +1,6 @@
 import {reversePatch, structuredPatch, StructuredPatch, applyPatch} from 'diff';
 
-export const storyObjectVersion = '0.2.0';
+export const storyObjectVersion = '0.3.0';
 
 export type StoryObject = {
     metadata: {
@@ -46,16 +46,41 @@ export function generateEmptyStoryObject() {
  * @param {StoryObject} storyObject JSON representation of story
  * @returns {StoryObject}
  */
-export function convertStoryObject(storyObject: StoryObject) {
+export function convertStoryObject__0_1_0t0_2_0(storyObject: StoryObject) {
     if (storyObject.metadata.version !== '0.1.0') {
         return storyObject;
     }
+
+    console.log('Old story detected, converting to 0.2.0');
 
     storyObject.metadata.version = '0.2.0';
 
     storyObject.overview = {
         description: '',
         tags: [],
+    };
+
+    return storyObject;
+}
+
+/**
+ * Convert story 0.2.0 to 0.3.0
+ * @param {StoryObject} storyObject JSON representation of story
+ * @returns {StoryObject}
+ */
+export function convertStoryObject__0_2_0t0_3_0(storyObject: StoryObject) {
+    if (storyObject.metadata.version !== '0.2.0') {
+        return storyObject;
+    }
+
+    console.log('Old story detected, converting to 0.3.0');
+
+
+    storyObject.metadata.version = '0.3.0';
+
+    storyObject.history = {
+        patches: [],
+        pointer: 0,
     };
 
     return storyObject;
