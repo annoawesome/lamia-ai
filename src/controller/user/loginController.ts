@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import { userDao } from '../../dao/userDao.js';
-import { getEnvVar } from '../../service/lamiadbService.js';
+import { getEnvVarWithDefaultIgnoring } from '../../service/lamiadbService.js';
 import { Request, Response } from 'express';
 
 export function postLoginController(req: Request, res: Response) {
@@ -20,7 +20,7 @@ export function postLoginController(req: Request, res: Response) {
 
         bcrypt.compare(password, userdata.passwordHash, (err, success) => {
             if (success) {
-                jwt.sign({ username: username }, getEnvVar('JWT_SECRET'), {algorithm: 'HS256'}, (err, token) => {
+                jwt.sign({ username: username }, getEnvVarWithDefaultIgnoring('JWT_SECRET') as string, {algorithm: 'HS256'}, (err, token) => {
                     if (err) {
                         console.log(err);
                         res.sendStatus(500);

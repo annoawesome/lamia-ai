@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import { userDao } from '../../dao/userDao.js';
-import { getEnvVar } from '../../service/lamiadbService.js';
+import { getEnvVarWithDefaultIgnoring } from '../../service/lamiadbService.js';
 import { isFailure, sanitizeFailure } from '../../util/failure.js';
 import { Request, Response } from 'express';
 
@@ -15,7 +15,7 @@ export function createUserController(req: Request, res: Response) {
 
     bcrypt.hash(password, saltRounds).then((passwordHash) => {
         userDao.createUser(username, passwordHash)
-            .then(() => jwt.sign({ username: username }, getEnvVar('JWT_SECRET'), {algorithm: 'HS256'}, (err, token) => {
+            .then(() => jwt.sign({ username: username }, getEnvVarWithDefaultIgnoring('JWT_SECRET') as string, {algorithm: 'HS256'}, (err, token) => {
                 if (err) {
                     console.log(err);
                     res.sendStatus(500);

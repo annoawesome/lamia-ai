@@ -1,31 +1,8 @@
 import path from 'path';
-import crypto from 'crypto';
 
-import { createKeyValueStore, readDocumentWithDefaults, getKeyValueStore, userDataPath } from "../util/fsdb.js";
+import { createKeyValueStore, readDocumentWithDefaults, getKeyValueStore, userDataPath, writeDocument } from "../util/fsdb.js";
 
 export const dataDirectoryPath = path.join(userDataPath, 'Lamia AI Server');
-
-type Config = {
-    metadata: {
-        version: string;
-    };
-    env: {
-        JWT_SECRET: string;
-        LAMIA_URL: string;
-        LAMIA_PORT: number;
-    };
-};
-
-export let config = {
-    metadata: {
-        version: '0.0.0'
-    },
-    env: {
-        JWT_SECRET: crypto.randomBytes(128).toString('hex'),
-        LAMIA_URL: 'http://localhost:27297',
-        LAMIA_PORT: 27297,
-    }
-};
 
 /**
  * 
@@ -52,23 +29,45 @@ export function getLamiaUserDirectory(username: string) {
 }
 
 /**
- * Generate and get config file if .env is not available.
- * @returns {Object}
+ * Get variable from .env or config file. Only use for unique local variables
+ * @param {string} variableName Name of variable
  */
-export async function getConfig() {
-    const configStr = readDocumentWithDefaults(dataDirectoryPath, 'config.json', JSON.stringify(config));
-    config = JSON.parse(configStr) as Config;
+export function getEnvVarWithDefault(variableName: string, defaultValue: unknown) {
+    if (process.env[variableName]) {
+        return process.env[variableName];
+    };
 
-    return config;
+    const configStr = readDocumentWithDefaults(dataDirectoryPath, 'config.json', '{}');
+    const config = JSON.parse(configStr);
+
+    if (!config[variableName]) {
+        config[variableName] = defaultValue;
+        writeDocument(dataDirectoryPath, 'config.json', JSON.stringify(config));
+    }
+    
+    return config[variableName];
 }
 
 /**
- * Get environment variable from .env or config file
+ * Same as `getEnvVarWithDefault()` but without setting a default.
+ * @param variableName 
+ * @returns 
+ */
+export function getEnvVarWithDefaultIgnoring(variableName: string) {
+    if (process.env[variableName]) {
+        return process.env[variableName];
+    };
+
+    const configStr = readDocumentWithDefaults(dataDirectoryPath, 'config.json', '{}');
+    const config = JSON.parse(configStr);
+    
+    return config[variableName];
+}
+
+/**
+ * Get variable from .env
  * @param {string} variableName Name of variable
  */
 export function getEnvVar(variableName: string) {
-    const configEnv = config.env as {[x: string]: any};
-
-    if (process.env[variableName]) return process.env[variableName];
-    else return configEnv[variableName];
+    return process.env[variableName];
 }

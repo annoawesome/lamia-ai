@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
+import { getEnvVar } from '../service/lamiadbService.js';
 
 export function getInfoController(req: Request, res: Response) {
     res.json({
-        backendName: process.env.LAMIA_BACKEND_NAME,
-        version: process.env.LAMIA_VERSION_LABEL,
+        backendName: getEnvVar('LAMIA_BACKEND_NAME'),
+        version: getEnvVar('LAMIA_VERSION_LABEL'),
     });
 }

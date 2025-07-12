@@ -1,18 +1,20 @@
 import express from 'express';
+import crypto from 'crypto';
 import cookieParser from 'cookie-parser';
 
 import {router as userRouter} from './router/userRouter.js';
 import { router as storyRouter } from './router/storyRouter.js';
 import { logSource, log } from './middleware/logger.js';
-import { getConfig, getEnvVar } from './service/lamiadbService.js';
+import { getEnvVar, getEnvVarWithDefault } from './service/lamiadbService.js';
 import { getInfoController } from './controller/infoController.js';
 
 const server = express();
 
 export async function startServer() {
     log('Loading configuration');
-    await getConfig();
     log('Starting server');
+
+    getEnvVarWithDefault('JWT_SECRET', crypto.randomBytes(128).toString('hex'));
 
     const defaultPort = getEnvVar('LAMIA_PORT');
 
