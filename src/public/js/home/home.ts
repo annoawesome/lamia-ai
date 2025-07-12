@@ -50,6 +50,10 @@ subscribe(homeView.storyInput, 'history:redo', () => {
     homeController.performRedo();
 });
 
+subscribe(homeView.appInput, 'info', () => {
+    homeController.getBackendInfo();
+});
+
 
 subscribe(homeController.indexOutput, 'get', obtainedIndex => {
     homeView.onGetStoryIndex(obtainedIndex);
@@ -89,6 +93,10 @@ subscribe(homeController.storyOutput, 'history:undo', (content: string) => {
 
 subscribe(homeController.storyOutput, 'history:redo', (content: string) => {
     homeView.onRequestUpdateText(content);
+});
+
+subscribe(homeController.appOutput, 'info', backendInfo => {
+    homeView.onGetBackendInfo(backendInfo);
 });
 
 homeView.init();

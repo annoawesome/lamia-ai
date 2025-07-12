@@ -10,6 +10,7 @@ import { llmSettings } from "./storyOverviewLlm.js";
 export const storyOutput = newEvent();
 export const indexOutput = newEvent();
 export const llmOutput = newEvent();
+export const appOutput = newEvent();
 
 
 /**
@@ -198,4 +199,11 @@ export function performRedo() {
         redoStoryContent(currentStoryObject);
         emit(storyOutput, 'history:redo', currentStoryObject.content);
     }
+}
+
+
+export function getBackendInfo() {
+    lamiaApi.getBackendInfo().then(backendInfo => {
+        emit(appOutput, 'info', backendInfo);
+    });
 }

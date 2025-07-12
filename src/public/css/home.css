@@ -57,6 +57,14 @@ body {
     flex-grow: 1;
 }
 
+#p-backend-info {
+    margin: 10px;
+    font-size: small;
+    display: flex;
+    align-items: center;
+    color: rgb(100, 100, 100);
+}
+
 /* left panel */
 
 .panel-left {

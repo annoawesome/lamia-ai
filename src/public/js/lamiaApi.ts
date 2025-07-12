@@ -152,3 +152,14 @@ export async function deleteStory(storyId: string) {
 
     return statusCode;
 }
+
+export async function getBackendInfo() {
+    const request = new Request(`/api/v1/info`, {
+        method: 'GET'
+    });
+    
+    const res = await fetch(request);
+    const info = await res.json();
+
+    return info;
+}

@@ -24,9 +24,12 @@ const btnAiGenerateMore = document.getElementById('btn-ai-generate-more') as HTM
 const btnUndo = document.getElementById('btn-undo') as HTMLButtonElement;
 const btnRedo = document.getElementById('btn-redo') as HTMLButtonElement;
 
+const pBackendInfo = document.getElementById('p-backend-info') as HTMLParagraphElement;
+
 export const storyInput = newEvent();
 export const indexInput = newEvent();
 export const llmInput = newEvent();
+export const appInput = newEvent();
 
 async function requestLlmGenerate() {
     const text = getStoryText();
@@ -198,6 +201,12 @@ function requestRedo() {
     emit(storyInput, 'history:redo');
 }
 
+/* APP */
+
+function requestGetBackendInfo() {
+    emit(appInput, 'info');
+}
+
 
 /**
  * Update story textarea and title input. Trigger on event.
@@ -256,6 +265,10 @@ export function onRequestUpdateText(newContent: string) {
     setStoryText(newContent);
 }
 
+export function onGetBackendInfo(backendInfo: { backendName: string, version: string }) {
+    pBackendInfo.innerText = `Backend: ${backendInfo.backendName} (${backendInfo.version})`;
+}
+
 
 // TODO: move to main home.js
 export function init() {
@@ -295,4 +308,6 @@ export function init() {
     btnRedo.addEventListener('click', requestRedo);
 
     requestUpdateStoryIndexGui();
+
+    requestGetBackendInfo();
 }

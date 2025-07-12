@@ -5,6 +5,7 @@ import {router as userRouter} from './router/userRouter.js';
 import { router as storyRouter } from './router/storyRouter.js';
 import { logSource, log } from './middleware/logger.js';
 import { getConfig, getEnvVar } from './service/lamiadbService.js';
+import { getInfoController } from './controller/infoController.js';
 
 const server = express();
 
@@ -20,6 +21,8 @@ export async function startServer() {
 
     server.use('/api/v1/user', userRouter);
     server.use('/api/v1/story', storyRouter);
+
+    server.get('/api/v1/info', getInfoController);
 
     // say YES to build tools!
     server.use(express.static('dist/public', { extensions: [ 'html' ] }));
