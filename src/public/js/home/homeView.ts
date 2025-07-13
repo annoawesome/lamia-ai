@@ -2,7 +2,7 @@ import { homeState } from './globalHomeState.js';
 import { emit, newEvent } from '../events.js';
 import { generateEmptyStoryObject, generateStoryObject, StoryObject } from './storyObject.js';
 import { StoryIndex } from './homeState.js';
-import { appendToStoryText, fixStoryText, generateStoryObjectFromGui, getLlmUri, getStoryText, setStoryText, whenFinishWriting } from './homeViewUtil.js';
+import { appendToStoryText, fixStoryText, generateStoryObjectFromGui, getLlmUri, getStoryText, setStoryText, whenFinishWriting, whenFinishWritingMultiLine } from './homeViewUtil.js';
 
 const btnNewStory = document.getElementById('btn-new-story') as HTMLButtonElement;
 const panelSubStoryIndex = document.getElementById('panel-sub-story-index') as HTMLDivElement;
@@ -290,7 +290,7 @@ export function init() {
 
     btnDeleteStory.onclick = () => requestDeleteStoryPermanently(homeState.currentId.get());
 
-    whenFinishWriting(divEditorContent, () => {
+    whenFinishWritingMultiLine(divEditorContent, () => {
         requestSaveCurrentStory();
     });
 
@@ -299,7 +299,7 @@ export function init() {
         pCharacterCount.innerText = `${getStoryText().length} characters`;
     }, 1000);
 
-    whenFinishWriting(divEditorDesc, () => forceRequestSaveCurrentStory(homeState.currentId.get()));
+    whenFinishWritingMultiLine(divEditorDesc, () => forceRequestSaveCurrentStory(homeState.currentId.get()));
     whenFinishWriting(inputStoryTags, () => forceRequestSaveCurrentStory(homeState.currentId.get()));
 
     whenFinishWriting(inputLlmEndpointUrl, () => requestSetLlmInputUri());

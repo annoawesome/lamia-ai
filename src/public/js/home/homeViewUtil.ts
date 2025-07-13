@@ -71,13 +71,17 @@ export function generateStoryObjectFromGui() {
 }
 
 export function whenFinishWriting(domElement: HTMLElement, callback: () => void) {
-    domElement.addEventListener('blur', () => {
-        callback();
-    });
+    whenFinishWritingMultiLine(domElement, callback);
 
     domElement.addEventListener('keypress', ev => {
         if (ev.key === 'Enter') {
             domElement.blur();
         }
+    });
+}
+
+export function whenFinishWritingMultiLine(domElement: HTMLElement, callback: () => void) {
+    domElement.addEventListener('blur', () => {
+        callback();
     });
 }
