@@ -1,0 +1,54 @@
+body,
+html,
+h1 {
+    margin: 0;
+}
+
+#title-image-overlay {
+    position: relative;
+    background: linear-gradient(180deg, rgba(96, 32, 32, 0.5), var(--c-neutral-3));
+    width: 100%;
+    height: 520px;
+}
+
+#title-image {
+    position: absolute;
+    width: 100%;
+    height: 512px;
+    object-fit: cover;
+    filter: blur(4px);
+}
+
+#hero-text {
+    padding: 192px 0 128px;
+    font-size: 64px;
+}
+
+.self-ad-card {
+    background: var(--c-neutral-2);
+
+    width: 768px;
+    margin: 128px 128px 0 128px;
+    padding: 64px;
+
+    border-radius: 32px;
+    box-shadow: 0 8px 32px var(--c-neutral-1);
+}
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.card-image {
+    float: right;
+    width: 256px;
+    height: 256px;
+    margin-left: 64px;
+
+    border-radius: 16px;
+    border: 2px solid rgba(48, 48, 64);
+}
