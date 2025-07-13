@@ -4,7 +4,10 @@
         {
             "label": "vite: server",
             "type": "shell",
-            "command": "cd ./src/public && npx vite",
+            "command": "npx vite",
+            "options": {
+                "cwd": "${workspaceFolder}/src/public"
+            },
             "group": "build",
             "presentation": {
                 "echo": true,
@@ -20,7 +23,10 @@
         {
             "label": "vite: build",
             "type": "shell",
-            "command": "cd ./src/public && npx vite build --emptyOutDir",
+            "command": "npx vite build --emptyOutDir",
+            "options": {
+                "cwd": "${workspaceFolder}/src/public"
+            },
             "group": "build",
             "presentation": {
                 "echo": true,
@@ -33,7 +39,10 @@
         {
             "label": "vite: watch",
             "type": "shell",
-            "command": "cd ./src/public && npx vite build --watch --emptyOutDir",
+            "command": "npx vite build --watch --emptyOutDir",
+            "options": {
+                "cwd": "${workspaceFolder}/src/public"
+            },
             "group": "build",
             "presentation": {
                 "echo": true,
