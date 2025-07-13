@@ -5,27 +5,39 @@
   <title>Lamia AI | Register</title>
 </head>
 <body>
-  <h1>Register User</h1>
-
   <div class="warn warn-popup" id="warn-register-error" style="display: none;">
     <p id="p-warn-register-error">Internal server error</p>
   </div>
 
-  <div class="div-center-container">
-    <div class="div-form">
-      <form>
-        <label for="username">Username</label>
-        <input type="text" name="username" id="input-username">
-        <label for="password">Password</label>
-        <input type="password" name="password" id="input-password">
-        <label for="re-enter-password">Re-enter Password</label>
-        <input type="password" name="re-enter-password" id="input-re-enter-password">
+  <div class="flex center-container screenview">
+    <div class="div-form div-secondary">
+      <h1>Register User</h1>
+
+      <form class="form-row">
+        <div>
+          <label for="username">Username</label>
+          <input type="text" name="username" class="input-primary occupy-width" id="input-username">
+        </div>
+
+        <div>
+          <label for="password">Password</label>
+          <input type="password" name="password" class="input-primary occupy-width" id="input-password">
+        </div>
+
+        <div>
+          <label for="re-enter-password">Re-enter Password</label>
+          <input type="password" name="re-enter-password" class="input-primary occupy-width" id="input-re-enter-password">
+        </div>
+
         <div class="info">
           <p>
             If you lose your password, you will not be able to recover your data!
           </p>
         </div>
-        <input type="button" value="Register Account" class="btn" id="btn-register-account">
+
+        <div>
+          <input type="button" value="Register Account" class="btn btn-primary btn-medium" id="btn-register-account">
+        </div>
 
         <p>Already have an account? <a href="login">Login here!</a></p>
       </form>

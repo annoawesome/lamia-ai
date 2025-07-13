@@ -34,19 +34,16 @@ body {
 .topbar .btn {
     padding: 5px;
     margin: 8px 0px 8px 8px;
-    background-color: var(--btn-inset);
-    border: 1px solid var(--border-color);
 }
 
 .topbar .topbar-group-right .btn-topbar {
     margin: 8px 8px 8px 0px;
 }
 
-.topbar #input-story-name {
+#input-story-name {
     margin: 8px;
-    border: 0;
-    box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.25);
     font-size: medium;
+    text-align: center;
 }
 
 /* The thing below the topbar */
@@ -62,27 +59,26 @@ body {
     font-size: small;
     display: flex;
     align-items: center;
-    color: rgb(100, 100, 100);
+    color: var(--c-neutral-6);
 }
 
 /* left panel */
 
 .panel-left {
-    background-color: var(--bg-outset);
     width: 25%;
     height: 100%;
 }
 
 /* buttons */
 .btn-story-select {
-    background-color: rgba(0, 0, 0, 0);
+    background-color: transparent;
     border: 0;
     width: 100%;
     color: white;
 }
 
 .btn-story-select:hover {
-    background-color: rgba(255, 255, 255, 0.25);
+    background-color: var(--c-neutral-base);
 }
 
 /* Story paragraphs */
@@ -96,26 +92,29 @@ body {
 
 /* text field */
 .panel-middle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
     width: 45%;
     height: 95%;
     margin: auto;
+    gap: 16px;
 }
 
 /* Generic text editor field */
 .div-editor {
-    background-color: var(--btn-inset);
-    border: 1px solid var(--border-color);
+    background-color: var(--c-neutral-2);
     border-radius: 12px;
     padding: 10px;
 
     scrollbar-width: thin;
-    scrollbar-color: rgb(100, 100, 100) rgba(0,0,0,0);
+    scrollbar-color: var(--c-neutral-6) transparent;
     overflow-y: auto;
 }
 
 #div-editor-desc {
     height: 200px;
-    margin: 10px 16px;
     line-height: 1.5;
 }
 
@@ -126,7 +125,6 @@ body {
 #div-editor-content {
     width: 95%;
     height: 75vh;
-    margin: auto;
 }
 
 #div-editor-content > * {
@@ -137,9 +135,13 @@ body {
     float: right;
 }
 
-.btn-middle-panel {
-    margin: 10px;
-    padding: 10px;
+.middle-panel-btns {
+    height: 32px;
+    width: 95%;
+}
+
+.middle-panel-btns > .btn-secondary {
+    margin-right: 32px;
 }
 
 /* Right panel */
@@ -150,7 +152,7 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: thin;
-    scrollbar-color: rgb(100, 100, 100) rgba(0,0,0,0);
+    scrollbar-color: var(--c-neutral-6) transparent;
 }
 
 /* Story overview */
@@ -165,8 +167,7 @@ body {
 
 #div-story-stats {
     padding: 16px;
-    margin: 16px;
-    background-color: var(--bg-inset);
+    background-color: var(--c-neutral-2);
     border: 1px solid black;
     border-radius: 12px;
 }
@@ -184,8 +185,6 @@ body {
 }
 
 #warn-dangerous-actions {
-    margin: 16px;
-
     display: flex;
     flex-flow: column;
 }
@@ -206,14 +205,15 @@ body {
 
 /* story overview tabs */
 .btn-overview-tab {
-    background-color: var(--btn-inset);
-    border: 1px solid var(--border-color);
+    background-color: var(--c-neutral-2);
+    border: 1px solid var(--c-neutral-base);
     border-radius: 12px 12px 0 0;
     padding: 8px 16px;
 }
 
 .input-llm {
     width: 80%;
+    margin-bottom: 24px;
 }
 
 /* Popup styles */
@@ -233,17 +233,15 @@ body {
 .div-popup {
     width: 400px;
     height: 300px;
+    padding: 32px;
 
-    background-color: var(--bg-color);
+    background-color: var(--c-neutral-3);
     border-radius: 24px;
-}
-
-form p {
-    margin: 16px;
 }
 
 #div-ai-selector-popup form {
     margin: 16px 0px;
+    padding: 16px;
 }
 
 /* prevent input overflow */
@@ -252,6 +250,6 @@ form p {
 }
 
 #btn-llm-selector-exit {
-    margin: 16px;
+    margin: 16px 0;
     padding: 10px 20px;
 }

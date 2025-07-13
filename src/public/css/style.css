@@ -1,21 +1,28 @@
 html,
 body {
-    --bg-color: rgb(30, 30, 30);
-    --btn-color: rgb(250, 25, 25);
-    --btn-inset: rgb(20, 20, 20);
-    --bg-inset: rgb(20, 20, 20);
-    --text-color: rgb(200, 200, 200);
+    --c-neutral-9: rgb(224, 224, 224);
+    --c-neutral-8: rgb(192, 192, 192);
+    --c-neutral-7: rgb(160, 160, 160);
+    --c-neutral-6: rgb(128, 128, 128);
+    --c-neutral-base: rgb(64, 64, 64);
+    --c-neutral-4: rgb(48, 48, 48);
+    --c-neutral-3: rgb(32, 32, 32);
+    --c-neutral-2: rgb(16, 16, 16);
+    --c-neutral-1: rgb(8, 8, 8);
+
+    --c-primary-2: rgb(96, 0, 0);
+    --c-primary-base: rgb(192, 0, 0);
+    --c-primary-4: rgb(192, 64, 64);
+    --c-primary-5: rgb(192, 128, 128);
 
     --div-info-bg-color: rgba(0, 150, 255, 0.2);
     --div-info-border-color: rgb(0, 200, 255);
     --div-warn-bg-color: rgba(255, 0, 0, 0.1);
     --div-warn-border-color: rgb(255, 0, 0);
 
-    --border-color: rgb(100, 100, 100);
-
-    background-color: var(--bg-color);
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    color: var(--text-color);
+    background-color: var(--c-neutral-3);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: var(--c-neutral-9);
 }
 
 h1 {
@@ -26,48 +33,41 @@ h1 {
     text-decoration: none;
     text-align: center;
 
-    background-color: var(--btn-color);
-    color: var(--text-color);
+    color: var(--c-neutral-9);
     border-radius: 8px;
     border: 0;
-}
-
-/* Links for login and register in index.html */
-a.btn {
-    display: block;
-    margin: auto;
-    margin-bottom: 10px;
-
-    padding: 10px;
-    width: min(400px, 50%);
 }
 
 .div-form {
     width: min(40%, 400px);
 }
 
-.div-center-container {
+.flex {
+    display: flex;
+}
+
+.center-container {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
 }
 
 input,
 label {
     display: block;
-    color: var(--text-color);
-    margin-left: 15px;
-    width: 100%;
+    color: var(--c-neutral-9);
 }
 
-input {
-    margin: 5px 15px 15px 15px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    padding: 5px;
-    font-size: 1em;
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 8px;
+}
 
-    background-color: var(--btn-inset)
+.form-row label {
+    margin-bottom: 8px;
 }
 
 .info {
@@ -75,7 +75,6 @@ input {
     padding: 6px 12px;
     border: 1px solid var(--div-info-border-color);
     border-radius: 8px;
-    margin: 15px;
 }
 
 .warn {
@@ -92,20 +91,9 @@ input {
     margin-bottom: 16px;
 }
 
-/* #warn-register-error {
-    margin: auto;
-    text-align: center;
-    width: 60%;
-    margin-bottom: 16px;
-} */
-
-input.btn {
-    width: 50%;
-}
-
 /* Links inside p tags */
 p > a {
-    color: var(--btn-color);
+    color: var(--c-primary-base);
 }
 
 footer {
@@ -115,4 +103,137 @@ footer {
 
 .gr-hidden {
     display: none;
+}
+
+.flex-list-down {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+}
+
+.btn-primary {
+    text-decoration: none;
+    text-align: center;
+    font-weight: 700;
+
+    background-color: var(--c-primary-base);
+    color: var(--c-neutral-9);
+    border-radius: 8px;
+
+    border-top: 1px solid var(--c-primary-5);
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 4px solid var(--c-primary-2);
+}
+
+.btn-primary:hover {
+    transition: background-color 0.2s;
+    margin-top: 0px
+}
+
+.btn-primary:active {
+    border-bottom: 2px solid var(--c-primary-2);
+    background-color: var(--c-primary-4);
+    transform: translateY(2px);
+    margin: 1px 0
+}
+
+.btn-secondary {
+    background-color: var(--c-neutral-2);
+
+    border-top: 1px solid var(--c-neutral-base);
+    border-bottom: 1px solid var(--c-neutral-4);
+    border-left: 1px solid var(--c-neutral-4);
+    border-right: 1px solid var(--c-neutral-4);
+}
+
+.btn-secondary:hover {
+    background-color: var(--c-neutral-3);
+    transition: background-color 0.2s;
+}
+
+.btn-secondary:active {
+    background-color: var(--c-neutral-4);
+}
+
+.btn-tertiary {
+    background-color: var(--c-neutral-3);
+}
+
+.btn-tertiary:hover {
+    transition: background-color 0.2s;
+    background-color: var(--c-neutral-base);
+}
+
+.btn-tertiary:active {
+    transition: background-color 0.2s;
+    background-color: var(--c-neutral-6);
+}
+
+.btn-large {
+    padding: 16px 24px;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.btn-medium {
+    padding: 12px 16px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.btn-small {
+    padding: 8px;
+}
+
+.input-primary {
+    background-color: var(--c-neutral-2);
+    border-top: 1px solid var(--c-neutral-base);
+    border-left: 1px solid var(--c-neutral-4);
+    border-right: 1px solid var(--c-neutral-4);
+    border-bottom: 1px solid var(--c-neutral-4);
+    border-radius: 8px;
+
+    padding: 8px;
+
+    box-shadow: 0px 2px 4px var(--c-neutral-1), 0 2px 16px var(--c-neutral-2);
+}
+
+.input-secondary {
+    border-radius: 4px;
+    border: 0;
+    padding: 5px;
+    font-size: 16px;
+
+    background-color: var(--c-neutral-2)
+}
+
+.input-tertiary {
+    border: 0;
+    background-color: transparent;
+}
+
+.div-secondary {
+    background-color: var(--c-neutral-3);
+    box-shadow: 0 16px 32px var(--c-neutral-1);
+
+    padding: 48px 128px;
+    border-radius: 16px;
+}
+
+.occupy-width {
+    width: 100%;
+}
+
+/* Takes up the entire view */
+.screenview {
+    width: 100%;
+    height: 100%;
+}
+
+
+#lamia-catchphrase {
+    margin: 192px 0;
+    font-size: 64px;
 }
