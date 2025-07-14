@@ -7,6 +7,7 @@ import { router as storyRouter } from './router/storyRouter.js';
 import { logSource, log } from './middleware/logger.js';
 import { getEnvVar, getEnvVarWithDefault } from './service/lamiadbService.js';
 import { getInfoController } from './controller/infoController.js';
+import { errorRedirectController } from './controller/errorController.js';
 
 const server = express();
 
@@ -28,6 +29,7 @@ export async function startServer() {
 
     // say YES to build tools!
     server.use(express.static('dist/public', { extensions: [ 'html' ] }));
+    server.use(errorRedirectController);
 
     server.listen(defaultPort, () => {
         log('Server listening at port ' + defaultPort);

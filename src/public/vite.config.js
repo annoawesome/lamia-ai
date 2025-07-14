@@ -9,6 +9,7 @@ export default defineConfig({
                 register: 'register.html',
                 login: 'login.html',
                 home: 'home.html',
+                error: 'error.html',
             }
         }
     },
