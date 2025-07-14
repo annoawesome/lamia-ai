@@ -295,8 +295,8 @@ export function init() {
     });
 
     setInterval(() => {
-        pWordCount.innerText = `${getWordCount(getStoryText())} words`;
-        pCharacterCount.innerText = `${getStoryText().length} characters`;
+        pWordCount.innerText = `${getWordCount(getStoryText())}`;
+        pCharacterCount.innerText = `${getStoryText().length}`;
     }, 1000);
 
     whenFinishWritingMultiLine(divEditorDesc, () => forceRequestSaveCurrentStory(homeState.currentId.get()));

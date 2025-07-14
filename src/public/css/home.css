@@ -161,13 +161,14 @@ body {
 
 #div-story-stats {
     padding: 16px;
-    background-color: var(--c-neutral-2);
-    border: 1px solid black;
-    border-radius: 12px;
+}
+
+.div-story-stats p {
+    margin: 0 0 8px 0;
 }
 
 .header-story-overview {
-    margin: 0px;
+    margin: 0 0 16px 0;
 }
 
 

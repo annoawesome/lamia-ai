@@ -261,6 +261,36 @@ footer {
     background-color: transparent;
 }
 
+/* How important text is. The less important = darker */
+.text-lightest {
+    color: var(--c-neutral-9);
+}
+
+.text-light {
+    color: var(--c-neutral-8);
+}
+
+.text-c-base {
+    color: var(--c-neutral-7);
+}
+
+.text-dark {
+    color: var(--c-neutral-6);
+}
+
+.text-darkest {
+    color: var(--c-neutral-base);
+}
+
+.text-inline {
+    display: inline;
+}
+
+/* Size of text */
+.text-medium {
+    font-size: 16px;
+}
+
 .div-secondary {
     background-color: var(--c-neutral-3);
     box-shadow: 0 16px 32px var(--c-neutral-1);
