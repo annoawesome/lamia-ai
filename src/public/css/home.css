@@ -154,10 +154,6 @@ body {
 }
 
 /* Story overview */
-.btn-story-panel {
-    margin: 10px auto;
-    padding: 8px 10px 8px 10px;
-}
 
 #input-story-tags {
     width: 80%;
@@ -172,19 +168,6 @@ body {
 
 .header-story-overview {
     margin: 0px;
-}
-
-.div-export-panel {
-    padding: 16px;
-}
-
-.div-export-panel button {
-    width: 75%;
-}
-
-#warn-dangerous-actions {
-    display: flex;
-    flex-flow: column;
 }
 
 
