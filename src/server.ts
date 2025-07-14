@@ -2,8 +2,9 @@ import express from 'express';
 import crypto from 'crypto';
 import cookieParser from 'cookie-parser';
 
-import {router as userRouter} from './router/userRouter.js';
+import { router as userRouter } from './router/userRouter.js';
 import { router as storyRouter } from './router/storyRouter.js';
+import { router as configRouter } from './router/configRouter.js';
 import { logSource, log } from './middleware/logger.js';
 import { getEnvVar, getEnvVarWithDefault } from './service/lamiadbService.js';
 import { getInfoController } from './controller/infoController.js';
@@ -25,6 +26,7 @@ export async function startServer() {
     server.use('/api/v1/user', userRouter);
     server.use('/api/v1/story', storyRouter);
 
+    server.use('/api/v1/config', configRouter);
     server.get('/api/v1/info', getInfoController);
 
     // say YES to build tools!

@@ -163,3 +163,14 @@ export async function getBackendInfo() {
 
     return info;
 }
+
+export async function getDefaultLlmEndpoint() {
+    const request = new Request(`/api/v1/config/defaults/llm-endpoint`, {
+        method: 'GET'
+    });
+    
+    const res = await fetch(request);
+    const defaultLlmEndpoint = await res.text();
+
+    return defaultLlmEndpoint || 'http://localhost:5001';
+}
