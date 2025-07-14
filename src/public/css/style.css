@@ -271,3 +271,10 @@ footer {
     width: 100%;
     height: 100%;
 }
+
+.separator-light {
+    width: 100%;
+    height: 2px;
+
+    background-color: var(--c-neutral-4);
+}
