@@ -1,9 +1,17 @@
 import path from 'path';
 
-import { createKeyValueStore, readDocumentWithDefaults, getKeyValueStore, writeDocument, getServerDataRootPath } from "../util/fsdb.js";
+import { createKeyValueStore, readDocumentWithDefaults, getKeyValueStore, writeDocument, getServerDataRootPath, expectKeyValueStore } from "../util/fsdb.js";
 
 export function getDataDirectoryPath() {
     return path.join(getServerDataRootPath(), 'Lamia AI Server');
+}
+
+/**
+ * Call this before any other db function to ensure that directory is there.
+ * Generates the directory where server dabase is located
+ */
+export function generateDataDirectoryPath() {
+    expectKeyValueStore(getServerDataRootPath(), 'Lamia AI Server');
 }
 
 /**
