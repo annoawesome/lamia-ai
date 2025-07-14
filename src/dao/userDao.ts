@@ -1,17 +1,17 @@
 import fs from 'fs';
 import path from 'path';
-import { getLamiaUserDirectory, dataDirectoryPath } from '../service/lamiadbService.js';
+import { getLamiaUserDirectory, getDataDirectoryPath } from '../service/lamiadbService.js';
 import { makeFailure } from '../util/failure.js';
 
 function createUserDirectory(username: string) {
     return new Promise((resolve, reject) => {
-        const lamiaUserDirectory = path.join(dataDirectoryPath, username);
+        const lamiaUserDirectory = path.join(getDataDirectoryPath(), username);
 
         if (fs.existsSync(lamiaUserDirectory)) {
             reject(makeFailure(null, 409, `user-already-exists`, `User "${username}" already exists`));
         }
     
-        fs.mkdir(path.join(dataDirectoryPath, username), { recursive: true }, (err) => {
+        fs.mkdir(lamiaUserDirectory, { recursive: true }, (err) => {
             if (err) reject(makeFailure(err, 500, 'internal-error', 'Internal server error'));
             else resolve(lamiaUserDirectory);
         });

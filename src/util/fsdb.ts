@@ -1,8 +1,19 @@
 import fs from 'fs';
 import path from 'path';
 import process from 'process';
+import { isValidPath } from './paths.js';
+import { getEnvVar } from './env.js';
 
-export const userDataPath = process.env.APPDATA || (process.platform === 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share");
+export function getServerDataRootPath() {
+    const userDataPath = process.env.APPDATA || (process.platform === 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share");
+    let serverDataRootPath = getEnvVar('LAMIA_SERVER_DATABASE_DIRECTORY') || userDataPath;
+
+    if (!isValidPath(serverDataRootPath)) {
+        serverDataRootPath = userDataPath;
+    }
+
+    return serverDataRootPath;
+}
 
 /**
  * 

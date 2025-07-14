@@ -1,15 +1,17 @@
 import path from 'path';
 
-import { createKeyValueStore, readDocumentWithDefaults, getKeyValueStore, userDataPath, writeDocument } from "../util/fsdb.js";
+import { createKeyValueStore, readDocumentWithDefaults, getKeyValueStore, writeDocument, getServerDataRootPath } from "../util/fsdb.js";
 
-export const dataDirectoryPath = path.join(userDataPath, 'Lamia AI Server');
+export function getDataDirectoryPath() {
+    return path.join(getServerDataRootPath(), 'Lamia AI Server');
+}
 
 /**
  * 
  * @param {string} username 
  */
 export function postLamiaUserDirectory(username: string) {
-    return createKeyValueStore(dataDirectoryPath, username);
+    return createKeyValueStore(getDataDirectoryPath(), username);
 }
 
 /**
@@ -25,7 +27,7 @@ export function createLamiaUserDirectory(username: string) {
  * @param {string} username 
  */
 export function getLamiaUserDirectory(username: string) {
-    return getKeyValueStore(dataDirectoryPath, username);
+    return getKeyValueStore(getDataDirectoryPath(), username);
 }
 
 /**
@@ -37,12 +39,12 @@ export function getEnvVarWithDefault(variableName: string, defaultValue: unknown
         return process.env[variableName];
     };
 
-    const configStr = readDocumentWithDefaults(dataDirectoryPath, 'config.json', '{}');
+    const configStr = readDocumentWithDefaults(getDataDirectoryPath(), 'config.json', '{}');
     const config = JSON.parse(configStr);
 
     if (!config[variableName]) {
         config[variableName] = defaultValue;
-        writeDocument(dataDirectoryPath, 'config.json', JSON.stringify(config));
+        writeDocument(getDataDirectoryPath(), 'config.json', JSON.stringify(config));
     }
     
     return config[variableName];
@@ -58,16 +60,8 @@ export function getEnvVarWithDefaultIgnoring(variableName: string) {
         return process.env[variableName];
     };
 
-    const configStr = readDocumentWithDefaults(dataDirectoryPath, 'config.json', '{}');
+    const configStr = readDocumentWithDefaults(getDataDirectoryPath(), 'config.json', '{}');
     const config = JSON.parse(configStr);
     
     return config[variableName];
-}
-
-/**
- * Get variable from .env
- * @param {string} variableName Name of variable
- */
-export function getEnvVar(variableName: string) {
-    return process.env[variableName];
 }

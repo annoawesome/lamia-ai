@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getEnvVar } from '../service/lamiadbService.js';
+import { getEnvVar } from '../util/env.js';
 
 export function getInfoController(req: Request, res: Response) {
     res.json({

@@ -6,7 +6,8 @@ import { router as userRouter } from './router/userRouter.js';
 import { router as storyRouter } from './router/storyRouter.js';
 import { router as configRouter } from './router/configRouter.js';
 import { logSource, log } from './middleware/logger.js';
-import { getEnvVar, getEnvVarWithDefault } from './service/lamiadbService.js';
+import { getEnvVar } from './util/env.js';
+import { getEnvVarWithDefault } from './service/lamiadbService.js';
 import { getInfoController } from './controller/infoController.js';
 import { errorRedirectController } from './controller/errorController.js';
 
