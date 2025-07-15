@@ -234,6 +234,7 @@ body {
     padding: 32px 0;
 
     overflow: hidden;
+    pointer-events: none;
 }
 
 .toast-notification {
@@ -245,6 +246,8 @@ body {
     box-shadow: 0 16px 32px var(--c-neutral-1);
     color: var(--c-neutral-9);
     border: 0;
+
+    pointer-events: all;
 }
 
 .toast-notification svg {
