@@ -207,3 +207,11 @@ export function getBackendInfo() {
         emit(appOutput, 'info', backendInfo);
     });
 }
+
+export function logout() {
+    lamiaApi.logout().then((response: Response) => {
+        if (response.ok) {
+            emit(appOutput, 'logout');
+        }
+    });
+}

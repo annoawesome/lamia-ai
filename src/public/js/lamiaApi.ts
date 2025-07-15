@@ -164,6 +164,16 @@ export async function getBackendInfo() {
     return info;
 }
 
+export async function logout() {
+    const request = new Request(`/api/v1/user/logout`, {
+        method: 'GET'
+    });
+    
+    const res = await fetch(request);
+
+    return res;
+}
+
 export async function getDefaultLlmEndpoint() {
     const request = new Request(`/api/v1/config/defaults/llm-endpoint`, {
         method: 'GET'

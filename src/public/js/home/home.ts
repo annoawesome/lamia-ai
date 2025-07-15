@@ -54,6 +54,10 @@ subscribe(homeView.appInput, 'info', () => {
     homeController.getBackendInfo();
 });
 
+subscribe(homeView.appInput, 'logout', () => {
+    homeController.logout();
+});
+
 
 subscribe(homeController.indexOutput, 'get', obtainedIndex => {
     homeView.onGetStoryIndex(obtainedIndex);
@@ -97,6 +101,10 @@ subscribe(homeController.storyOutput, 'history:redo', (content: string) => {
 
 subscribe(homeController.appOutput, 'info', backendInfo => {
     homeView.onGetBackendInfo(backendInfo);
+});
+
+subscribe(homeController.appOutput, 'logout', () => {
+    homeView.onLogout();
 });
 
 homeView.init();

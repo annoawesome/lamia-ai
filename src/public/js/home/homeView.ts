@@ -25,6 +25,7 @@ const btnUndo = document.getElementById('btn-undo') as HTMLButtonElement;
 const btnRedo = document.getElementById('btn-redo') as HTMLButtonElement;
 
 const pBackendInfo = document.getElementById('p-backend-info') as HTMLParagraphElement;
+const btnMenu = document.getElementById('btn-menu') as HTMLButtonElement;
 
 export const storyInput = newEvent();
 export const indexInput = newEvent();
@@ -207,6 +208,10 @@ function requestGetBackendInfo() {
     emit(appInput, 'info');
 }
 
+function requestLogout() {
+    emit(appInput, 'logout');
+}
+
 
 /**
  * Update story textarea and title input. Trigger on event.
@@ -269,6 +274,10 @@ export function onGetBackendInfo(backendInfo: { backendName: string, version: st
     pBackendInfo.innerText = `Backend: ${backendInfo.backendName} (${backendInfo.version})`;
 }
 
+export function onLogout() {
+    window.location.href = '/';
+}
+
 
 // TODO: move to main home.js
 export function init() {
@@ -306,6 +315,9 @@ export function init() {
 
     btnUndo.addEventListener('click', requestUndo);
     btnRedo.addEventListener('click', requestRedo);
+
+    // temporary, used to test log outs
+    btnMenu.addEventListener('click', requestLogout);
 
     requestUpdateStoryIndexGui();
 
