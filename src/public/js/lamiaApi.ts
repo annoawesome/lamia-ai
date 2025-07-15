@@ -41,6 +41,10 @@ function generateIndexObject() {
     return index;
 }
 
+function throwErrorOnNotOk(res: Response) {
+    if (!res.ok) throw new Error(String(res.status));
+}
+
 export async function createStory(storyObject: StoryObject) {
     const payload = await generateEncryptedPayload(JSON.stringify(storyObject));
 
@@ -54,6 +58,8 @@ export async function createStory(storyObject: StoryObject) {
     });
 
     const res = await fetch(request);
+    throwErrorOnNotOk(res);
+
     return await res.text();
 }
 
@@ -66,6 +72,8 @@ export async function getStory(storyId: string) {
     });
 
     const res = await fetch(request);
+    throwErrorOnNotOk(res);
+
     const payload = await res.json();
     const storyObjectStr = await decryptPayload(payload);
 
@@ -87,6 +95,8 @@ export async function updateStory(storyId: string, storyObject: StoryObject) {
     });
 
     const res = await fetch(request);
+    throwErrorOnNotOk(res);
+
     return await res.text();
 }
 
@@ -99,6 +109,8 @@ export async function getStoryIds() {
     });
 
     const res = await fetch(request);
+    throwErrorOnNotOk(res);
+
     const list = await res.json();
 
     return list;
@@ -115,7 +127,10 @@ export async function postIndex(index: StoryIndex) {
         body: JSON.stringify(encryptedPayload),
     });
 
-    return await fetch(request);
+    const res = await fetch(request);
+    throwErrorOnNotOk(res);
+
+    return res;
 }
 
 export async function getIndex() {
@@ -127,6 +142,8 @@ export async function getIndex() {
     });
 
     const res = await fetch(request);
+    throwErrorOnNotOk(res);
+
     const encryptedPayload = await res.json();
 
     if (!encryptedPayload.encryptedData64)
@@ -148,6 +165,8 @@ export async function deleteStory(storyId: string) {
     });
 
     const res = await fetch(request);
+    throwErrorOnNotOk(res);
+
     const statusCode = res.status;
 
     return statusCode;
@@ -159,6 +178,8 @@ export async function getBackendInfo() {
     });
     
     const res = await fetch(request);
+    throwErrorOnNotOk(res);
+
     const info = await res.json();
 
     return info;
@@ -170,6 +191,7 @@ export async function logout() {
     });
     
     const res = await fetch(request);
+    throwErrorOnNotOk(res);
 
     return res;
 }
@@ -180,6 +202,8 @@ export async function getDefaultLlmEndpoint() {
     });
     
     const res = await fetch(request);
+    throwErrorOnNotOk(res);
+
     const defaultLlmEndpoint = await res.text();
 
     return defaultLlmEndpoint || 'http://localhost:5001';

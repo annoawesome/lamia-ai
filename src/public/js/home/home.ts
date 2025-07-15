@@ -107,6 +107,10 @@ subscribe(homeController.appOutput, 'logout', () => {
     homeView.onLogout();
 });
 
+subscribe(homeController.appOutput, 'toast', (message: string) => {
+    homeView.onToastNotification(message);
+});
+
 homeView.init();
 storyOverviewTabsView.init();
 storyOverviewLlm.init();

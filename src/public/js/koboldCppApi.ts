@@ -30,7 +30,7 @@ async function listenToSse(request: Request, callback: (json: any) => void) {
 
     if (!response.ok || !response.body) {
         console.error('Failed to fetch SSE: ' + response.status);
-        return;
+        throw new Error(String(response.status));
     }
 
     const reader = response.body.getReader();
@@ -87,6 +87,26 @@ export async function postRequestGenerateSse(text: string, baseUrl: string, body
     });
 
     await listenToSse(request, callback);
+}
+
+/**
+ * Returns version number of the koboldai backend. Is empty when no backend
+ * @param baseUri 
+ * @returns
+ */
+export async function getKoboldCppBackendVersion(baseUri: string) {
+    const request = new Request(`${baseUri}/api/v1/version/info/version`, {
+        method: 'GET'
+    });
+
+    const response = await fetch(request);
+
+    if (response.ok) {
+        const json = await response.json();
+        return json.result;
+    } else {
+        return '';
+    }
 }
 
 /**

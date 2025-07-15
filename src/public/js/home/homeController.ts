@@ -12,6 +12,26 @@ export const indexOutput = newEvent();
 export const llmOutput = newEvent();
 export const appOutput = newEvent();
 
+/**
+ * Propagates error to render.
+ * @param err The error created by the failed request
+ * @param resultingBehavior Behavior that is caused by the error
+ */
+function emitBackendError(err: Error, resultingBehavior: string) {
+    const message = err.message;
+
+    switch (message) {
+        case '403':
+            emit(appOutput, 'toast', `${resultingBehavior}. Authentication error. Please log in`);
+            break;
+        case '404':
+            emit(appOutput, 'toast', `${resultingBehavior}. Server did not respond`);
+            break;
+        default:
+            emit(appOutput, 'toast', `${resultingBehavior}. An unknown error (${message}) (either client or server) has occurred.`);
+            break;
+    }
+}
 
 /**
  * Updates current story object
@@ -38,11 +58,9 @@ export function getStoryIndex() {
         .then(obtainedIndex => {
             homeState.index.set(obtainedIndex);
             emit(indexOutput, 'get', obtainedIndex);
+        }).catch((err: Error) => {
+            emitBackendError(err, 'Failed to load stories');
         });
-}
-
-export function obtainStoryIndex() {
-    lamiaApi.getIndex().then(obtainedIndex => homeState.index.set(obtainedIndex));
 }
 
 /**
@@ -71,6 +89,9 @@ export function createNewStory(protoStoryObject: StoryObject) {
             homeState.currentId.set(storyId);
             homeState.lastSeenText.set(storyObject.content);
             emit(storyOutput, 'create', storyObject, storyId);
+        })
+        .catch((err: Error) => {
+            emitBackendError(err, 'Failed to create story');
         });
 }
 
@@ -91,6 +112,9 @@ export function loadStory(storyId: string) {
             homeState.currentStoryObject = storyObject;
 
             emit(storyOutput, 'load', storyObject, storyId);
+        })
+        .catch((err: Error) => {
+            emitBackendError(err, 'Failed to load story');
         });
 }
 
@@ -109,6 +133,9 @@ export function saveStory(storyObjectSnapshot: StoryObject, storyId: string) {
         lamiaApi.updateStory(storyId, currentStoryObject)
             .then(() => {
                 console.log('Updated id ' + storyId);
+            })
+            .catch((err: Error) => {
+                emitBackendError(err, 'Failed to save story');
             });
     }
 }
@@ -128,6 +155,9 @@ export function deleteStory(storyId: string) {
                 homeState.currentStoryObject = null;
                 emit(storyOutput, 'delete', storyId);
             }
+        })
+        .catch((err: Error) => {
+            emitBackendError(err, 'Failed to delete story');
         });
 }
 
@@ -151,13 +181,32 @@ export function generateStory(text: string, url: string) {
             if (data && data.token) {
                 emit(llmOutput, 'generate.stream', data.token);
             }
-        }).then(() => {
+        })
+        .then(() => {
             emit(llmOutput, 'generate.stream:done');
+        })
+        .catch((err: Error) => {
+            const message = err.message;
+
+            if (message.startsWith('NetworkError') || message === '404') {
+                emit(appOutput, 'toast', 'The LLM endpoint did not respond. Is it up and running?');
+            } else {
+                emit(appOutput, 'toast', 'Failed to generate text. The LLM endpoint responded with an unknown error (' + message + ')');
+            }
         });
     } else {
         koboldCppApi.postRequestGenerate(text, url, body)
             .then(json => {
                 emit(llmOutput, 'generate', json.results[0].text);
+            })
+            .catch((err: Error) => {
+                const message = err.message;
+
+                if (message.startsWith('NetworkError') || message === '404') {
+                    emit(appOutput, 'toast', 'The LLM endpoint did not respond. Is it up and running?');
+                } else {
+                    emit(appOutput, 'toast', 'Failed to generate text. The LLM endpoint responded with an unknown error (' + message + ')');
+                }
             });
     }
 }
@@ -205,13 +254,18 @@ export function performRedo() {
 export function getBackendInfo() {
     lamiaApi.getBackendInfo().then(backendInfo => {
         emit(appOutput, 'info', backendInfo);
+    })
+    .catch((err: Error) => {
+        emitBackendError(err, 'Failed to get backend information');
     });
 }
 
 export function logout() {
-    lamiaApi.logout().then((response: Response) => {
-        if (response.ok) {
+    lamiaApi.logout()
+        .then(() => {
             emit(appOutput, 'logout');
-        }
-    });
+        })
+        .catch((err: Error) => {
+            emitBackendError(err, 'Failed to logout');
+        });
 }

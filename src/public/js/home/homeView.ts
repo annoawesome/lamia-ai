@@ -3,6 +3,7 @@ import { emit, newEvent } from '../events.js';
 import { generateEmptyStoryObject, generateStoryObject, StoryObject } from './storyObject.js';
 import { StoryIndex } from './homeState.js';
 import { appendToStoryText, fixStoryText, generateStoryObjectFromGui, getLlmUri, getStoryText, setStoryText, whenFinishWriting, whenFinishWritingMultiLine } from './homeViewUtil.js';
+import { popToastNotif } from './toastNotifs.js';
 
 const btnNewStory = document.getElementById('btn-new-story') as HTMLButtonElement;
 const panelSubStoryIndex = document.getElementById('panel-sub-story-index') as HTMLDivElement;
@@ -276,6 +277,10 @@ export function onGetBackendInfo(backendInfo: { backendName: string, version: st
 
 export function onLogout() {
     window.location.href = '/';
+}
+
+export function onToastNotification(message: string) {
+    popToastNotif(message);
 }
 
 
