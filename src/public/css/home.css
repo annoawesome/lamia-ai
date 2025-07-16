@@ -131,6 +131,17 @@ body {
 
 #llm-waiting-indicator {
     margin: 0 8px;
+    animation: 1s ease-in-out infinite normal hourglass-spin;
+}
+
+@keyframes hourglass-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(180deg);
+    }
 }
 
 .middle-panel-btns {
