@@ -291,6 +291,23 @@ footer {
     font-size: 16px;
 }
 
+.svg-light {
+    fill: var(--c-neutral-8);
+}
+
+.svg-c-base {
+    fill: var(--c-neutral-7);
+}
+
+.svg-dark {
+    fill: var(--c-neutral-6);
+}
+
+.svg-darker {
+    fill: var(--c-neutral-base);
+}
+
+
 .div-secondary {
     background-color: var(--c-neutral-3);
     box-shadow: 0 16px 32px var(--c-neutral-1);
