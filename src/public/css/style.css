@@ -258,7 +258,14 @@ footer {
 
 .input-tertiary {
     border: 0;
+
+    transition: background-color 0.2s;
     background-color: transparent;
+}
+
+.input-tertiary:focus {
+    transition: background-color 0.2s;
+    background-color: var(--c-neutral-2)
 }
 
 /* How important text is. The less important = darker */
