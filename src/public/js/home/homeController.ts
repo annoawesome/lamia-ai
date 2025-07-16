@@ -183,7 +183,7 @@ export function generateStory(text: string, url: string) {
             }
         })
         .then(() => {
-            emit(llmOutput, 'generate.stream:done');
+            emit(llmOutput, 'generate:done');
         })
         .catch((err: Error) => {
             const message = err.message;
@@ -193,11 +193,14 @@ export function generateStory(text: string, url: string) {
             } else {
                 emit(appOutput, 'toast', 'Failed to generate text. The LLM endpoint responded with an unknown error (' + message + ')');
             }
+
+            emit(llmOutput, 'generate:done');
         });
     } else {
         koboldCppApi.postRequestGenerate(text, url, body)
             .then(json => {
                 emit(llmOutput, 'generate', json.results[0].text);
+                emit(llmOutput, 'generate:done');
             })
             .catch((err: Error) => {
                 const message = err.message;
@@ -207,6 +210,8 @@ export function generateStory(text: string, url: string) {
                 } else {
                     emit(appOutput, 'toast', 'Failed to generate text. The LLM endpoint responded with an unknown error (' + message + ')');
                 }
+
+                emit(llmOutput, 'generate:done');
             });
     }
 }

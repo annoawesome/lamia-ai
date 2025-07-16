@@ -129,17 +129,26 @@ body {
     margin-bottom: 16px;
 }
 
-#btn-ai-generate-more {
-    float: right;
+#llm-waiting-indicator {
+    fill: #444;
+    margin: 0 8px;
 }
 
 .middle-panel-btns {
-    height: 32px;
+    height: fit-content;
     width: 95%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .middle-panel-btns > .btn-secondary {
     margin-right: 32px;
+}
+
+#panel-middle-btn-separator {
+    margin-left: auto;
 }
 
 /* Right panel */

@@ -22,6 +22,8 @@ const inputLlmEndpointUrl = document.getElementById('input-llm-endpoint-uri') as
 const pLlmModelName = document.getElementById('p-llm-model-name') as HTMLParagraphElement;
 const btnAiGenerateMore = document.getElementById('btn-ai-generate-more') as HTMLButtonElement;
 
+const svgLlmWaitingIndicator = document.getElementById('llm-waiting-indicator') as HTMLOrSVGImageElement;
+
 const btnUndo = document.getElementById('btn-undo') as HTMLButtonElement;
 const btnRedo = document.getElementById('btn-redo') as HTMLButtonElement;
 
@@ -39,6 +41,7 @@ async function requestLlmGenerate() {
 
     fixStoryText();
 
+    svgLlmWaitingIndicator.classList.remove('gr-hidden');
     emit(llmInput, 'generate', text, url);
 }
 
@@ -56,6 +59,7 @@ export function onSseStreamedGenerateStory(textChunk: string) {
 }
 
 export function onSseStreamFinish() {
+    svgLlmWaitingIndicator.classList.add('gr-hidden');
     requestSaveCurrentStory();
 }
 
