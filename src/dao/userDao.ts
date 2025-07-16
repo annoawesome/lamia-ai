@@ -3,12 +3,24 @@ import path from 'path';
 import { getLamiaUserDirectory, getDataDirectoryPath } from '../service/lamiadbService.js';
 import { makeFailure } from '../util/failure.js';
 
+function isValidUsername(str: string) {
+    return /^[A-Za-z0-9_]+$/.test(str);
+}
+
 function createUserDirectory(username: string) {
     return new Promise((resolve, reject) => {
         const lamiaUserDirectory = path.join(getDataDirectoryPath(), username);
 
+        if (username.length < 4 || username.length > 48) {
+            reject(makeFailure(null, 400, `bad-length-username`, `Username must be between 4 and 48 characters long`));
+        }
+
+        if (!isValidUsername(username)) {
+            reject(makeFailure(null, 400, `malformed-username`, `Username must contain only alphanumeric characters`));
+        }
+
         if (fs.existsSync(lamiaUserDirectory)) {
-            reject(makeFailure(null, 409, `user-already-exists`, `User "${username}" already exists`));
+            reject(makeFailure(null, 409, `user-already-exists`, `Username was taken`));
         }
     
         fs.mkdir(lamiaUserDirectory, { recursive: true }, (err) => {
@@ -45,7 +57,7 @@ async function getUserMetadata(username: string) {
         return fs.readFileSync(path.join(dataPath, '/userdata'), {
             encoding: 'utf-8',
         });
-    } catch (e) {
+    } catch {
         return false;
     }
 }

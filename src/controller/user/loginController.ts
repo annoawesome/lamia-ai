@@ -11,8 +11,9 @@ export function postLoginController(req: Request, res: Response) {
     const password = body.password;
 
     userDao.getUserMetadata(username).then(userdataStr => {
+        // user does not exist
         if (userdataStr === false) {
-            res.sendStatus(500);
+            res.sendStatus(409);
             return;
         }
 
