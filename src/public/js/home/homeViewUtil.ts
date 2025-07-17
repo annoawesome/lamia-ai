@@ -56,8 +56,20 @@ export function appendToStoryText(text: string) {
     }
 }
 
+export function setStoryTitle(newTitle: string) {
+    inputStoryName.value = newTitle;
+}
+
+export function getStoryTitle() {
+    return inputStoryName.value;
+}
+
+export function isValidStoryTitle(title: string) {
+    return !(/^\s*$/.test(title));
+}
+
 export function generateStoryObjectFromGui() {
-    const storyTitle = inputStoryName.value || 'Untitled Story';
+    const storyTitle = getStoryTitle();
     const storyContent = getStoryText();
     const storyDesc = divEditorDesc.innerText;
     const storyTags = inputStoryTags.value.split(new RegExp('\\s*,\\s*')).filter(str => str.length > 0);

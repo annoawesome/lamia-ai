@@ -2,7 +2,7 @@ import { homeState } from './globalHomeState.js';
 import { emit, newEvent } from '../events.js';
 import { generateEmptyStoryObject, generateStoryObject, StoryObject } from './storyObject.js';
 import { StoryIndex } from './homeState.js';
-import { appendToStoryText, fixStoryText, generateStoryObjectFromGui, getLlmUri, getStoryText, setStoryText, whenFinishWriting, whenFinishWritingMultiLine } from './homeViewUtil.js';
+import { appendToStoryText, fixStoryText, generateStoryObjectFromGui, getLlmUri, getStoryText, getStoryTitle, isValidStoryTitle, setStoryText, setStoryTitle, whenFinishWriting, whenFinishWritingMultiLine } from './homeViewUtil.js';
 import { popToastNotif } from './toastNotifs.js';
 
 const btnNewStory = document.getElementById('btn-new-story') as HTMLButtonElement;
@@ -148,6 +148,10 @@ function getUpdatedStoryContent() {
     }
 
     if (!isStoryLoaded()) {
+        return updatedStoryContent;
+    }
+
+    if (!isValidStoryTitle(getStoryTitle())) {
         return updatedStoryContent;
     }
 
@@ -298,8 +302,12 @@ export function init() {
     });
 
     whenFinishWriting(inputStoryName, () => {
+        if (!isValidStoryTitle(getStoryTitle())) {
+            setStoryTitle('Untitled Story');
+        }
+
         if (isStoryLoaded()) {
-            requestUpdateStoryIndex(inputStoryName.value, homeState.currentId.get());
+            requestUpdateStoryIndex(getStoryTitle(), homeState.currentId.get());
             forceRequestSaveCurrentStory(homeState.currentId.get());
         } else {
             requestCreateNewStory(generateStoryObjectFromGui());
@@ -317,8 +325,21 @@ export function init() {
         pCharacterCount.innerText = `${getStoryText().length}`;
     }, 1000);
 
-    whenFinishWritingMultiLine(divEditorDesc, () => forceRequestSaveCurrentStory(homeState.currentId.get()));
-    whenFinishWriting(inputStoryTags, () => forceRequestSaveCurrentStory(homeState.currentId.get()));
+    whenFinishWritingMultiLine(divEditorDesc, () => {
+        if (!isValidStoryTitle(getStoryTitle())){
+            return;
+        }
+
+        forceRequestSaveCurrentStory(homeState.currentId.get());
+    });
+
+    whenFinishWriting(inputStoryTags, () => {
+        if (!isValidStoryTitle(getStoryTitle())){
+            return;
+        }
+
+        forceRequestSaveCurrentStory(homeState.currentId.get());
+    });
 
     whenFinishWriting(inputLlmEndpointUrl, () => requestSetLlmInputUri());
 
