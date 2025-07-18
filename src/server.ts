@@ -10,6 +10,7 @@ import { getEnvVar } from './util/env.js';
 import { generateDataDirectoryPath, getEnvVarWithDefault } from './service/lamiadbService.js';
 import { getInfoController } from './controller/infoController.js';
 import { errorRedirectController } from './controller/errorController.js';
+import { limiter } from './middleware/ratelimit.js';
 
 const server = express();
 
@@ -24,6 +25,7 @@ export async function startServer() {
 
     server.use(logSource);
     server.use(cookieParser());
+    server.use(limiter);
 
     server.use('/api/v1/user', userRouter);
     server.use('/api/v1/story', storyRouter);
