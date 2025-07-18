@@ -1,6 +1,8 @@
 import { app, BrowserWindow, Menu } from 'electron';
+import dotenv from 'dotenv';
+import fs from 'fs';
+
 import { startServer } from './server.js';
-import 'dotenv/config';
 import { getEnvVar } from './util/env.js';
 
 function createBrowserWindow() {
@@ -13,8 +15,32 @@ function createBrowserWindow() {
     Menu.setApplicationMenu(null);
 }
 
+function loadEnvFile(path: string) {
+    if (fs.existsSync(path)) {
+        dotenv.config({
+            path: path
+        });
+
+        return true;
+    }
+
+    return false;
+}
+
+function loadEnv() {
+    if (loadEnvFile('.env.local')) return;
+    if (loadEnvFile('.env')) return;
+
+    if (process.env.NODE_ENV === 'production' && loadEnvFile('.env.production.local')) return;
+    if (process.env.NODE_ENV === 'production' && loadEnvFile('.env.production')) return;
+    if (process.env.NODE_ENV === 'testing' && loadEnvFile('.env.test.local')) return;
+    if (process.env.NODE_ENV === 'testing' && loadEnvFile('.env.test')) return;
+    if (process.env.NODE_ENV === 'development' && loadEnvFile('.env.development.local')) return;
+}
+
 // Starts the server
 function init() {
+    loadEnv();
     startServer();
 }
 
