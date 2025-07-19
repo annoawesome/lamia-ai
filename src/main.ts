@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import electronSquirrelStartup from 'electron-squirrel-startup';
 import fs from 'fs';
 
+import { envDependentPaths } from './util/paths.js';
 import { startServer } from './server.js';
 import { getEnvVar } from './util/env.js';
 import path from 'path';
@@ -43,9 +44,20 @@ function loadEnv() {
     if (loadEnvFile(path.join(process.resourcesPath, '.env.production'))) return;
 }
 
+function fixPaths() {
+    const lamiaAppDataDirectory = getEnvVar('LAMIA_USERDATA_DIRECTORY');
+
+    if (getEnvVar('LAMIA_APP_CONTEXT') === 'Electron') {
+        envDependentPaths.userData = () => app.getPath('userData');
+    } else if (lamiaAppDataDirectory) {
+        envDependentPaths.userData = () => lamiaAppDataDirectory;
+    }
+}
+
 // Starts the server
 function init() {
     loadEnv();
+    fixPaths();
     startServer();
 }
 
