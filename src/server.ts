@@ -1,6 +1,7 @@
 import express from 'express';
 import crypto from 'crypto';
 import cookieParser from 'cookie-parser';
+import path from 'path';
 
 import { router as userRouter } from './router/userRouter.js';
 import { router as storyRouter } from './router/storyRouter.js';
@@ -34,7 +35,7 @@ export async function startServer() {
     server.get('/api/v1/info', getInfoController);
 
     // say YES to build tools!
-    server.use(express.static('dist/public', { extensions: [ 'html' ] }));
+    server.use(express.static(path.join(getEnvVar('LAMIA_WEBROOT_DIR') || 'dist','public'), { extensions: [ 'html' ] }));
     server.use(errorRedirectController);
 
     server.listen(defaultPort, () => {

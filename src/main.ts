@@ -1,9 +1,11 @@
 import { app, BrowserWindow, Menu } from 'electron';
 import dotenv from 'dotenv';
+import electronSquirrelStartup from 'electron-squirrel-startup';
 import fs from 'fs';
 
 import { startServer } from './server.js';
 import { getEnvVar } from './util/env.js';
+import path from 'path';
 
 function createBrowserWindow() {
     const browserWindow = new BrowserWindow({
@@ -36,6 +38,9 @@ function loadEnv() {
     if (process.env.NODE_ENV === 'testing' && loadEnvFile('.env.test.local')) return;
     if (process.env.NODE_ENV === 'testing' && loadEnvFile('.env.test')) return;
     if (process.env.NODE_ENV === 'development' && loadEnvFile('.env.development.local')) return;
+
+    // Electron Forge will copy the .env.production file to the resources path
+    if (loadEnvFile(path.join(process.resourcesPath, '.env.production'))) return;
 }
 
 // Starts the server
@@ -43,6 +48,8 @@ function init() {
     loadEnv();
     startServer();
 }
+
+if (electronSquirrelStartup) app.quit();
 
 app.whenReady().then(() => {
     init();
