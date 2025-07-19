@@ -34,8 +34,10 @@ export async function startServer() {
     server.use('/api/v1/config', configRouter);
     server.get('/api/v1/info', getInfoController);
 
+    const resourcesPath = getEnvVar('LAMIA_APP_CONTEXT') === 'Electron' ? process.resourcesPath : getEnvVar('LAMIA_WEBROOT_DIR') || 'dist';
+
     // say YES to build tools!
-    server.use(express.static(path.join(process.resourcesPath || getEnvVar('LAMIA_WEBROOT_DIR') || 'dist','public'), { extensions: [ 'html' ] }));
+    server.use(express.static(path.join(resourcesPath, 'public'), { extensions: [ 'html' ] }));
     server.use(errorRedirectController);
 
     server.listen(defaultPort, () => {
