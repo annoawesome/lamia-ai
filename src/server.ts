@@ -35,7 +35,7 @@ export async function startServer() {
     server.get('/api/v1/info', getInfoController);
 
     // say YES to build tools!
-    server.use(express.static(path.join(getEnvVar('LAMIA_WEBROOT_DIR') || 'dist','public'), { extensions: [ 'html' ] }));
+    server.use(express.static(path.join(process.resourcesPath || getEnvVar('LAMIA_WEBROOT_DIR') || 'dist','public'), { extensions: [ 'html' ] }));
     server.use(errorRedirectController);
 
     server.listen(defaultPort, () => {
