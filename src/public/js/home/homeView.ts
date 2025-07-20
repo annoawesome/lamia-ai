@@ -28,7 +28,9 @@ const btnUndo = document.getElementById('btn-undo') as HTMLButtonElement;
 const btnRedo = document.getElementById('btn-redo') as HTMLButtonElement;
 
 const pBackendInfo = document.getElementById('p-backend-info') as HTMLParagraphElement;
-const btnMenu = document.getElementById('btn-menu') as HTMLButtonElement;
+const btnOpenMenu = document.getElementById('btn-menu') as HTMLButtonElement;
+const divMainHomeMenuPopup = document.getElementById('main-home-menu-popup') as HTMLDivElement;
+const btnLogout = document.getElementById('btn-logout') as HTMLButtonElement;
 
 export const storyInput = newEvent();
 export const indexInput = newEvent();
@@ -347,9 +349,13 @@ export function init() {
     btnRedo.addEventListener('click', requestRedo);
 
     // temporary, used to test log outs
-    btnMenu.addEventListener('click', requestLogout);
+    btnOpenMenu.addEventListener('click', () => {
+        const classList = divMainHomeMenuPopup.classList;
+        return classList.contains('gr-hidden') ? classList.remove('gr-hidden') : classList.add('gr-hidden');
+    });
+
+    btnLogout.addEventListener('click', requestLogout);
 
     requestUpdateStoryIndexGui();
-
     requestGetBackendInfo();
 }
