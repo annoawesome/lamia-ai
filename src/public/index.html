@@ -5,11 +5,16 @@
 
   <meta http-equiv="Content-Security-Policy" content="
     default-src: 'self';
-    script-src 'self';
+    script-src 'self' js.sentry-cdn.com browser.sentry-cdn.com;
     style-src: 'self' 'unsafe-inline';
+    connect-src: 'self' sentry.io
+    report-uri https://o4509701677318144.ingest.us.sentry.io/api/4509701757534208/security/?sentry_key=e93b4277dc06ec33ba8ba3e606d1dff4;
+    report-to csp-endpoint;
   ">
 
   <title>Lamia AI</title>
+
+  <script src="https://js.sentry-cdn.com/14e41ff007cbe1a816c3562f2f8e852e.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
   <nav class="flex-to-right">
