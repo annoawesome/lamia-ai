@@ -46,7 +46,7 @@ body {
 
 #main-home-menu-popup {
     position: absolute;
-    width: 512px;
+    width: 256px;
     height: fit-content;
     transform: translateY(64px) translateX(16px);
     padding: 32px;
