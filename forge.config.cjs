@@ -4,6 +4,7 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 module.exports = {
   packagerConfig: {
     asar: true,
+    name: 'LamiaAI',
     extraResource: [
       '.env.production', // NOTE: This .env depends on the operating system, and may vary in content. This is probably the result of a code smell or bad practice.
       'dist/public',
