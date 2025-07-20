@@ -37,6 +37,7 @@
     "typescript-eslint": "^8.32.1"
   },
   "dependencies": {
+    "@sentry/node": "^9.40.0",
     "@typescript-eslint/eslint-plugin": "^8.32.0",
     "@typescript-eslint/parser": "^8.32.0",
     "bcrypt": "^5.1.1",
