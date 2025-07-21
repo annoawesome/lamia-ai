@@ -60,6 +60,8 @@ We believe using base models over instruct provides several benefits.
 3) Engagement. Writing *with* the AI, as opposed to the AI writing *for* you, is a deeply engaging process. You have far more direct control compared to regular prompting, though this comes at the slight cost of requiring some writing skill.
 
 ## Privacy
-Lamia automatically encrypts all the stories you write. If you use the desktop app, all data will be kept local and nothing is sent back to us.
+LamiaAI automatically encrypts all the stories you write. If you use the desktop app, all data will be kept local and nothing* is sent back to us.
 
 Running models locally is fully supported. Currently, LamiaAI only supports the KoboldCpp API, though other APIs aren't off the table.
+
+> \* *The LamiaAI desktop app does not send any data, with the exception of frontend error reports.*
