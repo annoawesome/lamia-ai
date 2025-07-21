@@ -2,7 +2,11 @@
 LamiaAI is a simple AI co-writing app with privacy-first priority. Unlike many other AI-assisted writing tools, Lamia was designed to use base models instead of ones fine-tuned for instruct mode. People familiar with NovelAI or KoboldAI's story mode will be familiar with this method of interacting with LLMs. 
 
 ## Download
-> The simple download is unavailable at this time. Please check the "Manual" subsection for instructions.
+First, download an LLM backend. For this guide, we will use KoboldCpp (since that is the only one supported at this moment). Go to their GitHub page and download the right executable from the Releases page. Then, download an LLM base model. We will choose [Llama 3.1 8B GGUF](https://huggingface.co/mradermacher/Meta-Llama-3.1-8B-GGUF). Choose the quantization type based on your GPU specs and download.
+
+Once you are done, run KoboldCpp and select the GGUF file. Make sure to configure before starting the server. Make sure to disable the "Open automatically in browser" option, as we will be using LamiaAI's frontend instead.
+
+> The simple download for the LamiaAI app is unavailable at this time. Please check the "Manual" subsection for instructions.
 
 Check the releases tab situated on the right. From there, select and download the file that corresponds to your operating system and architecture.
 
