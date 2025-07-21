@@ -10,7 +10,8 @@ import { getEnvVar } from '../../util/env.js';
 const saltRounds = 10;
 
 export function createUserController(req: Request, res: Response) {
-    if (getEnvVar('LAMIA_DISALLOW_NEW_USER_REGISTRATION')) {
+    const disallowRegistration = getEnvVar('LAMIA_DISALLOW_NEW_USER_REGISTRATION');
+    if (disallowRegistration === 'true') {
         const failure = makeFailure(null, 403, 'registration-forbidden', 'New user registration is disabled by server policy');
         res.status(403).json(sanitizeFailure(failure));
         return;
