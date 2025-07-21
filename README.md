@@ -1,5 +1,5 @@
 # LamiaAI: A flexible AI co-writing app
-LamiaAI is a simple AI co-writing app with privacy-first priority. Unlike many other AI-assisted writing tools, Lamia was designed to use base models instead of ones fine-tuned for instruct mode. People familar with NovelAI or KoboldAI's story mode will be familiar with this method of interacting with LLMs. 
+LamiaAI is a simple AI co-writing app with privacy-first priority. Unlike many other AI-assisted writing tools, Lamia was designed to use base models instead of ones fine-tuned for instruct mode. People familiar with NovelAI or KoboldAI's story mode will be familiar with this method of interacting with LLMs. 
 
 ## Download
 
@@ -40,7 +40,7 @@ Finally, we should return to the project root.
 ## Building
 LamiaAI is built off of Electron and uses Electron Forge for building the desktop application. Both Windows and Linux are available targets.
 
-To build on both platforms, make sure you are using a suitable `.env.production` file. More details, such as required variables and settings can be found in [`defaults/env/example.prod.electron.env`](./defaults/env/example.prod.electron.env). The following command works on both OS'es:
+To build on both platforms, make sure you are using a suitable `.env.production` file. More details, such as required variables and settings can be found in [`defaults/env/example.prod.electron.env`](./defaults/env/example.prod.electron.env). The following command works on both OSes:
 
 `$ npm run make`
 
