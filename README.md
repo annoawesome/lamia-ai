@@ -56,6 +56,3 @@ We believe using base models over instruct provides several benefits.
 Lamia automatically encrypts all the stories you write. If you use the desktop app, all data will be kept local and nothing is sent back to us.
 
 Running models locally is fully supported. Currently, LamiaAI only supports the KoboldCpp API, though other APIs aren't off the table.
-
-## Brainless Mode
-For those who wish to write without the assistance of AI, Lamia also provides a "brainless" mode. Many tools provided by LamiaAI work both for humans and the LLM, so you won't lose out by opting out.
