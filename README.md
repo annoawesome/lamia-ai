@@ -2,9 +2,9 @@
 LamiaAI is a simple AI co-writing app with privacy-first priority. Unlike many other AI-assisted writing tools, Lamia was designed to use base models instead of ones fine-tuned for instruct mode. People familiar with NovelAI or KoboldAI's story mode will be familiar with this method of interacting with LLMs. 
 
 ## Download
+> The simple download is unavailable at this time. Please check the "Manual" subsection for instructions.
 
-### Automatic
-> Currently unavailable at this time.
+Check the releases tab situated on the right. From there, select and download the file that corresponds to your operating system and architecture.
 
 ### Manual
 > **INFO:** This guide assumes you are running in a Unix environment. The commands may be slightly different on Windows.
