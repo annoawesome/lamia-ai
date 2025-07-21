@@ -1,7 +1,10 @@
 import express from 'express';
 import crypto from 'crypto';
 import cookieParser from 'cookie-parser';
+import path from 'path';
+import * as Sentry from '@sentry/node';
 
+import { initSentry } from './instrument.js';
 import { router as userRouter } from './router/userRouter.js';
 import { router as storyRouter } from './router/storyRouter.js';
 import { router as configRouter } from './router/configRouter.js';
@@ -18,6 +21,8 @@ export async function startServer() {
     log('Loading configuration');
     log('Starting server');
 
+    initSentry(getEnvVar('SENTRY_LAMIA_DSN'));
+
     generateDataDirectoryPath();
     getEnvVarWithDefault('JWT_SECRET', crypto.randomBytes(128).toString('hex'));
 
@@ -33,8 +38,11 @@ export async function startServer() {
     server.use('/api/v1/config', configRouter);
     server.get('/api/v1/info', getInfoController);
 
+    const resourcesPath = getEnvVar('LAMIA_APP_CONTEXT') === 'Electron' ? process.resourcesPath : getEnvVar('LAMIA_WEBROOT_DIR') || 'dist';
+
     // say YES to build tools!
-    server.use(express.static('dist/public', { extensions: [ 'html' ] }));
+    server.use(express.static(path.join(resourcesPath, 'public'), { extensions: [ 'html' ] }));
+    Sentry.setupExpressErrorHandler(server);
     server.use(errorRedirectController);
 
     server.listen(defaultPort, () => {

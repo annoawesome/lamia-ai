@@ -1,9 +1,12 @@
 import { app, BrowserWindow, Menu } from 'electron';
 import dotenv from 'dotenv';
+import electronSquirrelStartup from 'electron-squirrel-startup';
 import fs from 'fs';
 
+import { envDependentPaths } from './util/paths.js';
 import { startServer } from './server.js';
 import { getEnvVar } from './util/env.js';
+import path from 'path';
 
 function createBrowserWindow() {
     const browserWindow = new BrowserWindow({
@@ -36,13 +39,29 @@ function loadEnv() {
     if (process.env.NODE_ENV === 'testing' && loadEnvFile('.env.test.local')) return;
     if (process.env.NODE_ENV === 'testing' && loadEnvFile('.env.test')) return;
     if (process.env.NODE_ENV === 'development' && loadEnvFile('.env.development.local')) return;
+
+    // Electron Forge will copy the .env.production file to the resources path
+    if (loadEnvFile(path.join(process.resourcesPath, '.env.production'))) return;
+}
+
+function fixPaths() {
+    const lamiaAppDataDirectory = getEnvVar('LAMIA_USERDATA_DIRECTORY');
+
+    if (getEnvVar('LAMIA_APP_CONTEXT') === 'Electron') {
+        envDependentPaths.userData = () => app.getPath('userData');
+    } else if (lamiaAppDataDirectory) {
+        envDependentPaths.userData = () => lamiaAppDataDirectory;
+    }
 }
 
 // Starts the server
 function init() {
     loadEnv();
+    fixPaths();
     startServer();
 }
+
+if (electronSquirrelStartup) app.quit();
 
 app.whenReady().then(() => {
     init();
