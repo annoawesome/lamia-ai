@@ -1,0 +1,17 @@
+
+# Adjust this file as needed
+services:
+  web-server:
+    image: annocode/lamia-ai
+    build:
+      dockerfile: ./Dockerfile
+      tags:
+        - "annocode/lamia-ai"
+    volumes:
+      - userdata:/data
+    ports:
+      - 8080:8080
+    env_file:
+      - .env.docker.prod
+volumes:
+  userdata:

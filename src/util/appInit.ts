@@ -28,7 +28,7 @@ export function loadEnv() {
     if (process.env.NODE_ENV === 'development' && loadEnvFile('.env.development.local')) return;
 
     // Electron Forge will copy the .env.production file to the resources path
-    if (loadEnvFile(path.join(process.resourcesPath, '.env.production'))) return;
+    if (loadEnvFile(path.join(process.resourcesPath || '', '.env.production'))) return;
 }
 
 export function fixPaths(defaultDynamicUserDataPath: string | undefined) {
