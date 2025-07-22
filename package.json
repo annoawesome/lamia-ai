@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "description": "A flexible AI co-writing app",
   "private": true,
-  "main": "dist/main.js",
+  "main": "dist/electronApp.js",
   "type": "module",
   "scripts": {
-    "start": "electron-forge start",
+    "start:electron": "electron-forge start",
+    "start:server": "node dist/app.js",
     "tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "package": "electron-forge package",
