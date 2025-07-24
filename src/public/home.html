@@ -109,11 +109,11 @@
 
         <div class="div form-row">
           <div>
-            <label for="story-description">Description</label>
+            <label class="text-dark" for="story-description">Description</label>
             <div class="div div-editor input-secondary" id="div-editor-desc" contenteditable="true"></div>
           </div>
           <div>
-            <label for="story-tags">Tags</label>
+            <label class="text-dark" for="story-tags">Tags</label>
             <input type="text" name="story-tags" class="input-secondary" id="input-story-tags">
           </div>
         </div>
@@ -133,7 +133,7 @@
         <div class="separator-light"></div>
 
         <div class="div flex-list-column" id="div-export-panel">
-          <h2>Export</h2>
+          <h2 class="text-darkest text-medium">Export</h2>
 
           <button type="button" class="btn btn-small btn-secondary" id="btn-export-text">
             Export as Text
@@ -148,7 +148,7 @@
         <div class="separator-light"></div>
 
         <div class="div flex-list-column" id="warn-dangerous-actions">
-          <h2 class="header header-story-overview">Dangerous!</h2>
+          <h2 class="text-darkest text-medium">Dangerous!</h2>
 
           <button class="btn btn-small btn-secondary" id="btn-archive-story">
             Archive Story
@@ -162,28 +162,28 @@
       </div>
 
       <div class="div div-story-overview gr-hidden" id="div-story-overview-llm-settings">
-        <label for="llm-ctx-len" title="Maximum number of tokens visible to the LLM">Context Length</label>
+        <label class="text-dark" for="llm-ctx-len" title="Maximum number of tokens visible to the LLM">Context Length</label>
         <input type="number" name="llm-ctx-len" class="input input-llm input-secondary" id="input-llm-ctx-len" min="256" step="1" value="2048" placeholder="2048">
 
-        <label for="llm-res-len" title="Amount of tokens to generate">Response Length</label>
+        <label class="text-dark" for="llm-res-len" title="Amount of tokens to generate">Response Length</label>
         <input type="number" name="llm-res-len" class="input input-llm input-secondary" id="input-llm-res-len" min="1" step="1" value="120">
 
-        <label for="llm-temp" title="How creative the LLM should be">Temperature</label>
+        <label class="text-dark" for="llm-temp" title="How creative the LLM should be">Temperature</label>
         <input type="number" name="llm-temp" class="input input-llm input-secondary" id="input-llm-temp" min="0" value="1.15">
 
-        <label for="llm-rep-pen" title="How creative the LLM should be">Repetition Penalty</label>
+        <label class="text-dark" for="llm-rep-pen" title="How creative the LLM should be">Repetition Penalty</label>
         <input type="number" name="llm-rep-pen" class="input input-llm input-secondary" id="input-llm-rep-pen" min="1" value="1.07">
 
-        <label for="llm-top-p" title="Makes unlikely tokens less likely to appear">Top-p</label>
+        <label class="text-dark" for="llm-top-p" title="Makes unlikely tokens less likely to appear">Top-p</label>
         <input type="number" name="llm-top-p" class="input input-llm input-secondary" id="input-llm-top-p" min="0" max="1" value="0.92">
 
-        <label for="llm-top-k" title="Allow only the k-th most likely tokens to appear">Top-k</label>
+        <label class="text-dark" for="llm-top-k" title="Allow only the k-th most likely tokens to appear">Top-k</label>
         <input type="number" name="llm-top-k" class="input input-llm input-secondary" id="input-llm-top-k" min="1" value="100">
 
         <div class="separator-light"></div>
 
         <!-- TODO: style this -->
-        <label for="llm-stream-type">Streaming Mode</label>
+        <label class="text-dark" for="llm-stream-type">Streaming Mode</label>
         <select name="llm-stream-type" id="select-llm-stream-type">
           <option value="sse" selected>SSE</option>
           <option value="polling">Polling</option>
@@ -197,10 +197,10 @@
 
     <div class="div div-popup" id="div-ai-selector-popup">
       <form action="#">
-        <label for="llm-url">AI Endpoint</label>
+        <label class="text-dark" for="llm-url">AI Endpoint</label>
         <input type="text" name="llm-url" class="input-secondary" id="input-llm-endpoint-uri" value="http://localhost:5001" placeholder="http://localhost:5001">
 
-        <p id="p-llm-model-name">Model: None</p>
+        <p class="text-dark" id="p-llm-model-name">Model: None</p>
 
         <button type="button" class="btn btn-primary" id="btn-llm-selector-exit">Exit</button>
       </form>
