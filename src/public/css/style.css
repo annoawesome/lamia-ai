@@ -243,6 +243,7 @@ footer {
     border-radius: 8px;
 
     padding: 8px;
+    font-size: 16px;
 
     box-shadow: 0px 2px 4px var(--c-neutral-1), 0 2px 16px var(--c-neutral-2);
 }
