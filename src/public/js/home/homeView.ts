@@ -43,6 +43,7 @@ async function requestLlmGenerate() {
 
     fixStoryText();
 
+    btnAiGenerateMore.disabled = true;
     svgLlmWaitingIndicator.classList.remove('gr-hidden');
     emit(llmInput, 'generate', text, url);
 }
@@ -61,6 +62,7 @@ export function onSseStreamedGenerateStory(textChunk: string) {
 }
 
 export function onSseStreamFinish() {
+    btnAiGenerateMore.disabled = false;
     svgLlmWaitingIndicator.classList.add('gr-hidden');
     requestSaveCurrentStory();
 }
