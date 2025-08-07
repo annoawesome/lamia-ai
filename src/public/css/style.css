@@ -186,6 +186,18 @@ footer {
     margin: 1px 0
 }
 
+.btn-primary:disabled {
+    background-color: var(--c-neutral-6);
+    border-top: 1px solid var(--c-neutral-7);
+    border-bottom: 4px solid var(--c-neutral-4);
+}
+
+.btn-primary:disabled:active {
+    border-bottom: 2px solid var(--c-neutral-4);
+    transform: translateY(2px);
+    margin: 1px 0
+}
+
 .btn-secondary {
     background-color: var(--c-neutral-2);
 

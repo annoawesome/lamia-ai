@@ -43,6 +43,7 @@ async function requestLlmGenerate() {
 
     fixStoryText();
 
+    btnAiGenerateMore.disabled = true;
     svgLlmWaitingIndicator.classList.remove('gr-hidden');
     emit(llmInput, 'generate', text, url);
 }
@@ -61,6 +62,7 @@ export function onSseStreamedGenerateStory(textChunk: string) {
 }
 
 export function onSseStreamFinish() {
+    btnAiGenerateMore.disabled = false;
     svgLlmWaitingIndicator.classList.add('gr-hidden');
     requestSaveCurrentStory();
 }
@@ -87,6 +89,8 @@ function loadStoryFromEvent(storyObject: StoryObject) {
     const overview = storyObject.overview;
 
     setStoryText(storyObject.content);
+
+    divEditorContent.contentEditable = 'true';
     inputStoryName.value = storyObject.title;
     divEditorDesc.innerText = overview.description;
     inputStoryTags.value = overview.tags.toString().replaceAll(',', ', ');
@@ -264,6 +268,7 @@ export function onGetStoryIndex(obtainedIndex: StoryIndex) {
  */
 export function onDelete(storyId: string) {
     loadStoryFromEvent(generateEmptyStoryObject());
+    divEditorContent.contentEditable = 'false';
     removeStoryInIndexGui(storyId);
 }
 
