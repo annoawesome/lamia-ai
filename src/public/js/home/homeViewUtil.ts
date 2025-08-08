@@ -82,6 +82,23 @@ export function generateStoryObjectFromGui() {
     );
 }
 
+export type StoryContextEventBody = {
+    title: string,
+    desc: string,
+    tags: string
+};
+
+/**
+ * Get story data such as title and tags. Used to send data to llm to augment.
+ */
+export function getStoryContext(): StoryContextEventBody {
+    return {
+        title: getStoryTitle(),
+        desc: divEditorDesc.textContent,
+        tags: inputStoryTags.value,
+    };
+}
+
 export function whenFinishWriting(domElement: HTMLElement, callback: () => void) {
     whenFinishWritingMultiLine(domElement, callback);
 

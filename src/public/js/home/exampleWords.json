@@ -1,0 +1,71 @@
+{
+  "adjective": [
+    "Legendary",
+    "Destined",
+    "Great",
+    "Little",
+    "Bloody",
+    "Scarlet",
+    "Last",
+    "Magical"
+  ],
+
+  "noun": [
+    "Sword",
+    "King",
+    "Princess",
+    "Wizard",
+    "War",
+    "Nebula",
+    "Alien",
+    "Starship",
+    "Plasma",
+    "Hope",
+    "Fury",
+    "Blood",
+    "Hero",
+    "Heroes"
+  ],
+
+  "proper_place": [
+    "Earth",
+    "New York City",
+    "Tokyo",
+    "Los Angeles",
+    "Washington",
+    "Paris",
+    "London",
+    "Moscow",
+    "Beijing",
+    "Mars",
+    "Sol",
+    "Milky Way",
+    "Alpha Centauri",
+    "Fantasia",
+    "Terra",
+    "Asgard"
+  ],
+
+  "genres": [
+    "action",
+    "adventure",
+    "romance",
+    "mystery",
+    "fantasy",
+    "sci-fi",
+    "drama",
+    "dystopia",
+    "horror",
+    "steampunk"
+  ],
+  
+  "pov": [
+    "1st person",
+    "3rd person"
+  ],
+  
+  "descriptors": [
+    "male protagonist",
+    "female protagonist"
+  ]
+}
