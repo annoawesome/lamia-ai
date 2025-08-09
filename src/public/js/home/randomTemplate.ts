@@ -16,7 +16,7 @@ function selectRandomlyWithoutReplacement(arr: string[]) {
   return value;
 }
 
-const templates = ['The {adjective} {noun}', '{noun} and {noun}', 'The {noun} Chronicles', 'The {noun} of {proper_place}'];
+const templates = ['The {adjective} {noun}', '{noun} and {noun}', 'The {noun} Chronicles', 'The {noun} of {proper_place}', '{noun} of {proper_place}'];
 
 function fillTemplate(template: string, placeholder: string, words: string[]) {
   const regex = new RegExp('\\{' + placeholder + '\\}', 'g');

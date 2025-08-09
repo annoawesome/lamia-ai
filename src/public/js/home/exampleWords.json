@@ -5,9 +5,19 @@
     "Great",
     "Little",
     "Bloody",
-    "Scarlet",
     "Last",
-    "Magical"
+    "Magical",
+    "Solemn",
+    "Enchanted",
+    "Divine",
+    "Radiant",
+    "Toxic",
+    "Black",
+    "White",
+    "Scarlet",
+    "Golden",
+    "Pale",
+    "Lush"
   ],
 
   "noun": [
@@ -20,11 +30,26 @@
     "Alien",
     "Starship",
     "Plasma",
+    "Supernova",
+    "Void",
     "Hope",
     "Fury",
     "Blood",
+    "Wolf",
+    "Wolves",
     "Hero",
-    "Heroes"
+    "Heroes",
+    "Friend",
+    "Friends",
+    "Summer",
+    "Storm",
+    "Dragon",
+    "Dragons",
+    "Demon",
+    "Shadow",
+    "Calamity",
+    "Hex",
+    "Witch"
   ],
 
   "proper_place": [
@@ -38,12 +63,15 @@
     "Moscow",
     "Beijing",
     "Mars",
+    "Venus",
+    "Jupiter",
     "Sol",
     "Milky Way",
     "Alpha Centauri",
     "Fantasia",
     "Terra",
-    "Asgard"
+    "Asgard",
+    "Mythicis"
   ],
 
   "genres": [
