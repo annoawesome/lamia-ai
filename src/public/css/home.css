@@ -113,7 +113,7 @@ body {
 .div-editor {
     background-color: var(--c-neutral-2);
     border-radius: 12px;
-    padding: 10px;
+    padding: 8px;
 
     scrollbar-width: thin;
     scrollbar-color: var(--c-neutral-6) transparent;
@@ -132,6 +132,7 @@ body {
 #div-editor-content {
     width: 95%;
     height: 75vh;
+    padding: 16px;
 }
 
 #div-editor-content > * {
