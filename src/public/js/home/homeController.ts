@@ -182,6 +182,9 @@ export function generateStory(text: string, url: string, storyContextEventBody: 
     if (storyContextEventBody.tags) {
         augmentedText = `Tags: ${storyContextEventBody.tags}\n## Chapter 1\n${augmentedText}`;
     }
+    if (storyContextEventBody.desc) {
+        augmentedText = `Blurb: ${storyContextEventBody.desc}\n${augmentedText}`;
+    }
     if (storyContextEventBody.title) {
         augmentedText = `# ${storyContextEventBody.title}\n${augmentedText}`;
     }
