@@ -6,6 +6,7 @@ import { convertStoryObject__0_1_0t0_2_0, convertStoryObject__0_2_0t0_3_0, gener
 import * as lamiaApi from '../lamiaApi.js';
 import * as koboldCppApi from '../koboldCppApi.js';
 import { llmSettings } from "./storyOverviewLlm.js";
+import { StoryContextEventBody } from "./homeViewUtil.js";
 
 export const storyOutput = newEvent();
 export const indexOutput = newEvent();
@@ -166,7 +167,7 @@ export function deleteStory(storyId: string) {
  * @param {string} text Prompt to give to the llm.
  * @param {string} url The url to send the request to.
  */
-export function generateStory(text: string, url: string) {
+export function generateStory(text: string, url: string, storyContextEventBody: StoryContextEventBody) {
     const body: koboldCppApi.KoboldCppRequestBody = {
         max_length: llmSettings.responseLength,
         max_context_length: llmSettings.contextLength,
@@ -176,8 +177,20 @@ export function generateStory(text: string, url: string) {
         top_p: llmSettings.topP,
     };
 
+    let augmentedText = text;
+
+    if (storyContextEventBody.tags) {
+        augmentedText = `Tags: ${storyContextEventBody.tags}\n## Chapter 1\n${augmentedText}`;
+    }
+    if (storyContextEventBody.desc) {
+        augmentedText = `Blurb: ${storyContextEventBody.desc}\n${augmentedText}`;
+    }
+    if (storyContextEventBody.title) {
+        augmentedText = `# ${storyContextEventBody.title}\n${augmentedText}`;
+    }
+
     if (llmSettings.streamingMode === 'sse') {
-        koboldCppApi.postRequestGenerateSse(text, url, body, (data) => {
+        koboldCppApi.postRequestGenerateSse(augmentedText, url, body, (data) => {
             if (data && data.token) {
                 emit(llmOutput, 'generate.stream', data.token);
             }
@@ -197,7 +210,7 @@ export function generateStory(text: string, url: string) {
             emit(llmOutput, 'generate:done');
         });
     } else {
-        koboldCppApi.postRequestGenerate(text, url, body)
+        koboldCppApi.postRequestGenerate(augmentedText, url, body)
             .then(json => {
                 emit(llmOutput, 'generate', json.results[0].text);
                 emit(llmOutput, 'generate:done');

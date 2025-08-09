@@ -2,8 +2,9 @@ import { homeState } from './globalHomeState.js';
 import { emit, newEvent } from '../events.js';
 import { generateEmptyStoryObject, generateStoryObject, StoryObject } from './storyObject.js';
 import { StoryIndex } from './homeState.js';
-import { appendToStoryText, fixStoryText, generateStoryObjectFromGui, getLlmUri, getStoryText, getStoryTitle, isValidStoryTitle, setStoryText, setStoryTitle, whenFinishWriting, whenFinishWritingMultiLine } from './homeViewUtil.js';
+import { appendToStoryText, fixStoryText, generateStoryObjectFromGui, getLlmUri, getStoryContext, getStoryText, getStoryTitle, isValidStoryTitle, setStoryText, setStoryTitle, whenFinishWriting, whenFinishWritingMultiLine } from './homeViewUtil.js';
 import { popToastNotif } from './toastNotifs.js';
+import { randomlyGenerateTags, randomlyGenerateTitle } from './randomTemplate.js';
 
 const btnNewStory = document.getElementById('btn-new-story') as HTMLButtonElement;
 const panelSubStoryIndex = document.getElementById('panel-sub-story-index') as HTMLDivElement;
@@ -45,7 +46,7 @@ async function requestLlmGenerate() {
 
     btnAiGenerateMore.disabled = true;
     svgLlmWaitingIndicator.classList.remove('gr-hidden');
-    emit(llmInput, 'generate', text, url);
+    emit(llmInput, 'generate', text, url, getStoryContext());
 }
 
 /**
@@ -301,7 +302,7 @@ export function onToastNotification(message: string) {
 
 // TODO: move to main home.js
 export function init() {
-    btnNewStory.onclick = () => requestCreateNewStory(generateStoryObject('Untitled Story', '', '', []));
+    btnNewStory.onclick = () => requestCreateNewStory(generateStoryObject(randomlyGenerateTitle(), '', '', randomlyGenerateTags()));
     btnAiGenerateMore.onclick = () => requestLlmGenerate();
 
     divEditorContent.addEventListener('blur', () => {

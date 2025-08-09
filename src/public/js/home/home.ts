@@ -38,8 +38,8 @@ subscribe(homeView.llmInput, 'setEndpoint', (uri: string) => {
     homeController.setLlmUri(uri);
 });
 
-subscribe(homeView.llmInput, 'generate', (text, url) => {
-    homeController.generateStory(text, url);
+subscribe(homeView.llmInput, 'generate', (text, url, storyContext) => {
+    homeController.generateStory(text, url, storyContext);
 });
 
 subscribe(homeView.storyInput, 'history:undo', () => {
