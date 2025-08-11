@@ -1,5 +1,4 @@
 import { app, BrowserWindow, Menu } from 'electron';
-import electronSquirrelStartup from 'electron-squirrel-startup';
 
 import { startServer } from './server.js';
 import { getEnvVar } from './util/env.js';
@@ -21,8 +20,6 @@ function init() {
     fixPaths(app.getPath('userData'));
     startServer();
 }
-
-if (electronSquirrelStartup) app.quit();
 
 app.whenReady().then(() => {
     init();
