@@ -1,0 +1,7 @@
+appId: com.hoongseth.lamia-ai
+productName: LamiaAI
+directories:
+  output: out
+extraResources:
+  - .env.production
+  - dist/public
