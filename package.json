@@ -40,16 +40,5 @@
     "express": "^4.21.2",
     "express-rate-limit": "^8.0.1",
     "jsonwebtoken": "^9.0.2"
-  },
-  "build": {
-    "appId": "com.hoongseth.lamia-ai",
-    "productName": "LamiaAI",
-    "directories": {
-      "output": "out"
-    },
-    "extraResources": [
-      ".env.production",
-      "dist/public"
-    ]
   }
 }
