@@ -67,18 +67,22 @@ h2 {
 }
 
 /* The topbar at index */
-.flex-to-right {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+#lamia-topbar {
     position: sticky;
     top: 0;
+    gap: 16px;
 
     background-color: var(--c-neutral-2);
     height: 64px;
     padding: 0 48px;
-    gap: 16px;
     z-index: 1;
+}
+
+.flex-flow-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
 }
 
 .disable-sticky-topbar {
