@@ -17,7 +17,9 @@ export function popToastNotif(message: string) {
     toastNotifications.appendChild(toastNotif);
 
     toastNotif.addEventListener('click', () => {
-        toastNotifications.removeChild(toastNotif);
+        if (toastNotif.parentElement === toastNotifications) {
+            toastNotifications.removeChild(toastNotif);
+        }
     });
 
     setInterval(() => toastNotif.click(), 5000);
