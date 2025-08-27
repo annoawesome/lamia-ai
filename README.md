@@ -46,7 +46,7 @@ Finally, we should return to the project root.
 
 #### With Visual Studio Code
 
-LamiaAI has VSCode specific configurations that automate the above steps. Simply open up a workspace, making sure to select `lamia-ai.code-workspace`, and several build tasks will automatically run. The only manual step is creating and copying `.env` files to the project root.
+LamiaAI has VSCode specific configurations that automate some of the above steps. Simply open up a workspace, making sure to select `lamia-ai.code-workspace`, and several build tasks will automatically run. However, the appropriate `npm install` and `.env` commands are still required! After these steps, just restart VSCode and everything _should_ be good to go.
 
 ### Docker
 
