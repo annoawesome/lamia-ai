@@ -50,7 +50,7 @@ LamiaAI has VSCode specific configurations that automate the above steps. Simply
 
 ## Building
 
-LamiaAI is built off of Electron and uses Electron Builder for building the desktop application. Both Windows (NSIS) and Linux (AppImage & Snap) are available targets.
+LamiaAI is built on Electron and uses Electron Builder for building the desktop application. Both Windows (NSIS) and Linux (AppImage & Snap) are available targets.
 
 To build on both platforms, make sure you are using a suitable `.env.production` file. More details, such as required variables and settings can be found in [`defaults/env/example.prod.electron.env`](./defaults/env/example.prod.electron.env). The following command works on both operating systems:
 
@@ -72,4 +72,4 @@ LamiaAI automatically encrypts all the stories you write. If you use the desktop
 
 Running models locally is fully supported. Currently, LamiaAI only supports the KoboldCpp API, though other APIs aren't off the table.
 
-[^1]: The LamiaAI desktop app does not send any data, with the exception of some error reports, which may unintentionally do so. Currently, there is no opt-out, though we plan on rectifying this in the near future.
+[^1]: The LamiaAI desktop app does not send any data, with the exception of some error reports, which may unintentionally contain user data. Currently, there is no opt-out, though we plan on rectifying this in the near future.
