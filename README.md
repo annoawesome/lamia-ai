@@ -4,9 +4,9 @@ LamiaAI is a simple AI co-writing app with privacy-first priority. Unlike many o
 
 ## Download
 
-First, download an LLM backend. For this guide, we will use KoboldCpp (since that is the only one supported at this moment). Go to [their GitHub page](https://github.com/LostRuins/koboldcpp) and download the right executable from the Releases page. Then, download an LLM base model. We will choose [Llama 3.1 8B GGUF](https://huggingface.co/mradermacher/Meta-Llama-3.1-8B-GGUF). Choose the quantization type based on your GPU specs and download.
+First, download an LLM backend. For this guide, choose KoboldCpp (since that is the only one supported at this moment). Go to [their GitHub page](https://github.com/LostRuins/koboldcpp) and download the right executable for your operating system from the Releases page. Then, download an LLM base model. A good choice is [Llama 3.1 8B GGUF](https://huggingface.co/mradermacher/Meta-Llama-3.1-8B-GGUF). Choose the quantization type based on your GPU specs and download.
 
-Once you are done, run KoboldCpp and select the GGUF file. Make sure to configure before starting the server. Make sure to disable the "Open automatically in browser" option, as we will be using LamiaAI's front end instead.
+Once you are done, run KoboldCpp and select the GGUF file. Make sure to configure before starting the server. Make sure to disable the "Open automatically in browser" option, as you will be using LamiaAI's front end instead.
 
 > The simple download for the LamiaAI app is unavailable at this time. Please check the "Manual" subsection for instructions.
 
@@ -30,7 +30,7 @@ Make sure to have a `.env` file ready, as LamiaAI will not run without them. Def
 
 `$ cp defaults/env/example.env .env`
 
-Next, we need to build the front end. To do this, run the following:
+Next, you need to build the front end. To do this, run the following:
 
 `$ cd src/public`
 
@@ -38,7 +38,7 @@ Next, we need to build the front end. To do this, run the following:
 
 `$ npx vite build --emptyOutDir`
 
-Finally, we should return to the project root.
+Finally, you should return to the project root.
 
 `$ cd ../..`
 
@@ -64,7 +64,7 @@ Wait for a few minutes for the build to finish. The outputted files should be in
 
 ## Why Use Base Models?
 
-We believe using base models over instruct provides several benefits.
+Using base models over instruct provides several benefits.
 
 1. Freedom. Many instruct models go through alignment after pre-training, which neuters their ability to write about sensitive topics. Base models are largely free of this reprogramming.
 2. Creativity. Fine-tuning datasets introduces the model to "slop", degrading quality and introducing telltale AI cliches. Common examples include "shivers down your spine", "maybe, just maybe" and "ministrations".
@@ -76,4 +76,4 @@ LamiaAI automatically encrypts all the stories you write. If you use the desktop
 
 Running models locally is fully supported. Currently, LamiaAI only supports the KoboldCpp API, though other APIs aren't off the table.
 
-[^1]: The LamiaAI desktop app does not send any data, with the exception of some error reports, which may unintentionally contain user data. Currently, there is no opt-out, though we plan on rectifying this in the near future.
+[^1]: The LamiaAI desktop app does not send any data, with the exception of some error reports, which may unintentionally contain user data. Currently, there is no opt-out, though there are plans on rectifying this in the near future.
