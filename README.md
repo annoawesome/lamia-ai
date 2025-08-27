@@ -48,6 +48,10 @@ Finally, we should return to the project root.
 
 LamiaAI has VSCode specific configurations that automate the above steps. Simply open up a workspace, making sure to select `lamia-ai.code-workspace`, and several build tasks will automatically run. The only manual step is creating and copying `.env` files to the project root.
 
+### Docker
+
+A Dockerfile is provided which builds the LamiaAI image. Additionally, an example `compose.yaml` file is provided.
+
 ## Building
 
 LamiaAI is built on Electron and uses Electron Builder for building the desktop application. Both Windows (NSIS) and Linux (AppImage & Snap) are available targets.
