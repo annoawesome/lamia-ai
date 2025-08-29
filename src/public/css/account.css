@@ -1,0 +1,22 @@
+.pref-flexbox {
+    display: flex;
+    gap: 64px;
+}
+
+#preference-categories {
+    display: flex;
+    flex-direction: column;
+
+    width: 256px;
+    padding: 16px;
+    margin: 32px;
+    border-radius: 16px;
+    background-color: var(--c-neutral-2);
+}
+
+.account-panel {
+    flex: 1;
+    height: calc(85vh - 64px);
+    margin: 32px;
+    overflow-y: auto;
+}
