@@ -1,13 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import LamiaAiTopbar from "../components/LamiaAiTopbar";
 
 function UserPreferences() {
+    const [llmSettings, setLlmSettings] = useState(null);
+    console.log(llmSettings);
+
+    useEffect(() => {
+        const request = new Request("/api/v1/config/user/llm-config", {
+            method: "GET",
+        });
+
+        fetch(request)
+            .then(res => res.json())
+            .then(json => setLlmSettings(json))
+            .catch(() => console.log("Failed!"));
+    }, []);
+    
+    // TODO: set value for each input
+    // If input has not loaded yet, then show a loading screen first
     return (
         <form className="account-panel" action="#">
             <h2>Default LLM Settings</h2>
             <h3>Samplers</h3>
             <label htmlFor="llm-temperature">Temperature</label>
-            <input type="range" name="llm-temperature" id="" />
+            <input type="range" name="llm-temperature" id=""/>
             <label htmlFor="llm-context-length">Context Length</label>
             <input type="number" name="llm-context-length" />
             <label htmlFor="llm-response-length">Response Length</label>
