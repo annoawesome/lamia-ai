@@ -22,26 +22,26 @@ function UserPreferences() {
         return <form className="account-panel" action="#">
             <h2>Default LLM Settings</h2>
             <h3>Samplers</h3>
-            <label htmlFor="llm-temperature">Temperature</label>
-            <input type="range" name="llm-temperature" id="" defaultValue={llmSettings["llm-temperature"]}/>
-            <label htmlFor="llm-context-length">Context Length</label>
-            <input type="number" name="llm-context-length" defaultValue={llmSettings["llm-context-length"]}/>
-            <label htmlFor="llm-response-length">Response Length</label>
-            <input type="number" name="llm-response-length" defaultValue={llmSettings["llm-response-length"]}/>
+            <label htmlFor="llm-temperature" className="form-label">Temperature</label>
+            <input type="range" name="llm-temperature" className="input-secondary" id="" defaultValue={llmSettings["llm-temperature"]}/>
+            <label htmlFor="llm-context-length" className="form-label">Context Length</label>
+            <input type="number" name="llm-context-length" className="input-secondary" defaultValue={llmSettings["llm-context-length"]}/>
+            <label htmlFor="llm-response-length" className="form-label">Response Length</label>
+            <input type="number" name="llm-response-length" className="input-secondary" defaultValue={llmSettings["llm-response-length"]}/>
 
-            <label htmlFor="llm-top-p">Top-P</label>
-            <input type="number" name="llm-top-p" id="" defaultValue={llmSettings["llm-top-p"]}/>
-            <label htmlFor="llm-top-k">Top-K</label>
-            <input type="number" name="llm-top-k" id="" defaultValue={llmSettings["llm-top-k"]}/>
+            <label htmlFor="llm-top-p" className="form-label">Top-P</label>
+            <input type="number" name="llm-top-p" id="" className="input-secondary" defaultValue={llmSettings["llm-top-p"]}/>
+            <label htmlFor="llm-top-k" className="form-label">Top-K</label>
+            <input type="number" name="llm-top-k" id="" className="input-secondary" defaultValue={llmSettings["llm-top-k"]}/>
 
             <h3>Backend Configuration</h3>
-            <label htmlFor="llm-streaming-mode">Streaming Mode</label>
-            <select name="llm-streaming-mode" id="" defaultValue={llmSettings["llm-streaming-mode"] || "none"}>
+            <label htmlFor="llm-streaming-mode" className="form-label">Streaming Mode</label>
+            <select name="llm-streaming-mode" id="" className="input-secondary" defaultValue={llmSettings["llm-streaming-mode"] || "none"}>
                 <option value="none">None</option>
                 <option value="polling">Polling</option>
                 <option value="sse">{"SSE (Server Sent Event)"}</option>
             </select>
-            <button type="button" onClick={(ev) => {
+            <button type="button" className="btn btn-primary btn-large" id="btn-save-llm-settings" onClick={(ev) => {
                 const formData = Object.fromEntries(new FormData(ev.currentTarget.parentElement as HTMLFormElement));
                 const request = new Request("/api/v1/config/user/llm-config", {
                     method: "POST",
