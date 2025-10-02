@@ -20,7 +20,42 @@ export const llmSettings = {
     streamingMode: 'sse',
 };
 
+// Converts llm-settings data format from server into compatible one following the above exported constant
+function updateLlmSettings(defaultLlmSettings: Record<string, string>) {
+    llmSettings.temperature = +defaultLlmSettings["llm-temperature"];
+    llmSettings.contextLength = +defaultLlmSettings["llm-context-length"];
+    llmSettings.responseLength = +defaultLlmSettings["llm-response-length"];
+    llmSettings.topP = +defaultLlmSettings["llm-top-p"];
+    llmSettings.topK = +defaultLlmSettings["llm-top-k"];
+    llmSettings.streamingMode = defaultLlmSettings["llm-streaming-mode"] as string;
+}
+
+function renderLlmSettings(llmSettings: Record<string, string | number>) {
+    inputLlmCtxLen.value = llmSettings.contextLength.toString();
+    inputLlmResLen.value = llmSettings.responseLength.toString();
+    inputLlmTemp.value = llmSettings.temperature.toString();
+    inputLlmRepPen.value = llmSettings.repetitionPenalty.toString();
+    inputLlmTopP.value = llmSettings.topP.toString();
+    inputLlmTopK.value = llmSettings.topK.toString();
+    selectLlmStreamType.value = llmSettings.streamingMode.toString();
+}
+
+function requestLlmSettingsFromServer() {
+    const request = new Request('/api/v1/config/user/llm-config', {
+        method: 'GET'
+    });
+
+    fetch(request)
+        .then(res => res.json())
+        .then(res => {
+            updateLlmSettings(res);
+            renderLlmSettings(llmSettings);
+        });
+}
+
 export function init() {
+    requestLlmSettingsFromServer();
+
     whenFinishWriting(inputLlmCtxLen, () => llmSettings.contextLength = +inputLlmCtxLen.value);
     whenFinishWriting(inputLlmResLen, () => llmSettings.responseLength = +inputLlmResLen.value);
     whenFinishWriting(inputLlmTemp, () => llmSettings.temperature = +inputLlmTemp.value);
