@@ -22,7 +22,7 @@
     "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.1",
     "@types/jsonwebtoken": "^9.0.9",
-    "electron": "^35.7.2",
+    "electron": "^42.1.0",
     "electron-builder": "^26.0.12",
     "eslint": "^9.23.0",
     "globals": "^16.0.0",
